@@ -40,10 +40,23 @@ export function ModuleContent() {
             {currentActivity.description || 'Learn the fundamentals you need to understand and apply these concepts in real-world scenarios.'}
           </p>
         </div>
-        <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-          <Video className="w-4 h-4 mr-1" />
-          Video
-        </Badge>
+        <div className="flex items-center space-x-3">
+          <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+            <Video className="w-4 h-4 mr-1" />
+            Video
+          </Badge>
+          {isCompleted ? (
+            <Badge className="bg-green-600 text-white">
+              <CheckCircle className="w-4 h-4 mr-1" />
+              Completed
+            </Badge>
+          ) : (
+            <Button onClick={handleCompleteActivity} className="bg-blue-600 hover:bg-blue-700">
+              <PlayCircle className="w-4 h-4 mr-2" />
+              Mark as Complete
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* About This Lesson */}
@@ -82,6 +95,34 @@ export function ModuleContent() {
         </CardContent>
       </Card>
 
+      {/* Module Progress */}
+      <Card className="bg-purple-50 border-purple-200">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-purple-900 mb-4 flex items-center">
+            <Award className="w-5 h-5 mr-2" />
+            Module Progress
+          </h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-purple-800">Progress in {currentModule.title}</span>
+              <span className="text-purple-900 font-semibold">{moduleProgress}%</span>
+            </div>
+            <div className="w-full bg-purple-200 rounded-full h-2">
+              <div 
+                className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${moduleProgress}%` }}
+              ></div>
+            </div>
+            {moduleIsCompleted && (
+              <div className="flex items-center text-green-700 font-medium">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Module completed! Next module is now unlocked.
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Next Steps */}
       <Card className="bg-green-50 border-green-200">
         <CardContent className="p-6">
@@ -90,7 +131,10 @@ export function ModuleContent() {
             Next Steps
           </h3>
           <p className="text-green-800">
-            After completing this lesson, move on to the next activity to continue building your knowledge.
+            {isCompleted 
+              ? "Great work! Move on to the next activity to continue building your knowledge."
+              : "Complete this activity to progress through the module and unlock new content."
+            }
           </p>
         </CardContent>
       </Card>
