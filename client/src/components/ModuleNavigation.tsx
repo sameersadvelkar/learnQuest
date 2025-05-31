@@ -16,7 +16,7 @@ import {
 
 export function ModuleNavigation() {
   const { state: courseState, dispatch } = useCourse();
-  const { getModuleProgress, isActivityCompleted, isModuleLocked } = useProgressTracking();
+  const { getModuleProgress, isActivityCompleted, isModuleLocked, getModuleStatus } = useProgressTracking();
 
   const handleActivityClick = (activityId: number) => {
     const activity = courseState.activities.find(a => a.id === activityId);
@@ -48,20 +48,21 @@ export function ModuleNavigation() {
     }
   };
 
-  const getModuleStatusBadge = (moduleId: number, moduleIndex: number) => {
-    const progress = getModuleProgress(moduleId);
-    const isLocked = isModuleLocked(moduleId, moduleIndex);
+  const getModuleStatusIcon = (moduleId: number, moduleIndex: number) => {
+    const status = getModuleStatus(moduleId, moduleIndex);
     
-    if (isLocked) {
-      return <Badge variant="secondary" className="bg-gray-200 text-gray-600">Locked</Badge>;
+    switch (status) {
+      case 'locked':
+        return <Lock className="w-5 h-5 text-gray-400" />;
+      case 'completed':
+        return <CheckCircle className="w-5 h-5 text-green-600" />;
+      case 'active':
+        return <PlayCircle className="w-5 h-5 text-blue-600" />;
+      case 'available':
+        return <Circle className="w-5 h-5 text-gray-400" />;
+      default:
+        return null;
     }
-    if (progress === 100) {
-      return <Badge className="bg-secondary text-secondary-foreground">Complete</Badge>;
-    }
-    if (progress > 0) {
-      return <Badge variant="outline" className="text-accent border-accent">In Progress</Badge>;
-    }
-    return null;
   };
 
   return (
@@ -104,7 +105,7 @@ export function ModuleNavigation() {
                     )}
                   </div>
                 </div>
-                {getModuleStatusBadge(module.id, moduleIndex)}
+                {getModuleStatusIcon(module.id, moduleIndex)}
               </div>
 
               {/* Activities List */}

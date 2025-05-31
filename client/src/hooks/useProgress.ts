@@ -105,6 +105,11 @@ export function useProgressTracking() {
     return progressState.completedActivities.has(activityId);
   }, [progressState.completedActivities]);
 
+  const isModuleCompleted = useCallback((moduleId: number) => {
+    const moduleProgress = getModuleProgress(moduleId);
+    return moduleProgress === 100;
+  }, [getModuleProgress]);
+
   const isModuleLocked = useCallback((moduleId: number, orderIndex: number) => {
     if (orderIndex === 0) return false; // First module is always unlocked
     
@@ -112,9 +117,19 @@ export function useProgressTracking() {
     const previousModule = courseState.modules.find(m => m.orderIndex === orderIndex - 1);
     if (!previousModule) return false;
     
-    const previousModuleProgress = getModuleProgress(previousModule.id);
-    return previousModuleProgress < 100;
-  }, [courseState.modules, getModuleProgress]);
+    return !isModuleCompleted(previousModule.id);
+  }, [courseState.modules, isModuleCompleted]);
+
+  const getModuleStatus = useCallback((moduleId: number, orderIndex: number) => {
+    if (isModuleLocked(moduleId, orderIndex)) return 'locked';
+    if (isModuleCompleted(moduleId)) return 'completed';
+    
+    // Check if module is currently active (has current activity)
+    const isActive = courseState.currentActivity?.moduleId === moduleId;
+    if (isActive) return 'active';
+    
+    return 'available';
+  }, [isModuleLocked, isModuleCompleted, courseState.currentActivity]);
 
   return {
     progressState,
@@ -123,7 +138,9 @@ export function useProgressTracking() {
     getCourseProgress,
     getModuleProgress,
     isActivityCompleted,
+    isModuleCompleted,
     isModuleLocked,
+    getModuleStatus,
     checkAchievements,
   };
 }

@@ -1,16 +1,27 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCourse } from '@/contexts/CourseContext';
-import { Video, BookOpen, CheckCircle } from 'lucide-react';
+import { useProgressTracking } from '@/hooks/useProgress';
+import { Video, BookOpen, CheckCircle, PlayCircle, Award } from 'lucide-react';
 
 export function ModuleContent() {
   const { state: courseState } = useCourse();
   const { currentModule, currentActivity } = courseState;
+  const { completeActivity, isActivityCompleted, isModuleCompleted, getModuleProgress } = useProgressTracking();
 
   if (!currentModule || !currentActivity) {
     return null;
   }
+
+  const isCompleted = isActivityCompleted(currentActivity.id);
+  const moduleProgress = getModuleProgress(currentModule.id);
+  const moduleIsCompleted = isModuleCompleted(currentModule.id);
+
+  const handleCompleteActivity = () => {
+    completeActivity(currentActivity.id, currentModule.id);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
