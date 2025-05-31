@@ -2,7 +2,7 @@ import React from 'react';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { Button } from '@/components/ui/button';
 import { Activity } from '@shared/schema';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, BookOpen } from 'lucide-react';
 
 interface TwoColumnLayoutProps {
   activity: Activity;
@@ -35,12 +35,15 @@ export function TwoColumnLayout({
             onComplete={onVideoComplete}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-900">
-            <div className="text-center text-gray-400">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-700 rounded-full flex items-center justify-center">
-                <i className="fas fa-video text-2xl"></i>
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+            <div className="text-center text-white max-w-md px-6">
+              <div className="w-20 h-20 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <BookOpen className="w-10 h-10 text-white" />
               </div>
-              <p>No video available for this activity</p>
+              <h2 className="text-2xl font-bold mb-3">{activity.title}</h2>
+              <p className="text-blue-100 text-lg leading-relaxed">
+                {activity.description || 'Explore this lesson to learn new concepts and skills that will advance your understanding.'}
+              </p>
             </div>
           </div>
         )}
