@@ -179,6 +179,29 @@ export default function Course() {
     // Handle quiz activities - display in regular course layout
     if (activity.type === 'quiz') {
       if (activity.id === 8) { // Props Practice Quiz
+        const quizContent = {
+          title: activity.title,
+          description: activity.description || '',
+          type: 'quiz' as const,
+          quiz: {
+            questions: [
+              {
+                id: 'props-1',
+                question: 'What are props in React?',
+                type: 'multiple-choice' as const,
+                options: [
+                  'Properties passed to components',
+                  'Component state variables',
+                  'Event handlers',
+                  'CSS styles'
+                ],
+                correctAnswer: 0,
+                explanation: 'Props are properties passed from parent to child components.'
+              }
+            ]
+          }
+        };
+        
         return (
           <TwoColumnLayout 
             activity={activity}
@@ -245,7 +268,10 @@ export default function Course() {
             setRedirectCountdown(5);
           }}
         >
-          <WhatIsReactPage />
+          <div className="max-w-4xl mx-auto p-6">
+            <h2 className="text-2xl font-bold mb-4">{activity.title}</h2>
+            <p className="text-gray-600">{activity.description}</p>
+          </div>
         </TwoColumnLayout>
       );
     }
@@ -263,7 +289,10 @@ export default function Course() {
             setRedirectCountdown(5);
           }}
         >
-          <PropsInDetailPage />
+          <div className="max-w-4xl mx-auto p-6">
+            <h2 className="text-2xl font-bold mb-4">{activity.title}</h2>
+            <p className="text-gray-600">{activity.description}</p>
+          </div>
         </TwoColumnLayout>
       );
     }
