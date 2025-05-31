@@ -86,12 +86,12 @@ export function useProgressTracking() {
   }, [progressState.earnedAchievements, progressDispatch]);
 
   const getCourseProgress = useCallback(() => {
-    if (!courseState.currentCourse) return 0;
+    if (!courseState.activities || courseState.activities.length === 0) return 0;
     return calculateCourseProgress(
       progressState.completedActivities,
-      courseState.currentCourse.totalPages
+      courseState.activities.length
     );
-  }, [progressState.completedActivities, courseState.currentCourse]);
+  }, [progressState.completedActivities, courseState.activities]);
 
   const getModuleProgress = useCallback((moduleId: number) => {
     const moduleActivities = courseState.activities

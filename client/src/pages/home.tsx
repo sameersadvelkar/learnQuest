@@ -176,8 +176,8 @@ export default function Home() {
                     </div>
                     <Progress value={courseProgress} className="h-2" />
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{completedActivities} of {courseState.currentCourse?.totalPages || 12} completed</span>
-                      <span>~{Math.max(0, Math.ceil(((courseState.currentCourse?.totalPages || 12) - completedActivities) * 15))}min left</span>
+                      <span>{completedActivities} of {courseState.activities?.length || 12} completed</span>
+                      <span>~{Math.max(0, Math.ceil(((courseState.activities?.length || 12) - completedActivities) * 15))}min left</span>
                     </div>
                   </div>
 
