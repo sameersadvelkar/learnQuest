@@ -11,7 +11,9 @@ import {
   Video, 
   FileText, 
   HelpCircle,
-  Activity
+  Activity,
+  AlertCircle,
+  Clock
 } from 'lucide-react';
 
 export function ModuleNavigation() {
@@ -30,9 +32,18 @@ export function ModuleNavigation() {
     }
   };
 
-  const getActivityIcon = (type: string, completed: boolean, isCurrentActivity: boolean) => {
-    if (completed) return <CheckCircle className="w-4 h-4 text-secondary" />;
-    if (isCurrentActivity) return <PlayCircle className="w-4 h-4 text-primary" />;
+  const isActivityMissed = (activity: any, moduleActivities: any[]) => {
+    // Check if user has progressed past this activity but hasn't completed it
+    const currentActivityIndex = moduleActivities.findIndex(a => a.id === courseState.currentActivity?.id);
+    const thisActivityIndex = moduleActivities.findIndex(a => a.id === activity.id);
+    
+    return currentActivityIndex > thisActivityIndex && !isActivityCompleted(activity.id);
+  };
+
+  const getActivityIcon = (type: string, completed: boolean, isCurrentActivity: boolean, isMissed: boolean) => {
+    if (completed) return <CheckCircle className="w-4 h-4 text-green-600" />;
+    if (isMissed) return <AlertCircle className="w-4 h-4 text-orange-500" />;
+    if (isCurrentActivity) return <PlayCircle className="w-4 h-4 text-blue-600" />;
     
     switch (type) {
       case 'video':
@@ -114,6 +125,7 @@ export function ModuleNavigation() {
                   {moduleActivities.map((activity) => {
                     const completed = isActivityCompleted(activity.id);
                     const isCurrentActivity = courseState.currentActivity?.id === activity.id;
+                    const isMissed = isActivityMissed(activity, moduleActivities);
                     
                     return (
                       <Button
@@ -121,28 +133,45 @@ export function ModuleNavigation() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleActivityClick(activity.id)}
-                        className={`w-full justify-start text-left p-2 h-auto nav-item-hover ${
+                        className={`w-full justify-start text-left p-2 h-auto nav-item-hover relative ${
                           isCurrentActivity 
-                            ? 'bg-primary/10 border border-primary/20 text-primary' 
+                            ? 'bg-blue-50 border border-blue-200 text-blue-700' 
                             : completed
-                            ? 'text-secondary hover:bg-secondary/5'
+                            ? 'text-green-700 hover:bg-green-50 border border-green-100'
+                            : isMissed
+                            ? 'text-orange-700 hover:bg-orange-50 border border-orange-200 bg-orange-25'
                             : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
                         }`}
                       >
                         <div className="flex items-center space-x-3 w-full">
-                          {getActivityIcon(activity.type, completed, isCurrentActivity)}
+                          {getActivityIcon(activity.type, completed, isCurrentActivity, isMissed)}
                           <div className="flex-1">
-                            <div className="text-sm">{activity.title}</div>
+                            <div className={`text-sm ${isMissed ? 'font-medium' : ''}`}>
+                              {activity.title}
+                              {isMissed && (
+                                <Badge variant="outline" className="ml-2 text-xs bg-orange-100 text-orange-700 border-orange-300">
+                                  Missed
+                                </Badge>
+                              )}
+                            </div>
                             {activity.duration && (
-                              <div className="text-xs opacity-60">
-                                {activity.duration} min
+                              <div className="text-xs opacity-60 flex items-center space-x-1">
+                                <Clock className="w-3 h-3" />
+                                <span>{activity.duration} min</span>
                               </div>
                             )}
                           </div>
                           {completed && !isCurrentActivity && (
-                            <CheckCircle className="w-4 h-4 text-secondary flex-shrink-0" />
+                            <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                          )}
+                          {isMissed && !completed && (
+                            <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />
                           )}
                         </div>
+                        {/* Missed activity indicator dot */}
+                        {isMissed && !completed && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-white"></div>
+                        )}
                       </Button>
                     );
                   })}

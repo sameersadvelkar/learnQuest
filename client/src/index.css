@@ -71,4 +71,9 @@
   .progress-bar {
     transition: width 0.3s ease-in-out;
   }
+
+  /* Custom utility classes for missed activities */
+  .bg-orange-25 {
+    background-color: rgb(255 247 237 / 0.5);
+  }
 }
