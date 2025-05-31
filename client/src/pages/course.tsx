@@ -24,7 +24,8 @@ import {
   Video,
   FileText,
   Activity as ActivityIcon,
-  Book
+  Book,
+  CheckCircle
 } from 'lucide-react';
 
 export default function Course() {
