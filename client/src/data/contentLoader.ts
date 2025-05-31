@@ -49,10 +49,8 @@ export class ContentLoader {
 
     // Load modules
     await this.loadModule('module-1', course.id);
-    
-    // Add more modules as needed
-    // await this.loadModule('module-2', course.id);
-    // await this.loadModule('module-3', course.id);
+    await this.loadModule('module-2', course.id);
+    await this.loadModule('module-3', course.id);
   }
 
   private async loadModule(moduleFolder: string, courseId: number): Promise<void> {
