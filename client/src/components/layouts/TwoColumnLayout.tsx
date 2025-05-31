@@ -9,9 +9,9 @@ interface TwoColumnLayoutProps {
 
 export function TwoColumnLayout({ activity, children }: TwoColumnLayoutProps) {
   return (
-    <div className="flex-1 flex">
+    <div className="flex-1 flex flex-col">
       {/* Video Section */}
-      <div className="flex-1 bg-black relative">
+      <div className="w-full bg-black relative" style={{ height: '60vh' }}>
         {activity.videoUrl ? (
           <VideoPlayer 
             url={activity.videoUrl}
@@ -29,8 +29,8 @@ export function TwoColumnLayout({ activity, children }: TwoColumnLayoutProps) {
         )}
       </div>
       
-      {/* Content Section */}
-      <div className="w-96 bg-white border-l border-gray-200 flex flex-col">
+      {/* Content Section Below Video */}
+      <div className="flex-1 bg-white overflow-y-auto">
         {children}
       </div>
     </div>
