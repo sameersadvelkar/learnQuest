@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Sidebar } from '@/components/Sidebar';
 import { ModuleContent } from '@/components/ModuleContent';
 import { Navigation } from '@/components/Navigation';
@@ -18,14 +26,16 @@ import { sampleCourse, sampleModules, sampleActivities } from '@/data/courseCont
 import { propsInDetailContent } from '@/data/modules/module-2/activities/activity-1/page-1/content';
 import { 
   Settings, 
-  Volume2, 
-  VolumeX, 
   HelpCircle,
   Video,
   FileText,
   Activity as ActivityIcon,
   Book,
-  CheckCircle
+  CheckCircle,
+  Home,
+  User,
+  LogOut,
+  Globe
 } from 'lucide-react';
 
 export default function Course() {
@@ -114,8 +124,13 @@ export default function Course() {
     }
   };
 
-  const toggleAudio = () => {
-    settingsDispatch({ type: 'TOGGLE_AUDIO' });
+  const handleGoHome = () => {
+    setLocation('/');
+  };
+
+  const handleLogout = () => {
+    // Add logout logic here
+    console.log('Logout clicked');
   };
 
   const getActivityIcon = (type: string) => {
@@ -278,24 +293,43 @@ export default function Course() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={toggleAudio}
+            onClick={handleGoHome}
             className="p-2"
-            title={settings.audioMuted ? 'Unmute Audio' : 'Mute Audio'}
+            title="Go to Dashboard"
           >
-            {settings.audioMuted ? (
-              <VolumeX className="w-4 h-4 text-gray-600" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-gray-600" />
-            )}
+            <Home className="w-4 h-4 text-gray-600" />
           </Button>
           
           <Button variant="ghost" size="sm" className="p-2" title="Help">
             <HelpCircle className="w-4 h-4 text-gray-600" />
           </Button>
           
-          <Button variant="ghost" size="sm" className="p-2" title="Settings">
-            <Settings className="w-4 h-4 text-gray-600" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="p-2" title="Settings">
+                <Settings className="w-4 h-4 text-gray-600" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="flex items-center space-x-2">
+                <User className="w-4 h-4" />
+                <span>John Doe</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="flex items-center space-x-2">
+                <Globe className="w-4 h-4" />
+                <span>Language: English</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                onClick={handleLogout}
+                className="flex items-center space-x-2 text-red-600 focus:text-red-600"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
