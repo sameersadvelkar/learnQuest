@@ -37,33 +37,35 @@ A modern, gamified educational LMS (Learning Management System) built with React
 ### Installation
 
 1. Clone the repository:
-``bash
+```bash
 git clone https://github.com/your-username/LearnQuest.git
 cd LearnQuest
+```
 2. Install dependencies:
-  - npm install
 
+  ```- npm install```
 3. Start the development servers:
 Option 1: Using separate terminals
-# Terminal 1 - Backend
-npm run dev
 
+# Terminal 1 - Backend
+```npm run dev```
 # Terminal 2 - Frontend
-npx vite --port 5173
+```npx vite --port 5173```
 
 Option 2: Using concurrently (recommended)
 
-npm install --save-dev concurrently
-npm run dev:full
+```npm install --save-dev concurrently```
+  ``` npm run dev:full```
+
 
 Open your browser to http://localhost:5173
 Development Scripts
-npm run dev - Start backend server
-npm run build - Build for production
-npm run start - Run production server
-npm run check - TypeScript type checking
+```npm run dev - Start backend server```
+```npm run build - Build for production```
+```npm run start - Run production server```
+```npm run check - TypeScript type checking```
 
-Project Structure
+```Project Structure
 LearnQuest/
 ├── client/                 # React frontend
 │   ├── src/
@@ -77,7 +79,7 @@ LearnQuest/
 │   └── storage.ts         # Data storage layer
 ├── shared/                 # Shared types and schemas
 └── attached_assets/        # Static assets
-
+```
 
 Key Features
 Sequential Module Progression
@@ -94,10 +96,12 @@ Achievement system with unlockable badges
 Streak tracking for consistent learning
 Contributing
 Fork the repository
+```
 Create a feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
 Push to the branch (git push origin feature/amazing-feature)
 Open a Pull Request
+```
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
