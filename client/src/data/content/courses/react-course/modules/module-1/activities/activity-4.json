@@ -1,0 +1,37 @@
+{
+  "id": 4,
+  "moduleId": 1,
+  "title": "Module 1 Quiz",
+  "description": "Test your knowledge of React basics",
+  "type": "quiz",
+  "orderIndex": 3,
+  "duration": 10,
+  "isLocked": false,
+  "content": {
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is React?",
+        "type": "multiple_choice",
+        "options": ["A JavaScript library", "A JavaScript framework", "A programming language", "A database"],
+        "correct": 0,
+        "explanation": "React is a JavaScript library for building user interfaces, not a framework."
+      },
+      {
+        "id": 2,
+        "question": "React was created by which company?",
+        "type": "multiple_choice",
+        "options": ["Google", "Microsoft", "Facebook", "Apple"],
+        "correct": 2,
+        "explanation": "React was created by Facebook (now Meta) and is maintained by them along with the community."
+      },
+      {
+        "id": 3,
+        "question": "React components must return a single parent element.",
+        "type": "true_false",
+        "correct": true,
+        "explanation": "React components must return a single parent element, though you can use React Fragments to avoid extra DOM nodes."
+      }
+    ]
+  }
+}

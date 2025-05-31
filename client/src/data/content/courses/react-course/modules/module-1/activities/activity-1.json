@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "moduleId": 1,
+  "title": "What is React?",
+  "description": "Introduction to React and its ecosystem",
+  "type": "video",
+  "orderIndex": 0,
+  "content": null,
+  "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "duration": 15,
+  "isLocked": false
+}

@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "moduleId": 1,
+  "title": "Setting up Environment",
+  "description": "Learn how to set up your React development environment",
+  "type": "video",
+  "orderIndex": 1,
+  "content": null,
+  "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "duration": 20,
+  "isLocked": false
+}
