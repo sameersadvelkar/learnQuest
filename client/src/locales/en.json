@@ -1,0 +1,124 @@
+{
+  "app": {
+    "title": "EduQuest",
+    "subtitle": "Gamified Learning Management System"
+  },
+  "navigation": {
+    "home": "Home",
+    "course": "Course",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "previous": "Previous",
+    "next": "Next",
+    "markComplete": "Mark Complete",
+    "completed": "Completed",
+    "backToCourse": "Back to Course"
+  },
+  "course": {
+    "progress": "Course Progress",
+    "modules": "Modules",
+    "activities": "Activities",
+    "estimatedTime": "Estimated Time",
+    "completedPages": "completed pages",
+    "timeLeft": "time left",
+    "learningObjectives": "Learning Objectives",
+    "keyTakeaways": "Key Takeaways",
+    "nextSteps": "Next Steps",
+    "resources": "Resources",
+    "transcript": "Transcript",
+    "quiz": "Quiz",
+    "overview": "Overview"
+  },
+  "progress": {
+    "courseProgress": "Course Progress",
+    "moduleProgress": "Module Progress", 
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "locked": "Locked",
+    "unlockCondition": "Complete previous module to unlock"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "unlocked": "Achievement Unlocked!",
+    "recentAchievements": "Recent Achievements",
+    "totalPoints": "Total Points",
+    "streak": "Current Streak",
+    "noAchievements": "No achievements yet",
+    "earnAchievements": "Complete activities to earn achievements!"
+  },
+  "video": {
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "fullscreen": "Fullscreen",
+    "settings": "Video Settings",
+    "quality": "Quality",
+    "speed": "Playback Speed"
+  },
+  "quiz": {
+    "question": "Question",
+    "of": "of",
+    "timeRemaining": "Time Remaining",
+    "submit": "Submit Quiz",
+    "next": "Next Question",
+    "previous": "Previous Question",
+    "results": "Quiz Results",
+    "score": "Your Score",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "explanation": "Explanation",
+    "review": "Review Your Answers",
+    "excellent": "Excellent!",
+    "goodJob": "Good Job!",
+    "keepPracticing": "Keep Practicing!"
+  },
+  "settings": {
+    "title": "Settings",
+    "audio": "Audio",
+    "globalAudio": "Global Audio",
+    "muteAllSounds": "Mute all sounds in the course",
+    "videoQuality": "Video Quality",
+    "autoRecommended": "Auto (Recommended)",
+    "playbackSpeed": "Playback Speed",
+    "notifications": "Notifications",
+    "theme": "Theme",
+    "language": "Language",
+    "resetProgress": "Reset Course Progress",
+    "save": "Save Settings"
+  },
+  "errors": {
+    "noActivitySelected": "No Activity Selected",
+    "selectActivity": "Select an activity from the sidebar to begin learning",
+    "loadingError": "Error loading content",
+    "networkError": "Network connection error",
+    "tryAgain": "Try Again"
+  },
+  "messages": {
+    "welcome": "Welcome back to your learning journey!",
+    "continueWhere": "Continue where you left off and master new skills with our interactive courses.",
+    "noRecentActivity": "No activities completed yet",
+    "startFirstLesson": "Start your first lesson to see your progress here",
+    "keepLearning": "Keep learning daily to maintain your streak!",
+    "congratulations": "Congratulations on your progress!"
+  },
+  "badges": {
+    "gettingStarted": "Getting Started",
+    "modulemaster": "Module Master", 
+    "streakMaster": "Streak Master",
+    "speedLearner": "Speed Learner",
+    "firstVideo": "First Video",
+    "firstQuiz": "First Quiz",
+    "perfectScore": "Perfect Score",
+    "consistent": "Consistent Learner"
+  },
+  "stats": {
+    "thisWeek": "This week",
+    "totalTime": "Total time",
+    "averagePerDay": "Average per day",
+    "studyTime": "Study Time",
+    "learningStreak": "Learning Streak",
+    "daysInARow": "days in a row"
+  }
+}
