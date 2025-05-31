@@ -15,13 +15,8 @@ export function AchievementNotification({
   isVisible, 
   onClose 
 }: AchievementNotificationProps) {
-  const [showConfetti, setShowConfetti] = useState(false);
-
   useEffect(() => {
     if (isVisible) {
-      setShowConfetti(true);
-      createConfetti();
-      
       const timer = setTimeout(() => {
         onClose();
       }, 4000);
@@ -29,28 +24,6 @@ export function AchievementNotification({
       return () => clearTimeout(timer);
     }
   }, [isVisible, onClose]);
-
-  const createConfetti = () => {
-    const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'];
-    
-    for (let i = 0; i < 50; i++) {
-      setTimeout(() => {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 2 + 's';
-        
-        document.body.appendChild(confetti);
-        
-        setTimeout(() => {
-          if (document.body.contains(confetti)) {
-            document.body.removeChild(confetti);
-          }
-        }, 3000);
-      }, i * 50);
-    }
-  };
 
   const getIcon = (iconType: string) => {
     switch (iconType) {
