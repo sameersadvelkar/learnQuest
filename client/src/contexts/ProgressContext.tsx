@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState, useCallback } from 'react';
 import { UserProgress, Achievement } from '@shared/schema';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -152,6 +152,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [state, isInitialized]);
+
+  // Method to clear all progress (for testing)
+  const clearProgress = useCallback(() => {
+    localStorage.removeItem('course-progress');
+    dispatch({ type: 'RESET_PROGRESS' });
+  }, [dispatch]);
 
   return (
     <ProgressContext.Provider value={{ state, dispatch }}>
