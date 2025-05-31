@@ -129,16 +129,19 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         }
       });
     }
-  }, [storedProgress]);
+  }, []); // Only run on mount
 
   // Save progress to localStorage when state changes
   useEffect(() => {
-    const progressToSave = {
-      ...state,
-      completedActivities: Array.from(state.completedActivities),
-    };
-    setStoredProgress(progressToSave);
-  }, [state, setStoredProgress]);
+    // Skip saving on initial load to prevent infinite loop
+    if (state.completedActivities.size > 0 || state.totalPoints > 0) {
+      const progressToSave = {
+        ...state,
+        completedActivities: Array.from(state.completedActivities),
+      };
+      setStoredProgress(progressToSave);
+    }
+  }, [state.completedActivities.size, state.totalPoints, state.streak, state.earnedAchievements.length, setStoredProgress]);
 
   return (
     <ProgressContext.Provider value={{ state, dispatch }}>
