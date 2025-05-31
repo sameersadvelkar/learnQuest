@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { ImageDisplay } from '@/components/ImageDisplay';
 import { QuizComponent } from '@/components/QuizComponent';
+import { AssetRenderer, AssetGallery } from '@/components/AssetRenderer';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { Video, BookOpen, CheckCircle, PlayCircle, Award, Image } from 'lucide-react';
@@ -80,6 +81,17 @@ export function ModuleContent() {
               {renderReadingContent(content)}
             </CardContent>
           </Card>
+        );
+        
+      // Asset rendering cases
+      case 'image':
+      case 'audio':
+      case 'document':
+        return (
+          <AssetRenderer
+            content={content}
+            onComplete={handleCompleteActivity}
+          />
         );
         
       default:
