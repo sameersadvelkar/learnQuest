@@ -321,7 +321,7 @@ export default function Course() {
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h2 className="text-xl font-semibold text-gray-900">
-            {courseState.currentActivity?.title || 'Select an Activity'}
+            TechEdu Institute
           </h2>
           {courseState.currentActivity && (
             <Badge variant="secondary" className="flex items-center space-x-1">
