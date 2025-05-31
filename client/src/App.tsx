@@ -11,6 +11,7 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { useEffect } from "react";
 import Home from "@/pages/home";
 import Course from "@/pages/course";
+import CourseComplete from "@/pages/course-complete";
 import NotFound from "@/pages/not-found";
 
 function AchievementManager() {
@@ -79,6 +80,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/course/:courseId?" component={Course} />
+      <Route path="/course-complete" component={CourseComplete} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -109,6 +109,9 @@ export default function Course() {
           dispatch({ type: 'SET_CURRENT_MODULE', payload: nextModule });
         }
         dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: nextActivity });
+      } else {
+        // No more activities, course is complete - redirect to thank you page
+        setLocation('/course-complete');
       }
       
       setShowCompletionMessage(false);
