@@ -1,0 +1,94 @@
+{
+  "id": 7,
+  "moduleId": 2,
+  "title": "Quiz: Multiple Choice Formats",
+  "description": "Test your knowledge with various quiz question types",
+  "type": "quiz",
+  "orderIndex": 2,
+  "duration": 10,
+  "isLocked": false,
+  "content": {
+    "type": "quiz",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "What are React components?",
+        "options": [
+          "JavaScript functions that return JSX",
+          "HTML templates",
+          "CSS classes",
+          "Database queries"
+        ],
+        "correctAnswer": 0,
+        "explanation": "React components are JavaScript functions (or classes) that return JSX to describe what should appear on the screen."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "question": "Props in React components can be modified by the component itself.",
+        "correctAnswer": false,
+        "explanation": "Props are read-only. Components must never modify their own props - this is a fundamental rule in React."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_select",
+        "question": "Which of the following are valid prop types in React? (Select all that apply)",
+        "options": [
+          "String",
+          "Number",
+          "Function",
+          "Object",
+          "Array",
+          "Boolean"
+        ],
+        "correctAnswers": [0, 1, 2, 3, 4, 5],
+        "explanation": "All JavaScript data types can be passed as props: strings, numbers, functions, objects, arrays, and booleans."
+      },
+      {
+        "id": "q4",
+        "type": "fill_in_blank",
+        "question": "Complete this component: function Welcome({name}) { return <h1>Hello, ___!</h1>; }",
+        "correctAnswer": "{name}",
+        "placeholder": "Enter the JSX expression",
+        "explanation": "To display the name prop, you use JSX expression syntax: {name}"
+      },
+      {
+        "id": "q5",
+        "type": "code_completion",
+        "question": "Complete this component to display a user's name and age:",
+        "codeTemplate": "function UserInfo({ user }) {\n  return (\n    <div>\n      <h2>___</h2>\n      <p>Age: ___</p>\n    </div>\n  );\n}",
+        "blanks": [
+          {
+            "id": "blank1",
+            "correctAnswer": "{user.name}",
+            "placeholder": "Display name"
+          },
+          {
+            "id": "blank2", 
+            "correctAnswer": "{user.age}",
+            "placeholder": "Display age"
+          }
+        ],
+        "explanation": "Use JSX expressions {user.name} and {user.age} to access object properties."
+      },
+      {
+        "id": "q6",
+        "type": "drag_and_drop",
+        "question": "Arrange these component parts in the correct order:",
+        "items": [
+          { "id": "1", "text": "function ComponentName" },
+          { "id": "2", "text": "({ props })" },
+          { "id": "3", "text": "return" },
+          { "id": "4", "text": "(<JSX />);" }
+        ],
+        "correctOrder": ["1", "2", "3", "4"],
+        "explanation": "A React component follows this structure: function name, parameters, return statement, and JSX."
+      }
+    ],
+    "passingScore": 70,
+    "timeLimit": 600,
+    "allowRetakes": true,
+    "showCorrectAnswers": true
+  }
+}

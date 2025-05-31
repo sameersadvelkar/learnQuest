@@ -1,0 +1,84 @@
+{
+  "id": 10,
+  "moduleId": 2,
+  "title": "Lab: Advanced Component Patterns",
+  "description": "Hands-on practice with advanced component patterns and composition",
+  "type": "lab",
+  "orderIndex": 5,
+  "duration": 35,
+  "isLocked": false,
+  "content": {
+    "type": "multi_section",
+    "sections": [
+      {
+        "id": "theory",
+        "title": "Theory",
+        "content": {
+          "type": "markdown",
+          "text": "# Advanced Component Patterns\n\nIn this lab, you'll explore advanced patterns for building reusable and maintainable React components.\n\n## Patterns Covered:\n\n1. **Component Composition**: Building complex UIs by combining simple components\n2. **Children Props**: Using the special `children` prop for flexible layouts\n3. **Render Props**: Sharing code between components using props with function values\n4. **Higher-Order Components**: Functions that take a component and return a new component\n\n## Component Composition Example:\n\n```jsx\nfunction Card({ children }) {\n  return <div className=\"card\">{children}</div>;\n}\n\nfunction CardHeader({ children }) {\n  return <div className=\"card-header\">{children}</div>;\n}\n\nfunction CardBody({ children }) {\n  return <div className=\"card-body\">{children}</div>;\n}\n\n// Usage\n<Card>\n  <CardHeader>\n    <h2>User Profile</h2>\n  </CardHeader>\n  <CardBody>\n    <p>User information goes here</p>\n  </CardBody>\n</Card>\n```"
+        }
+      },
+      {
+        "id": "practice",
+        "title": "Practice",
+        "content": {
+          "type": "code_sandbox",
+          "exercises": [
+            {
+              "id": "ex1",
+              "title": "Create a Modal Component",
+              "description": "Build a reusable modal component using composition",
+              "starterCode": "// Create Modal, ModalHeader, ModalBody, and ModalFooter components\n// Use the children prop for flexible content\n\nfunction Modal({ isOpen, onClose, children }) {\n  if (!isOpen) return null;\n  \n  return (\n    <div className=\"modal-overlay\" onClick={onClose}>\n      <div className=\"modal-content\" onClick={e => e.stopPropagation()}>\n        {children}\n      </div>\n    </div>\n  );\n}\n\n// Add ModalHeader component here\n\n// Add ModalBody component here\n\n// Add ModalFooter component here",
+              "solution": "function Modal({ isOpen, onClose, children }) {\n  if (!isOpen) return null;\n  \n  return (\n    <div className=\"modal-overlay\" onClick={onClose}>\n      <div className=\"modal-content\" onClick={e => e.stopPropagation()}>\n        {children}\n      </div>\n    </div>\n  );\n}\n\nfunction ModalHeader({ children }) {\n  return <div className=\"modal-header\">{children}</div>;\n}\n\nfunction ModalBody({ children }) {\n  return <div className=\"modal-body\">{children}</div>;\n}\n\nfunction ModalFooter({ children }) {\n  return <div className=\"modal-footer\">{children}</div>;\n}",
+              "tests": [
+                "Modal renders when isOpen is true",
+                "Modal does not render when isOpen is false",
+                "ModalHeader displays children content",
+                "ModalBody displays children content",
+                "ModalFooter displays children content"
+              ]
+            },
+            {
+              "id": "ex2",
+              "title": "Build a Form with Validation",
+              "description": "Create a form component with validation patterns",
+              "starterCode": "// Create Form, FormField, and Input components with validation\n\nfunction Form({ onSubmit, children }) {\n  // Add form logic here\n}\n\nfunction FormField({ label, error, children }) {\n  // Add field wrapper logic here\n}\n\nfunction Input({ type = 'text', validation, ...props }) {\n  // Add input with validation logic here\n}",
+              "solution": "function Form({ onSubmit, children }) {\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    onSubmit(e);\n  };\n  \n  return (\n    <form onSubmit={handleSubmit}>\n      {children}\n    </form>\n  );\n}\n\nfunction FormField({ label, error, children }) {\n  return (\n    <div className=\"form-field\">\n      <label>{label}</label>\n      {children}\n      {error && <span className=\"error\">{error}</span>}\n    </div>\n  );\n}\n\nfunction Input({ type = 'text', validation, ...props }) {\n  return (\n    <input\n      type={type}\n      {...props}\n    />\n  );\n}",
+              "tests": [
+                "Form prevents default submission",
+                "FormField displays label and error",
+                "Input accepts all standard props",
+                "Components compose together properly"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "challenge",
+        "title": "Challenge",
+        "content": {
+          "type": "coding_challenge",
+          "title": "Build a Data Table Component",
+          "description": "Create a flexible, reusable data table component using advanced patterns",
+          "requirements": [
+            "Table component accepts data and columns props",
+            "Column definitions include header, accessor, and optional formatter",
+            "Support for sorting by clicking column headers",
+            "TableHeader, TableBody, and TableRow subcomponents",
+            "Pagination component for large datasets",
+            "Search/filter functionality"
+          ],
+          "starterCode": "// Build a complete data table system\n// Include Table, TableHeader, TableBody, TableRow, and Pagination components\n\nconst sampleData = [\n  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },\n  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },\n  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Editor' }\n];\n\nconst columns = [\n  { header: 'Name', accessor: 'name' },\n  { header: 'Email', accessor: 'email' },\n  { header: 'Role', accessor: 'role' }\n];\n\n// Your components here",
+          "timeLimit": 45,
+          "difficulty": "Advanced"
+        }
+      }
+    ],
+    "completionCriteria": {
+      "sectionsCompleted": ["theory", "practice"],
+      "exercisesCompleted": 2,
+      "challengeAttempted": true
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": 6,
+  "moduleId": 2,
+  "title": "Reading: Component Fundamentals",
+  "description": "Learn the theory behind React components with interactive content",
+  "type": "reading",
+  "orderIndex": 1,
+  "duration": 15,
+  "isLocked": false,
+  "content": {
+    "type": "tabbed_content",
+    "tabs": [
+      {
+        "id": "overview",
+        "title": "Overview",
+        "content": {
+          "type": "markdown",
+          "text": "# Component Fundamentals\n\nReact components are the building blocks of any React application. They are reusable pieces of code that return JSX to describe what should appear on the screen.\n\n## Key Concepts:\n\n- **Function Components**: Simple JavaScript functions that return JSX\n- **Props**: Parameters passed to components\n- **Composition**: Building complex UIs by combining simple components\n\n## Example:\n\n```jsx\nfunction Welcome(props) {\n  return <h1>Hello, {props.name}!</h1>;\n}\n```\n\nThis simple component accepts a `name` prop and renders a greeting."
+        }
+      },
+      {
+        "id": "props",
+        "title": "Props Deep Dive",
+        "content": {
+          "type": "markdown",
+          "text": "# Understanding Props\n\nProps (short for properties) are how components communicate with each other. They are read-only and help make components reusable.\n\n## Props Rules:\n\n1. **Read-only**: Components must never modify their own props\n2. **Any data type**: Props can be strings, numbers, objects, functions, etc.\n3. **Default values**: You can provide default props\n\n## Examples:\n\n```jsx\n// String prop\n<Welcome name=\"Sarah\" />\n\n// Number prop\n<Counter initialValue={10} />\n\n// Object prop\n<UserCard user={{name: 'John', age: 30}} />\n\n// Function prop\n<Button onClick={() => alert('Clicked!')} />\n```"
+        }
+      },
+      {
+        "id": "best-practices",
+        "title": "Best Practices",
+        "content": {
+          "type": "markdown",
+          "text": "# Component Best Practices\n\n## 1. Keep Components Small\nEach component should have a single responsibility.\n\n```jsx\n// Good: Focused component\nfunction UserAvatar({ user }) {\n  return (\n    <img \n      src={user.avatar} \n      alt={user.name}\n      className=\"avatar\"\n    />\n  );\n}\n```\n\n## 2. Use Descriptive Names\nComponent names should clearly indicate their purpose.\n\n```jsx\n// Good\nfunction ShoppingCartItem({ item }) { ... }\n\n// Bad\nfunction Item({ item }) { ... }\n```\n\n## 3. Destructure Props\nMakes your code cleaner and more readable.\n\n```jsx\n// Good\nfunction Welcome({ name, age }) {\n  return <h1>Hello, {name}! You are {age} years old.</h1>;\n}\n\n// Less ideal\nfunction Welcome(props) {\n  return <h1>Hello, {props.name}! You are {props.age} years old.</h1>;\n}\n```"
+        }
+      }
+    ]
+  }
+}

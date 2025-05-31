@@ -1,0 +1,67 @@
+{
+  "id": 8,
+  "moduleId": 2,
+  "title": "Interactive: Component Builder",
+  "description": "Build your first React component step by step",
+  "type": "interactive",
+  "orderIndex": 3,
+  "duration": 20,
+  "isLocked": false,
+  "content": {
+    "type": "step_by_step",
+    "steps": [
+      {
+        "id": "step1",
+        "title": "Create the Function",
+        "description": "Let's start by creating a basic function component",
+        "content": {
+          "type": "code_editor",
+          "language": "jsx",
+          "initialCode": "// Create a function component called Greeting\n",
+          "solution": "function Greeting() {\n  \n}",
+          "hints": [
+            "Start with the 'function' keyword",
+            "Component names must start with a capital letter",
+            "Don't forget the parentheses and curly braces"
+          ]
+        }
+      },
+      {
+        "id": "step2", 
+        "title": "Add Return Statement",
+        "description": "Components must return JSX elements",
+        "content": {
+          "type": "code_editor",
+          "language": "jsx",
+          "initialCode": "function Greeting() {\n  // Add a return statement here\n}",
+          "solution": "function Greeting() {\n  return (\n    <h1>Hello World!</h1>\n  );\n}",
+          "hints": [
+            "Use the 'return' keyword",
+            "Wrap JSX in parentheses for better readability",
+            "Don't forget the semicolon"
+          ]
+        }
+      },
+      {
+        "id": "step3",
+        "title": "Add Props",
+        "description": "Make the component accept and use props",
+        "content": {
+          "type": "code_editor",
+          "language": "jsx",
+          "initialCode": "function Greeting() {\n  return (\n    <h1>Hello World!</h1>\n  );\n}",
+          "solution": "function Greeting({ name }) {\n  return (\n    <h1>Hello {name}!</h1>\n  );\n}",
+          "hints": [
+            "Add parameters to the function",
+            "Use destructuring to extract props",
+            "Use curly braces to display variables in JSX"
+          ]
+        }
+      }
+    ],
+    "completionCriteria": {
+      "allStepsCompleted": true,
+      "codeCompiles": true
+    }
+  }
+}
