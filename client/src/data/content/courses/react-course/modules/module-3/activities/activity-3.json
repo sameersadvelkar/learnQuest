@@ -1,0 +1,99 @@
+{
+  "id": 13,
+  "moduleId": 3,
+  "title": "Assessment: Advanced State Quiz",
+  "description": "Comprehensive assessment covering state management concepts",
+  "type": "assessment",
+  "orderIndex": 2,
+  "duration": 25,
+  "isLocked": false,
+  "content": {
+    "type": "assessment",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "scenario_based",
+        "scenario": "You have a component that manages a list of users. When a user clicks 'Delete', the user should be removed from the list.",
+        "question": "Which approach correctly removes a user from the state?",
+        "options": [
+          "users.splice(userIndex, 1); setUsers(users);",
+          "setUsers(users.filter(user => user.id !== userId));",
+          "delete users[userIndex]; setUsers(users);",
+          "setUsers(users.remove(userId));"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Option B is correct because it creates a new array without mutating the original state. React requires immutable updates to trigger re-renders.",
+        "points": 10
+      },
+      {
+        "id": "q2",
+        "type": "code_analysis",
+        "code": "function Counter() {\n  const [count, setCount] = useState(0);\n  \n  const increment = () => {\n    setCount(count + 1);\n    setCount(count + 1);\n    setCount(count + 1);\n  };\n  \n  return <button onClick={increment}>{count}</button>;\n}",
+        "question": "What will happen when the button is clicked?",
+        "options": [
+          "Count increases by 3",
+          "Count increases by 1", 
+          "Count increases by 1 three times rapidly",
+          "Component crashes"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The count will only increase by 1 because all three setCount calls use the same stale value. To fix this, use the functional update pattern: setCount(prev => prev + 1).",
+        "points": 15
+      },
+      {
+        "id": "q3",
+        "type": "matching",
+        "question": "Match each state pattern with its correct use case:",
+        "leftColumn": [
+          "useState([])",
+          "useState({})",
+          "useState(false)",
+          "useState('')"
+        ],
+        "rightColumn": [
+          "Toggle visibility",
+          "Form input values",
+          "User profile data",
+          "Shopping cart items"
+        ],
+        "correctMatches": [
+          { "left": 0, "right": 3 },
+          { "left": 1, "right": 2 },
+          { "left": 2, "right": 0 },
+          { "left": 3, "right": 1 }
+        ],
+        "explanation": "Arrays for lists, objects for complex data, booleans for toggles, strings for text inputs.",
+        "points": 12
+      },
+      {
+        "id": "q4",
+        "type": "debugging",
+        "buggyCode": "function UserProfile() {\n  const [user, setUser] = useState({name: '', age: 0});\n  \n  const updateName = (newName) => {\n    user.name = newName;\n    setUser(user);\n  };\n  \n  return (\n    <input \n      value={user.name}\n      onChange={e => updateName(e.target.value)}\n    />\n  );\n}",
+        "question": "Identify and fix the bug in this code:",
+        "fixedCode": "function UserProfile() {\n  const [user, setUser] = useState({name: '', age: 0});\n  \n  const updateName = (newName) => {\n    setUser({...user, name: newName});\n  };\n  \n  return (\n    <input \n      value={user.name}\n      onChange={e => updateName(e.target.value)}\n    />\n  );\n}",
+        "explanation": "The bug is direct mutation of state. The fix uses the spread operator to create a new object while preserving other properties.",
+        "points": 18
+      },
+      {
+        "id": "q5",
+        "type": "performance",
+        "question": "Which pattern is more efficient for updating nested state?",
+        "scenario": "You have state: {user: {profile: {name: 'John', settings: {theme: 'dark'}}}}",
+        "options": [
+          "setUser({...user, profile: {...user.profile, settings: {...user.profile.settings, theme: 'light'}}});",
+          "Use a state management library like Redux",
+          "Break into separate useState calls for each level",
+          "Use useReducer for complex state updates"
+        ],
+        "correctAnswers": [2, 3],
+        "explanation": "For deeply nested state, splitting into separate useState calls or using useReducer provides better performance and maintainability.",
+        "points": 15
+      }
+    ],
+    "timeLimit": 1500,
+    "passingScore": 60,
+    "allowRetakes": false,
+    "showResults": "after_completion",
+    "certificateEligible": true
+  }
+}

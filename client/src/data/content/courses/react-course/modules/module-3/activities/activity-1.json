@@ -1,0 +1,82 @@
+{
+  "id": 11,
+  "moduleId": 3,
+  "title": "Presentation: Understanding React State",
+  "description": "Interactive slides about state management fundamentals",
+  "type": "presentation",
+  "orderIndex": 0,
+  "duration": 20,
+  "isLocked": false,
+  "content": {
+    "type": "slideshow",
+    "slides": [
+      {
+        "id": "slide1",
+        "title": "What is State?",
+        "content": {
+          "type": "split_layout",
+          "left": {
+            "type": "markdown",
+            "text": "# React State\n\nState is data that changes over time in your component.\n\n## Key Concepts:\n- **Local to component**: Each component manages its own state\n- **Triggers re-renders**: When state changes, component updates\n- **Immutable updates**: Always create new state, don't modify existing\n\n## Common Use Cases:\n- Form inputs\n- Toggle visibility\n- Counter values\n- Loading states"
+          },
+          "right": {
+            "type": "code_example",
+            "language": "jsx",
+            "code": "import { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>\n        Increment\n      </button>\n    </div>\n  );\n}"
+          }
+        }
+      },
+      {
+        "id": "slide2",
+        "title": "useState Hook",
+        "content": {
+          "type": "interactive_demo",
+          "demo": {
+            "type": "live_code",
+            "initialCode": "function ToggleButton() {\n  const [isOn, setIsOn] = useState(false);\n\n  return (\n    <button onClick={() => setIsOn(!isOn)}>\n      {isOn ? 'ON' : 'OFF'}\n    </button>\n  );\n}",
+            "editable": true,
+            "showPreview": true
+          },
+          "explanation": "Try modifying the code above! useState returns an array with two elements: the current state value and a function to update it."
+        }
+      },
+      {
+        "id": "slide3",
+        "title": "State Update Rules",
+        "content": {
+          "type": "comparison",
+          "left": {
+            "title": "❌ Wrong Way",
+            "code": "// Don't mutate state directly\nconst [user, setUser] = useState({name: 'John'});\n\n// This won't trigger re-render\nuser.name = 'Jane';\n\n// Don't do this either\nuser.age = 25;\nsetUser(user);"
+          },
+          "right": {
+            "title": "✅ Correct Way", 
+            "code": "// Create new objects/arrays\nconst [user, setUser] = useState({name: 'John'});\n\n// This triggers re-render\nsetUser({...user, name: 'Jane'});\n\n// Or replace entirely\nsetUser({name: 'Jane', age: 25});"
+          }
+        }
+      },
+      {
+        "id": "slide4",
+        "title": "Complex State Examples",
+        "content": {
+          "type": "tabbed_examples",
+          "tabs": [
+            {
+              "title": "Array State",
+              "code": "function TodoList() {\n  const [todos, setTodos] = useState([]);\n  \n  const addTodo = (text) => {\n    setTodos([...todos, { id: Date.now(), text }]);\n  };\n  \n  const removeTodo = (id) => {\n    setTodos(todos.filter(todo => todo.id !== id));\n  };\n  \n  return (\n    <div>\n      {todos.map(todo => (\n        <div key={todo.id}>\n          {todo.text}\n          <button onClick={() => removeTodo(todo.id)}>×</button>\n        </div>\n      ))}\n    </div>\n  );\n}"
+            },
+            {
+              "title": "Object State",
+              "code": "function UserForm() {\n  const [user, setUser] = useState({\n    name: '',\n    email: '',\n    age: 0\n  });\n  \n  const updateField = (field, value) => {\n    setUser(prev => ({ ...prev, [field]: value }));\n  };\n  \n  return (\n    <form>\n      <input \n        value={user.name}\n        onChange={e => updateField('name', e.target.value)}\n        placeholder=\"Name\"\n      />\n      <input \n        value={user.email}\n        onChange={e => updateField('email', e.target.value)}\n        placeholder=\"Email\"\n      />\n    </form>\n  );\n}"
+            }
+          ]
+        }
+      }
+    ],
+    "navigation": {
+      "showProgress": true,
+      "allowSkip": false,
+      "autoAdvance": false
+    }
+  }
+}
