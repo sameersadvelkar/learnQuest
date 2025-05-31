@@ -20,6 +20,11 @@ export class ContentLoader {
       return { courses: this.courses, modules: this.modules, activities: this.activities };
     }
 
+    // Clear existing data to prevent duplicates
+    this.courses = [];
+    this.modules = [];
+    this.activities = [];
+
     try {
       // Load React course content
       await this.loadReactCourse();

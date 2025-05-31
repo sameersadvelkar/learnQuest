@@ -1,7 +1,7 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ModuleNavigation } from '@/components/ModuleNavigation';
+import { AccordionNavigation } from '@/components/AccordionNavigation';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { Trophy, Clock, BookOpen } from 'lucide-react';
@@ -12,7 +12,7 @@ export function Sidebar() {
 
   const courseProgress = getCourseProgress();
   const completedCount = progressState.completedActivities.size;
-  const totalPages = courseState.currentCourse?.totalPages || 0;
+  const totalActivities = courseState.activities.length;
 
   return (
     <aside className="w-80 bg-sidebar border-r border-sidebar-border flex flex-col">
@@ -40,15 +40,15 @@ export function Sidebar() {
           </div>
           <Progress value={courseProgress} className="h-2" />
           <div className="flex justify-between text-xs text-sidebar-foreground/60">
-            <span>{completedCount} of {totalPages} completed</span>
-            <span>~{Math.max(0, Math.ceil((totalPages - completedCount) * 10))}min left</span>
+            <span>{completedCount} of {totalActivities} completed</span>
+            <span>~{Math.max(0, Math.ceil((totalActivities - completedCount) * 10))}min left</span>
           </div>
         </div>
       </div>
 
       {/* Module Navigation */}
       <nav className="flex-1 overflow-y-auto p-4">
-        <ModuleNavigation />
+        <AccordionNavigation />
       </nav>
 
       {/* Achievements Section */}
