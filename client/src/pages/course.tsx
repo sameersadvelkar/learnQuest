@@ -59,15 +59,9 @@ export default function Course() {
     }
   }, [courseState.currentCourse, dispatch]);
 
-  // Set layout based on activity type
+  // All activities use the same two-column layout
   useEffect(() => {
-    if (courseState.currentActivity) {
-      if (courseState.currentActivity.type === 'quiz') {
-        setCurrentLayout('fullscreen');
-      } else {
-        setCurrentLayout('two-column');
-      }
-    }
+    setCurrentLayout('two-column');
   }, [courseState.currentActivity]);
 
   const handleVideoProgress = (progress: number) => {
@@ -115,8 +109,9 @@ export default function Course() {
   const handleQuizComplete = (score: number) => {
     if (courseState.currentActivity && courseState.currentModule) {
       completeActivity(courseState.currentActivity.id, courseState.currentModule.id);
+      setShowCompletionMessage(true);
+      setRedirectCountdown(5);
     }
-    setShowQuiz(false);
   };
 
   const toggleAudio = () => {
@@ -153,20 +148,20 @@ export default function Course() {
 
     const activity = courseState.currentActivity;
 
-    // Handle quiz activities
+    // Handle quiz activities - display in regular course layout
     if (activity.type === 'quiz') {
       if (activity.id === 8) { // Props Practice Quiz
         return (
-          <FullScreenLayout
-            title="Props Practice Quiz"
-            subtitle="Test your understanding of props and components"
-            onBack={() => setCurrentLayout('two-column')}
+          <TwoColumnLayout 
+            activity={activity}
           >
-            <QuizComponent
-              content={propsInDetailContent}
-              onComplete={handleQuizComplete}
-            />
-          </FullScreenLayout>
+            <div className="max-w-4xl mx-auto p-6">
+              <QuizComponent
+                content={propsInDetailContent}
+                onComplete={handleQuizComplete}
+              />
+            </div>
+          </TwoColumnLayout>
         );
       } else {
         // Generic quiz for other activities
@@ -194,16 +189,16 @@ export default function Course() {
         };
 
         return (
-          <FullScreenLayout
-            title={activity.title}
-            subtitle={activity.description || undefined}
-            onBack={() => setCurrentLayout('two-column')}
+          <TwoColumnLayout 
+            activity={activity}
           >
-            <QuizComponent
-              content={quizContent}
-              onComplete={handleQuizComplete}
-            />
-          </FullScreenLayout>
+            <div className="max-w-4xl mx-auto p-6">
+              <QuizComponent
+                content={quizContent}
+                onComplete={handleQuizComplete}
+              />
+            </div>
+          </TwoColumnLayout>
         );
       }
     }
@@ -262,10 +257,6 @@ export default function Course() {
       </TwoColumnLayout>
     );
   };
-
-  if (currentLayout === 'fullscreen') {
-    return renderActivityContent();
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
