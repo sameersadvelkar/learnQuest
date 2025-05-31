@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'wouter';
+import { useParams, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sidebar } from '@/components/Sidebar';
@@ -29,11 +29,14 @@ import {
 
 export default function Course() {
   const { courseId } = useParams();
+  const [location, setLocation] = useLocation();
   const { state: courseState, dispatch } = useCourse();
-  const { updateActivityProgress, completeActivity } = useProgressTracking();
+  const { updateActivityProgress, completeActivity, isActivityCompleted } = useProgressTracking();
   const { state: settings, dispatch: settingsDispatch } = useSettings();
   const [currentLayout, setCurrentLayout] = useState<'two-column' | 'fullscreen'>('two-column');
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showCompletionMessage, setShowCompletionMessage] = useState(false);
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
 
   useEffect(() => {
     // Initialize with sample course data
@@ -75,8 +78,38 @@ export default function Course() {
   const handleVideoComplete = () => {
     if (courseState.currentActivity && courseState.currentModule) {
       completeActivity(courseState.currentActivity.id, courseState.currentModule.id);
+      setShowCompletionMessage(true);
+      setRedirectCountdown(5);
     }
   };
+
+  // Auto-redirect countdown effect
+  useEffect(() => {
+    if (showCompletionMessage && redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showCompletionMessage && redirectCountdown === 0) {
+      // Find next activity
+      const currentActivityIndex = courseState.activities.findIndex(
+        a => a.id === courseState.currentActivity?.id
+      );
+      const nextActivity = courseState.activities[currentActivityIndex + 1];
+      
+      if (nextActivity) {
+        // Navigate to next activity
+        const nextModule = courseState.modules.find(m => m.id === nextActivity.moduleId);
+        if (nextModule) {
+          dispatch({ type: 'SET_CURRENT_MODULE', payload: nextModule });
+        }
+        dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: nextActivity });
+      }
+      
+      setShowCompletionMessage(false);
+      setRedirectCountdown(5);
+    }
+  }, [showCompletionMessage, redirectCountdown, courseState.activities, courseState.modules, courseState.currentActivity?.id, dispatch]);
 
   const handleQuizComplete = (score: number) => {
     if (courseState.currentActivity && courseState.currentModule) {
@@ -179,6 +212,8 @@ export default function Course() {
       return (
         <TwoColumnLayout 
           activity={activity}
+          onVideoProgress={handleVideoProgress}
+          onVideoComplete={handleVideoComplete}
         >
           <WhatIsReactPage />
         </TwoColumnLayout>
@@ -189,6 +224,8 @@ export default function Course() {
       return (
         <TwoColumnLayout 
           activity={activity}
+          onVideoProgress={handleVideoProgress}
+          onVideoComplete={handleVideoComplete}
         >
           <PropsInDetailPage />
         </TwoColumnLayout>
@@ -199,6 +236,8 @@ export default function Course() {
     return (
       <TwoColumnLayout 
         activity={activity}
+        onVideoProgress={handleVideoProgress}
+        onVideoComplete={handleVideoComplete}
       >
         <ModuleContent />
       </TwoColumnLayout>
@@ -253,9 +292,47 @@ export default function Course() {
       <div className="flex flex-1">
         <Sidebar />
         
-        <main className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col relative">
           {renderActivityContent()}
           <Navigation />
+          
+          {/* Video Completion Overlay */}
+          {showCompletionMessage && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-8 max-w-md mx-4 text-center shadow-xl">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Activity Completed!
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Great job! You've successfully completed this activity.
+                </p>
+                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                  <p className="text-blue-800 text-sm">
+                    Redirecting to next activity in <span className="font-bold text-blue-900">{redirectCountdown}</span> seconds
+                  </p>
+                  <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
+                      style={{ width: `${((5 - redirectCountdown) / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => {
+                    setShowCompletionMessage(false);
+                    setRedirectCountdown(5);
+                  }}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Stay on this page
+                </Button>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

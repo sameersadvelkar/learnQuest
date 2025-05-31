@@ -5,9 +5,11 @@ import { Activity } from '@shared/schema';
 interface TwoColumnLayoutProps {
   activity: Activity;
   children: React.ReactNode;
+  onVideoProgress?: (progress: number) => void;
+  onVideoComplete?: () => void;
 }
 
-export function TwoColumnLayout({ activity, children }: TwoColumnLayoutProps) {
+export function TwoColumnLayout({ activity, children, onVideoProgress, onVideoComplete }: TwoColumnLayoutProps) {
   return (
     <div className="flex-1 flex flex-col">
       {/* Video Section */}
@@ -16,6 +18,8 @@ export function TwoColumnLayout({ activity, children }: TwoColumnLayoutProps) {
           <VideoPlayer 
             url={activity.videoUrl}
             title={activity.title}
+            onProgress={onVideoProgress}
+            onComplete={onVideoComplete}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-900">
