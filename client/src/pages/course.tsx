@@ -215,6 +215,12 @@ export default function Course() {
           activity={activity}
           onVideoProgress={handleVideoProgress}
           onVideoComplete={handleVideoComplete}
+          showCompletionMessage={showCompletionMessage}
+          redirectCountdown={redirectCountdown}
+          onCancelRedirect={() => {
+            setShowCompletionMessage(false);
+            setRedirectCountdown(5);
+          }}
         >
           <WhatIsReactPage />
         </TwoColumnLayout>
@@ -227,6 +233,12 @@ export default function Course() {
           activity={activity}
           onVideoProgress={handleVideoProgress}
           onVideoComplete={handleVideoComplete}
+          showCompletionMessage={showCompletionMessage}
+          redirectCountdown={redirectCountdown}
+          onCancelRedirect={() => {
+            setShowCompletionMessage(false);
+            setRedirectCountdown(5);
+          }}
         >
           <PropsInDetailPage />
         </TwoColumnLayout>
@@ -239,6 +251,12 @@ export default function Course() {
         activity={activity}
         onVideoProgress={handleVideoProgress}
         onVideoComplete={handleVideoComplete}
+        showCompletionMessage={showCompletionMessage}
+        redirectCountdown={redirectCountdown}
+        onCancelRedirect={() => {
+          setShowCompletionMessage(false);
+          setRedirectCountdown(5);
+        }}
       >
         <ModuleContent />
       </TwoColumnLayout>
@@ -293,47 +311,9 @@ export default function Course() {
       <div className="flex flex-1">
         <Sidebar />
         
-        <main className="flex-1 flex flex-col relative">
+        <main className="flex-1 flex flex-col">
           {renderActivityContent()}
           <Navigation />
-          
-          {/* Video Completion Overlay */}
-          {showCompletionMessage && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-8 max-w-md mx-4 text-center shadow-xl">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  Activity Completed!
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Great job! You've successfully completed this activity.
-                </p>
-                <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                  <p className="text-blue-800 text-sm">
-                    Redirecting to next activity in <span className="font-bold text-blue-900">{redirectCountdown}</span> seconds
-                  </p>
-                  <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
-                      style={{ width: `${((5 - redirectCountdown) / 5) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <Button 
-                  onClick={() => {
-                    setShowCompletionMessage(false);
-                    setRedirectCountdown(5);
-                  }}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Stay on this page
-                </Button>
-              </div>
-            </div>
-          )}
         </main>
       </div>
     </div>
