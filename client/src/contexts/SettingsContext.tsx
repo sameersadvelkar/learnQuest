@@ -8,7 +8,6 @@ interface SettingsState {
   notifications: boolean;
   autoplay: boolean;
   playbackSpeed: number;
-  theme: 'light' | 'dark' | 'system';
 }
 
 type SettingsAction =
@@ -18,7 +17,6 @@ type SettingsAction =
   | { type: 'TOGGLE_NOTIFICATIONS' }
   | { type: 'TOGGLE_AUTOPLAY' }
   | { type: 'SET_PLAYBACK_SPEED'; payload: number }
-  | { type: 'SET_THEME'; payload: SettingsState['theme'] }
   | { type: 'LOAD_SETTINGS'; payload: Partial<SettingsState> }
   | { type: 'RESET_SETTINGS' };
 
@@ -29,7 +27,7 @@ const initialState: SettingsState = {
   notifications: true,
   autoplay: false,
   playbackSpeed: 1.0,
-  theme: 'system',
+
 };
 
 function settingsReducer(state: SettingsState, action: SettingsAction): SettingsState {
@@ -52,8 +50,7 @@ function settingsReducer(state: SettingsState, action: SettingsAction): Settings
     case 'SET_PLAYBACK_SPEED':
       return { ...state, playbackSpeed: action.payload };
     
-    case 'SET_THEME':
-      return { ...state, theme: action.payload };
+
     
     case 'LOAD_SETTINGS':
       return { ...state, ...action.payload };
@@ -100,23 +97,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [state, isInitialized]);
 
-  // Apply theme to document
-  useEffect(() => {
-    const root = document.documentElement;
-    if (state.theme === 'dark') {
-      root.classList.add('dark');
-    } else if (state.theme === 'light') {
-      root.classList.remove('dark');
-    } else {
-      // System theme
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    }
-  }, [state.theme]);
+
 
   return (
     <SettingsContext.Provider value={{ state, dispatch }}>
