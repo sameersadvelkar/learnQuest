@@ -37,11 +37,23 @@ export function AccordionNavigation() {
     const activity = courseState.activities.find(a => a.id === activityId);
     if (activity) {
       dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: activity });
-      // Find the activity index to set current page
-      const activityIndex = courseState.activities.findIndex(a => a.id === activityId);
+      
+      // Calculate correct page number based on module structure
+      let pageNumber = 1;
+      const sortedActivities = courseState.activities
+        .sort((a, b) => {
+          if (a.moduleId !== b.moduleId) {
+            return a.moduleId - b.moduleId;
+          }
+          return a.orderIndex - b.orderIndex;
+        });
+      
+      const activityIndex = sortedActivities.findIndex(a => a.id === activityId);
       if (activityIndex !== -1) {
-        dispatch({ type: 'SET_CURRENT_PAGE', payload: activityIndex + 1 });
+        pageNumber = activityIndex + 1;
       }
+      
+      dispatch({ type: 'SET_CURRENT_PAGE', payload: pageNumber });
     }
   };
 

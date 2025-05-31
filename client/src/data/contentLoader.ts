@@ -88,7 +88,12 @@ export class ContentLoader {
         isLocked: activityData.isLocked || false,
         description: activityData.description || null
       };
-      this.activities.push(activity);
+      
+      // Check for duplicates before adding
+      const existingActivity = this.activities.find(a => a.id === activity.id);
+      if (!existingActivity) {
+        this.activities.push(activity);
+      }
     } catch (error) {
       console.error(`Error loading activity ${activityFile}:`, error);
     }

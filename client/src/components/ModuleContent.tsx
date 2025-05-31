@@ -2,9 +2,12 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { VideoPlayer } from '@/components/VideoPlayer';
+import { ImageDisplay } from '@/components/ImageDisplay';
+import { QuizComponent } from '@/components/QuizComponent';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
-import { Video, BookOpen, CheckCircle, PlayCircle, Award } from 'lucide-react';
+import { Video, BookOpen, CheckCircle, PlayCircle, Award, Image } from 'lucide-react';
 
 export function ModuleContent() {
   const { state: courseState } = useCourse();
@@ -21,6 +24,116 @@ export function ModuleContent() {
 
   const handleCompleteActivity = () => {
     completeActivity(currentActivity.id, currentModule.id);
+  };
+
+  const renderActivityContent = () => {
+    const content = currentActivity.content as any;
+    
+    // Handle different activity types
+    switch (currentActivity.type) {
+      case 'video':
+        if (currentActivity.videoUrl) {
+          return (
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  <Video className="w-5 h-5 mr-2" />
+                  Video Content
+                </h3>
+                <VideoPlayer
+                  url={currentActivity.videoUrl}
+                  title={currentActivity.title}
+                  onComplete={handleCompleteActivity}
+                />
+              </CardContent>
+            </Card>
+          );
+        }
+        break;
+        
+      case 'quiz':
+        if (content && content.type === 'quiz') {
+          return (
+            <Card>
+              <CardContent className="p-6">
+                <QuizComponent
+                  content={content}
+                  onComplete={(score) => {
+                    console.log('Quiz completed with score:', score);
+                    handleCompleteActivity();
+                  }}
+                />
+              </CardContent>
+            </Card>
+          );
+        }
+        break;
+        
+      case 'reading':
+        return (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <BookOpen className="w-5 h-5 mr-2" />
+                Reading Material
+              </h3>
+              {renderReadingContent(content)}
+            </CardContent>
+          </Card>
+        );
+        
+      default:
+        // For other activity types, show a placeholder with activity info
+        return (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">
+                {currentActivity.type.charAt(0).toUpperCase() + currentActivity.type.slice(1)} Activity
+              </h3>
+              <p className="text-gray-600 mb-4">
+                This is a {currentActivity.type} activity. Duration: {currentActivity.duration} minutes.
+              </p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-500">
+                  Activity content will be displayed here based on the activity type and configuration.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+    }
+    
+    return null;
+  };
+
+  const renderReadingContent = (content: any) => {
+    if (content && content.type === 'tabbed_content' && content.tabs) {
+      return (
+        <div className="space-y-4">
+          {content.tabs.map((tab: any, index: number) => (
+            <div key={tab.id || index} className="border border-gray-200 rounded-lg p-4">
+              <h4 className="font-medium text-gray-900 mb-2">{tab.title}</h4>
+              {tab.content?.type === 'markdown' && (
+                <div className="prose max-w-none">
+                  <pre className="whitespace-pre-wrap text-sm">{tab.content.text}</pre>
+                </div>
+              )}
+              {tab.content?.type === 'code_example' && (
+                <div className="bg-gray-900 text-green-400 p-4 rounded-md font-mono text-sm overflow-x-auto">
+                  <pre>{tab.content.code}</pre>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="text-gray-600">
+        <p>Reading content will be displayed here.</p>
+      </div>
+    );
   };
 
   return (
@@ -71,6 +184,9 @@ export function ModuleContent() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Main Content */}
+      {renderActivityContent()}
 
       {/* Key Takeaways */}
       <Card className="bg-amber-50 border-amber-200">
