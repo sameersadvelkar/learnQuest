@@ -49,6 +49,30 @@ export function ModuleContent() {
               </CardContent>
             </Card>
           );
+        } else {
+          return (
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <PlayCircle className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {currentActivity.title}
+                  </h3>
+                  <p className="text-gray-600 max-w-md mx-auto">
+                    {currentActivity.description || 'This lesson content is being prepared. Check back soon for updates.'}
+                  </p>
+                  <Button 
+                    onClick={handleCompleteActivity}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700"
+                  >
+                    Mark as Complete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
         }
         break;
         
@@ -166,10 +190,48 @@ export function ModuleContent() {
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-            <Video className="w-4 h-4 mr-1" />
-            Video
-          </Badge>
+          {(() => {
+            const getActivityBadge = () => {
+              switch (currentActivity.type) {
+                case 'video':
+                  return (
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200">
+                      <Video className="w-4 h-4 mr-1" />
+                      Video
+                    </Badge>
+                  );
+                case 'quiz':
+                  return (
+                    <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200">
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Quiz
+                    </Badge>
+                  );
+                case 'reading':
+                  return (
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                      <BookOpen className="w-4 h-4 mr-1" />
+                      Reading
+                    </Badge>
+                  );
+                case 'image':
+                  return (
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
+                      <Image className="w-4 h-4 mr-1" />
+                      Image
+                    </Badge>
+                  );
+                default:
+                  return (
+                    <Badge variant="secondary" className="bg-gray-100 text-gray-800 border-gray-200">
+                      <PlayCircle className="w-4 h-4 mr-1" />
+                      {currentActivity.type.charAt(0).toUpperCase() + currentActivity.type.slice(1)}
+                    </Badge>
+                  );
+              }
+            };
+            return getActivityBadge();
+          })()}
           {isCompleted ? (
             <Badge className="bg-green-600 text-white">
               <CheckCircle className="w-4 h-4 mr-1" />
