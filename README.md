@@ -62,6 +62,7 @@ npm run dev - Start backend server
 npm run build - Build for production
 npm run start - Run production server
 npm run check - TypeScript type checking
+
 Project Structure
 LearnQuest/
 ├── client/                 # React frontend
@@ -76,6 +77,8 @@ LearnQuest/
 │   └── storage.ts         # Data storage layer
 ├── shared/                 # Shared types and schemas
 └── attached_assets/        # Static assets
+
+
 Key Features
 Sequential Module Progression
 Students must complete all activities in Module 1 before accessing Module 2
