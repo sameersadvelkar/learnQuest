@@ -4,7 +4,7 @@
   "title": "Introduction to React",
   "description": "Learn the fundamentals of React",
   "orderIndex": 0,
-  "totalActivities": 4,
+  "totalActivities": 5,
   "isLocked": false,
-  "activities": ["activity-1", "activity-2", "activity-3", "activity-4"]
+  "activities": ["activity-1", "activity-2", "activity-3", "activity-4", "activity-5"]
 }

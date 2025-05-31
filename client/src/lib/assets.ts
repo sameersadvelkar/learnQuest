@@ -43,7 +43,7 @@ export const createAssetUrl = async (type: AssetType, filename: string): Promise
     const assetPath = `/src/assets/${type}s/${filename}`;
     
     if (modules[assetPath]) {
-      const url = await modules[assetPath]();
+      const url = await modules[assetPath]() as string;
       return url;
     }
     
