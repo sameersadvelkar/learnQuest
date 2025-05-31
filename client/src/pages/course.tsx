@@ -22,8 +22,7 @@ import { PropsInDetailPage } from '@/data/modules/module-2/activities/activity-1
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { useSettings } from '@/contexts/SettingsContext';
-import { sampleCourse, sampleModules, sampleActivities } from '@/data/courseContent';
-import { propsInDetailContent } from '@/data/modules/module-2/activities/activity-1/page-1/content';
+import { contentLoader } from '@/data/contentLoader';
 import { 
   Settings, 
   HelpCircle,
@@ -50,22 +49,34 @@ export default function Course() {
   const [redirectCountdown, setRedirectCountdown] = useState(5);
 
   useEffect(() => {
-    // Initialize with sample course data
+    // Initialize with file-based content
     if (!courseState.currentCourse) {
-      dispatch({ type: 'SET_COURSE', payload: sampleCourse });
-      dispatch({ type: 'SET_MODULES', payload: sampleModules });
-      dispatch({ type: 'SET_ACTIVITIES', payload: sampleActivities });
+      const loadContent = async () => {
+        try {
+          const { courses, modules, activities } = await contentLoader.loadAllContent();
+          
+          if (courses.length > 0) {
+            dispatch({ type: 'SET_COURSE', payload: courses[0] });
+          }
+          dispatch({ type: 'SET_MODULES', payload: modules });
+          dispatch({ type: 'SET_ACTIVITIES', payload: activities });
+          
+          // Set initial current module and activity
+          const firstModule = modules[0];
+          const firstActivity = activities.find(a => a.moduleId === firstModule?.id);
+          
+          if (firstModule) {
+            dispatch({ type: 'SET_CURRENT_MODULE', payload: firstModule });
+          }
+          if (firstActivity) {
+            dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: firstActivity });
+          }
+        } catch (error) {
+          console.error('Error loading course content:', error);
+        }
+      };
       
-      // Set initial current module and activity
-      const firstModule = sampleModules[0];
-      const firstActivity = sampleActivities.find(a => a.moduleId === firstModule.id);
-      
-      if (firstModule) {
-        dispatch({ type: 'SET_CURRENT_MODULE', payload: firstModule });
-      }
-      if (firstActivity) {
-        dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: firstActivity });
-      }
+      loadContent();
     }
   }, [courseState.currentCourse, dispatch]);
 

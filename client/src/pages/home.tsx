@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
-import { sampleCourse, sampleModules, sampleActivities } from '@/data/courseContent';
+import { contentLoader } from '@/data/contentLoader';
 import { 
   BookOpen, 
   Clock, 
@@ -23,10 +23,21 @@ export default function Home() {
   const { progressState, getCourseProgress } = useProgressTracking();
 
   useEffect(() => {
-    // Initialize with sample course data
-    dispatch({ type: 'SET_COURSE', payload: sampleCourse });
-    dispatch({ type: 'SET_MODULES', payload: sampleModules });
-    dispatch({ type: 'SET_ACTIVITIES', payload: sampleActivities });
+    // Initialize with file-based content
+    const loadContent = async () => {
+      try {
+        const { courses, modules, activities } = await contentLoader.loadAllContent();
+        if (courses.length > 0) {
+          dispatch({ type: 'SET_COURSE', payload: courses[0] });
+        }
+        dispatch({ type: 'SET_MODULES', payload: modules });
+        dispatch({ type: 'SET_ACTIVITIES', payload: activities });
+      } catch (error) {
+        console.error('Error loading content:', error);
+      }
+    };
+    
+    loadContent();
   }, [dispatch]);
 
   const courseProgress = getCourseProgress();

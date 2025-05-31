@@ -1,0 +1,12 @@
+{
+  "id": 3,
+  "moduleId": 1,
+  "title": "First Component",
+  "description": "Create your first React component",
+  "type": "video",
+  "orderIndex": 2,
+  "content": null,
+  "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "duration": 18,
+  "isLocked": false
+}
