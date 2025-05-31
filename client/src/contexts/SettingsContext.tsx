@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface SettingsState {
@@ -73,19 +73,32 @@ const SettingsContext = createContext<{
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(settingsReducer, initialState);
-  const [storedSettings, setStoredSettings] = useLocalStorage('lms-settings', {});
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
-    if (storedSettings && Object.keys(storedSettings).length > 0) {
-      dispatch({ type: 'LOAD_SETTINGS', payload: storedSettings });
+    try {
+      const stored = localStorage.getItem('lms-settings');
+      if (stored) {
+        const settingsData = JSON.parse(stored);
+        dispatch({ type: 'LOAD_SETTINGS', payload: settingsData });
+      }
+    } catch (error) {
+      console.error('Error loading settings from localStorage:', error);
     }
-  }, [storedSettings]);
+    setIsInitialized(true);
+  }, []);
 
   // Save settings to localStorage when state changes
   useEffect(() => {
-    setStoredSettings(state);
-  }, [state, setStoredSettings]);
+    if (isInitialized) {
+      try {
+        localStorage.setItem('lms-settings', JSON.stringify(state));
+      } catch (error) {
+        console.error('Error saving settings to localStorage:', error);
+      }
+    }
+  }, [state, isInitialized]);
 
   // Apply theme to document
   useEffect(() => {

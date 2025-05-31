@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
 import { UserProgress, Achievement } from '@shared/schema';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -115,33 +115,43 @@ const ProgressContext = createContext<{
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(progressReducer, initialState);
-  const [storedProgress, setStoredProgress] = useLocalStorage('course-progress', {});
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load progress from localStorage on mount
   useEffect(() => {
-    if (storedProgress && Object.keys(storedProgress).length > 0) {
-      dispatch({ 
-        type: 'LOAD_PROGRESS', 
-        payload: {
-          ...storedProgress,
-          completedActivities: new Set(storedProgress.completedActivities || []),
-          lastActivity: storedProgress.lastActivity ? new Date(storedProgress.lastActivity) : null,
-        }
-      });
+    try {
+      const stored = localStorage.getItem('course-progress');
+      if (stored) {
+        const progressData = JSON.parse(stored);
+        dispatch({ 
+          type: 'LOAD_PROGRESS', 
+          payload: {
+            ...progressData,
+            completedActivities: new Set(progressData.completedActivities || []),
+            lastActivity: progressData.lastActivity ? new Date(progressData.lastActivity) : null,
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading progress from localStorage:', error);
     }
-  }, []); // Only run on mount
+    setIsInitialized(true);
+  }, []);
 
   // Save progress to localStorage when state changes
   useEffect(() => {
-    // Skip saving on initial load to prevent infinite loop
-    if (state.completedActivities.size > 0 || state.totalPoints > 0) {
-      const progressToSave = {
-        ...state,
-        completedActivities: Array.from(state.completedActivities),
-      };
-      setStoredProgress(progressToSave);
+    if (isInitialized) {
+      try {
+        const progressToSave = {
+          ...state,
+          completedActivities: Array.from(state.completedActivities),
+        };
+        localStorage.setItem('course-progress', JSON.stringify(progressToSave));
+      } catch (error) {
+        console.error('Error saving progress to localStorage:', error);
+      }
     }
-  }, [state.completedActivities.size, state.totalPoints, state.streak, state.earnedAchievements.length, setStoredProgress]);
+  }, [state, isInitialized]);
 
   return (
     <ProgressContext.Provider value={{ state, dispatch }}>
