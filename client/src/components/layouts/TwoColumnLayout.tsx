@@ -35,14 +35,14 @@ export function TwoColumnLayout({
             onComplete={onVideoComplete}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
-            <div className="text-center text-white max-w-md px-6">
-              <div className="w-20 h-20 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <BookOpen className="w-10 h-10 text-white" />
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="text-center text-gray-600 max-w-md px-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
+                <BookOpen className="w-8 h-8 text-gray-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-3">{activity.title}</h2>
-              <p className="text-blue-100 text-lg leading-relaxed">
-                {activity.description || 'Explore this lesson to learn new concepts and skills that will advance your understanding.'}
+              <h3 className="text-lg font-medium mb-2">Ready to Learn</h3>
+              <p className="text-gray-500">
+                Content for this activity is available below
               </p>
             </div>
           </div>
