@@ -20,10 +20,18 @@ const activityIcons = {
 
 export function AccordionNavigation() {
   const { state: courseState, dispatch } = useCourse();
-  const { progressState } = useProgressTracking();
+  const { progressState, isModuleLocked, getModuleStatus } = useProgressTracking();
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set([1])); // First module expanded by default
 
   const toggleModule = (moduleId: number) => {
+    const module = courseState.modules.find(m => m.id === moduleId);
+    if (!module) return;
+    
+    // Don't allow expanding locked modules
+    if (isModuleLocked(moduleId, module.orderIndex)) {
+      return;
+    }
+    
     const newExpanded = new Set(expandedModules);
     if (newExpanded.has(moduleId)) {
       newExpanded.delete(moduleId);
@@ -35,26 +43,53 @@ export function AccordionNavigation() {
 
   const handleActivityClick = (activityId: number) => {
     const activity = courseState.activities.find(a => a.id === activityId);
-    if (activity) {
-      dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: activity });
-      
-      // Calculate correct page number based on module structure
-      let pageNumber = 1;
-      const sortedActivities = courseState.activities
-        .sort((a, b) => {
-          if (a.moduleId !== b.moduleId) {
-            return a.moduleId - b.moduleId;
-          }
-          return a.orderIndex - b.orderIndex;
-        });
-      
-      const activityIndex = sortedActivities.findIndex(a => a.id === activityId);
-      if (activityIndex !== -1) {
-        pageNumber = activityIndex + 1;
-      }
-      
-      dispatch({ type: 'SET_CURRENT_PAGE', payload: pageNumber });
+    if (!activity) return;
+    
+    const module = courseState.modules.find(m => m.id === activity.moduleId);
+    if (!module) return;
+    
+    // Check if the module is locked
+    if (isModuleLocked(activity.moduleId, module.orderIndex)) {
+      return; // Don't allow access to locked module activities
     }
+    
+    // Check if this is the first activity and force progression from module 1
+    const isFirstModule = module.orderIndex === 0;
+    if (!isFirstModule) {
+      // Check if previous modules are completed
+      const previousModule = courseState.modules.find(m => m.orderIndex === module.orderIndex - 1);
+      if (previousModule) {
+        const previousModuleActivities = courseState.activities
+          .filter(a => a.moduleId === previousModule.id)
+          .map(a => a.id);
+        const previousModuleCompleted = previousModuleActivities.every(id => 
+          progressState.completedActivities.has(id)
+        );
+        
+        if (!previousModuleCompleted) {
+          return; // Don't allow access if previous module isn't completed
+        }
+      }
+    }
+    
+    dispatch({ type: 'SET_CURRENT_ACTIVITY', payload: activity });
+    
+    // Calculate correct page number based on module structure
+    let pageNumber = 1;
+    const sortedActivities = courseState.activities
+      .sort((a, b) => {
+        if (a.moduleId !== b.moduleId) {
+          return a.moduleId - b.moduleId;
+        }
+        return a.orderIndex - b.orderIndex;
+      });
+    
+    const activityIndex = sortedActivities.findIndex(a => a.id === activityId);
+    if (activityIndex !== -1) {
+      pageNumber = activityIndex + 1;
+    }
+    
+    dispatch({ type: 'SET_CURRENT_PAGE', payload: pageNumber });
   };
 
   const getActivityStatus = (activityId: number) => {
@@ -112,15 +147,26 @@ export function AccordionNavigation() {
         const completedActivities = activities.filter(a => progressState.completedActivities.has(a.id)).length;
         const totalActivities = activities.length;
         const moduleProgress = totalActivities > 0 ? (completedActivities / totalActivities) * 100 : 0;
+        const moduleStatus = getModuleStatus(module.id, module.orderIndex);
+        const isLocked = moduleStatus === 'locked';
 
         return (
-          <div key={module.id} className="border border-sidebar-border rounded-lg overflow-hidden bg-sidebar">
+          <div key={module.id} className={cn(
+            "border border-sidebar-border rounded-lg overflow-hidden bg-sidebar",
+            isLocked && "opacity-50"
+          )}>
             {/* Module Header */}
             <button
               onClick={() => toggleModule(module.id)}
-              className="w-full px-4 py-3 flex items-center justify-between hover:bg-sidebar/50 transition-colors"
+              className={cn(
+                "w-full px-4 py-3 flex items-center justify-between transition-colors",
+                isLocked 
+                  ? "cursor-not-allowed" 
+                  : "hover:bg-sidebar/50"
+              )}
               aria-expanded={isExpanded}
               aria-controls={`module-${module.id}-content`}
+              disabled={isLocked}
             >
               <div className="flex items-center space-x-3 flex-1">
                 <div className="flex-shrink-0">
@@ -158,15 +204,18 @@ export function AccordionNavigation() {
                     {activities.map((activity) => {
                       const status = getActivityStatus(activity.id);
                       const IconComponent = activityIcons[activity.type as keyof typeof activityIcons] || FileText;
+                      const isActivityLocked = isLocked;
                       
                       return (
                         <button
                           key={activity.id}
                           onClick={() => handleActivityClick(activity.id)}
+                          disabled={isActivityLocked}
                           className={cn(
                             "w-full p-3 rounded-md border text-left transition-all duration-200 flex items-center space-x-3",
                             getStatusColors(status),
-                            courseState.currentActivity?.id === activity.id && "ring-2 ring-primary/20"
+                            courseState.currentActivity?.id === activity.id && "ring-2 ring-primary/20",
+                            isActivityLocked && "cursor-not-allowed opacity-60"
                           )}
                         >
                           <div className="flex-shrink-0">
