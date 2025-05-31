@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Sidebar } from '@/components/Sidebar';
 import { ModuleContent } from '@/components/ModuleContent';
 import { Navigation } from '@/components/Navigation';
 import { TwoColumnLayout } from '@/components/layouts/TwoColumnLayout';
@@ -249,10 +250,14 @@ export default function Course() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col">
-        {renderActivityContent()}
-        <Navigation />
-      </main>
+      <div className="flex flex-1">
+        <Sidebar />
+        
+        <main className="flex-1 flex flex-col">
+          {renderActivityContent()}
+          <Navigation />
+        </main>
+      </div>
     </div>
   );
 }
