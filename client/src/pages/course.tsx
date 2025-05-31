@@ -323,12 +323,6 @@ export default function Course() {
           <h2 className="text-xl font-semibold text-gray-900">
             TechEdu Institute
           </h2>
-          {courseState.currentActivity && (
-            <Badge variant="secondary" className="flex items-center space-x-1">
-              {getActivityIcon(courseState.currentActivity.type)}
-              <span className="capitalize">{courseState.currentActivity.type}</span>
-            </Badge>
-          )}
         </div>
         
         <div className="flex items-center space-x-3">
