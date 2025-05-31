@@ -17,8 +17,7 @@ import { TwoColumnLayout } from '@/components/layouts/TwoColumnLayout';
 import { FullScreenLayout } from '@/components/layouts/FullScreenLayout';
 import { ProgressTracker } from '@/components/ProgressTracker';
 import { QuizComponent } from '@/components/QuizComponent';
-import { WhatIsReactPage } from '@/data/modules/module-1/activities/activity-1/page-1/Page';
-import { PropsInDetailPage } from '@/data/modules/module-2/activities/activity-1/page-1/Page';
+
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -186,7 +185,7 @@ export default function Course() {
           >
             <div className="max-w-4xl mx-auto p-6">
               <QuizComponent
-                content={propsInDetailContent}
+                content={quizContent}
                 onComplete={handleQuizComplete}
               />
             </div>
