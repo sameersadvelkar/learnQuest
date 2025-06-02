@@ -60,9 +60,13 @@ Option 2: Using concurrently (recommended)
 
 Open your browser to http://localhost:5173
 Development Scripts
+
 ```npm run dev - Start backend server```
+
 ```npm run build - Build for production```
+
 ```npm run start - Run production server```
+
 ```npm run check - TypeScript type checking```
 
 ```Project Structure
