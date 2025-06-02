@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useCourse } from '@/contexts/CourseContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { contentLoader } from '@/data/contentLoader';
 import { 
@@ -15,11 +17,16 @@ import {
   CheckCircle,
   Star,
   TrendingUp,
-  Users
+  Users,
+  LogOut,
+  User,
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 
 export default function Home() {
   const { state: courseState, dispatch } = useCourse();
+  const { state: authState, logout } = useAuth();
   const { progressState, getCourseProgress } = useProgressTracking();
 
   useEffect(() => {
@@ -65,9 +72,38 @@ export default function Home() {
                 {progressState.totalPoints} pts
               </span>
             </div>
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
-              U
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-2 h-10">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
+                    {authState.user?.username?.charAt(0).toUpperCase() || 'S'}
+                  </div>
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium">{authState.user?.username || 'Student'}</p>
+                    <p className="text-xs text-muted-foreground">{authState.user?.email || 'student@example.com'}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <User className="w-4 h-4 mr-2" />
+                  Profile Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Globe className="w-4 h-4 mr-2" />
+                  Language: English
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout} className="text-red-600">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>

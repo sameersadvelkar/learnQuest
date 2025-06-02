@@ -2,12 +2,36 @@ import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizz
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const schools = pgTable("schools", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  logo: text("logo"),
+  adminName: text("admin_name"),
+  adminPassword: text("admin_password"),
+  address: text("address"),
+  city: text("city"),
+  state: text("state"),
+  pincode: text("pincode"),
+  studentsCount: integer("students_count").default(0),
+  coursesCount: integer("courses_count").default(0),
+  isWhiteLabelEnabled: boolean("is_white_label_enabled").default(false),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  role: text("role", { enum: ["student", "admin", "super_admin"] })
+    .default("student")
+    .notNull(),
+  schoolId: integer("school_id").references(() => schools.id),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const courses = pgTable("courses", {
@@ -17,6 +41,9 @@ export const courses = pgTable("courses", {
   totalModules: integer("total_modules").notNull(),
   totalPages: integer("total_pages").notNull(),
   estimatedDuration: integer("estimated_duration").notNull(), // in minutes
+  difficulty: text("difficulty").default("Beginner"),
+  prerequisites: text("prerequisites").array(),
+  learningObjectives: text("learning_objectives").array(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -41,6 +68,29 @@ export const activities = pgTable("activities", {
   videoUrl: text("video_url"),
   duration: integer("duration"), // in minutes
   isLocked: boolean("is_locked").default(false),
+});
+
+export const schoolCourses = pgTable("school_courses", {
+  id: serial("id").primaryKey(),
+  schoolId: integer("school_id")
+    .notNull()
+    .references(() => schools.id),
+  courseId: integer("course_id")
+    .notNull()
+    .references(() => courses.id),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(),
+});
+
+export const studentCourses = pgTable("student_courses", {
+  id: serial("id").primaryKey(),
+  studentId: integer("student_id")
+    .notNull()
+    .references(() => users.id),
+  courseId: integer("course_id")
+    .notNull()
+    .references(() => courses.id),
+  assignedBy: integer("assigned_by").references(() => users.id),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(),
 });
 
 export const userProgress = pgTable("user_progress", {
@@ -80,7 +130,32 @@ export const userSettings = pgTable("user_settings", {
   notifications: boolean("notifications").default(true),
 });
 
+export const supportRequests = pgTable("support_requests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  schoolId: integer("school_id").references(() => schools.id),
+  subject: text("subject").notNull(),
+  message: text("message").notNull(),
+  priority: text("priority", { enum: ["low", "medium", "high", "urgent"] })
+    .default("medium")
+    .notNull(),
+  status: text("status", {
+    enum: ["open", "in_progress", "resolved", "closed"],
+  })
+    .default("open")
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
+export const insertSchoolSchema = createInsertSchema(schools).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -99,6 +174,18 @@ export const insertActivitySchema = createInsertSchema(activities).omit({
   id: true,
 });
 
+export const insertSchoolCourseSchema = createInsertSchema(schoolCourses).omit({
+  id: true,
+  assignedAt: true,
+});
+
+export const insertStudentCourseSchema = createInsertSchema(
+  studentCourses
+).omit({
+  id: true,
+  assignedAt: true,
+});
+
 export const insertUserProgressSchema = createInsertSchema(userProgress).omit({
   id: true,
 });
@@ -107,7 +194,9 @@ export const insertAchievementSchema = createInsertSchema(achievements).omit({
   id: true,
 });
 
-export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+export const insertUserAchievementSchema = createInsertSchema(
+  userAchievements
+).omit({
   id: true,
 });
 
@@ -115,7 +204,18 @@ export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   id: true,
 });
 
+export const insertSupportRequestSchema = createInsertSchema(
+  supportRequests
+).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
+export type School = typeof schools.$inferSelect;
+export type InsertSchool = z.infer<typeof insertSchoolSchema>;
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
@@ -128,6 +228,12 @@ export type InsertModule = z.infer<typeof insertModuleSchema>;
 export type Activity = typeof activities.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
 
+export type SchoolCourse = typeof schoolCourses.$inferSelect;
+export type InsertSchoolCourse = z.infer<typeof insertSchoolCourseSchema>;
+
+export type StudentCourse = typeof studentCourses.$inferSelect;
+export type InsertStudentCourse = z.infer<typeof insertStudentCourseSchema>;
+
 export type UserProgress = typeof userProgress.$inferSelect;
 export type InsertUserProgress = z.infer<typeof insertUserProgressSchema>;
 
@@ -139,6 +245,9 @@ export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
 
 export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
+
+export type SupportRequest = typeof supportRequests.$inferSelect;
+export type InsertSupportRequest = z.infer<typeof insertSupportRequestSchema>;
 
 // Content schemas for YAML/JSON validation
 export const pageContentSchema = z.object({
