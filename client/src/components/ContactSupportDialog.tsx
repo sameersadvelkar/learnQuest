@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { MessageCircle, Send, CheckCircle } from 'lucide-react';
+import { MessageCircle, Send, CheckCircle, Headphones } from 'lucide-react';
 
 interface ContactSupportDialogProps {
   trigger?: React.ReactNode;
@@ -61,8 +61,8 @@ export function ContactSupportDialog({ trigger }: ContactSupportDialogProps) {
   };
 
   const defaultTrigger = (
-    <Button variant="outline" size="sm">
-      <MessageCircle className="w-4 h-4 mr-2" />
+    <Button className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl px-4 py-2 font-medium">
+      <Headphones className="w-4 h-4 mr-2" />
       Contact Support
     </Button>
   );
@@ -153,12 +153,14 @@ export function ContactSupportDialog({ trigger }: ContactSupportDialogProps) {
             <Button 
               type="button" 
               variant="outline" 
+              className="border-2 hover:bg-green-50"
+              style={{ borderColor: '#05aa6d', color: '#05aa6d' }}
               onClick={() => setIsOpen(false)}
               disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

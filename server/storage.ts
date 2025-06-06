@@ -1,26 +1,15 @@
 import type {
-  School,
-  InsertSchool,
-  User,
-  InsertUser,
-  Course,
-  InsertCourse,
-  Module,
-  InsertModule,
-  Activity,
-  InsertActivity,
-  SchoolCourse,
-  InsertSchoolCourse,
-  StudentCourse,
-  InsertStudentCourse,
-  UserProgress,
-  InsertUserProgress,
-  Achievement,
-  InsertAchievement,
-  UserAchievement,
-  InsertUserAchievement,
-  UserSettings,
-  InsertUserSettings,
+  School, InsertSchool,
+  User, InsertUser,
+  Course, InsertCourse,
+  Module, InsertModule,
+  Activity, InsertActivity,
+  SchoolCourse, InsertSchoolCourse,
+  StudentCourse, InsertStudentCourse,
+  UserProgress, InsertUserProgress,
+  Achievement, InsertAchievement,
+  UserAchievement, InsertUserAchievement,
+  UserSettings, InsertUserSettings
 } from "@shared/schema";
 
 export interface IStorage {
@@ -28,10 +17,7 @@ export interface IStorage {
   getAllSchools(): Promise<School[]>;
   getSchool(id: number): Promise<School | undefined>;
   createSchool(school: InsertSchool): Promise<School>;
-  updateSchool(
-    id: number,
-    updates: Partial<School>
-  ): Promise<School | undefined>;
+  updateSchool(id: number, updates: Partial<School>): Promise<School | undefined>;
 
   // User methods
   getUser(id: number): Promise<User | undefined>;
@@ -45,33 +31,17 @@ export interface IStorage {
   getAllCourses(): Promise<Course[]>;
   getCourse(id: number): Promise<Course | undefined>;
   createCourse(course: InsertCourse): Promise<Course>;
-  updateCourse(
-    id: number,
-    updates: Partial<Course>
-  ): Promise<Course | undefined>;
+  updateCourse(id: number, updates: Partial<Course>): Promise<Course | undefined>;
 
   // School-Course assignment methods
   getSchoolCourses(schoolId: number): Promise<Course[]>;
-  assignCourseToSchool(
-    schoolId: number,
-    courseId: number
-  ): Promise<SchoolCourse>;
-  unassignCourseFromSchool(
-    schoolId: number,
-    courseId: number
-  ): Promise<boolean>;
+  assignCourseToSchool(schoolId: number, courseId: number): Promise<SchoolCourse>;
+  unassignCourseFromSchool(schoolId: number, courseId: number): Promise<boolean>;
 
   // Student-Course assignment methods
   getStudentCourses(studentId: number): Promise<Course[]>;
-  assignCourseToStudent(
-    studentId: number,
-    courseId: number,
-    assignedBy: number
-  ): Promise<StudentCourse>;
-  unassignCourseFromStudent(
-    studentId: number,
-    courseId: number
-  ): Promise<boolean>;
+  assignCourseToStudent(studentId: number, courseId: number, assignedBy: number): Promise<StudentCourse>;
+  unassignCourseFromStudent(studentId: number, courseId: number): Promise<boolean>;
 
   // Module methods
   getModulesByCourse(courseId: number): Promise<Module[]>;
@@ -84,30 +54,19 @@ export interface IStorage {
 
   // Progress methods
   getUserProgress(userId: number): Promise<UserProgress[]>;
-  getUserProgressForCourse(
-    userId: number,
-    courseId: number
-  ): Promise<UserProgress[]>;
+  getUserProgressForCourse(userId: number, courseId: number): Promise<UserProgress[]>;
   createUserProgress(progress: InsertUserProgress): Promise<UserProgress>;
-  updateUserProgress(
-    id: number,
-    updates: Partial<UserProgress>
-  ): Promise<UserProgress | undefined>;
+  updateUserProgress(id: number, updates: Partial<UserProgress>): Promise<UserProgress | undefined>;
 
   // Achievement methods
   getAllAchievements(): Promise<Achievement[]>;
   getUserAchievements(userId: number): Promise<UserAchievement[]>;
-  createUserAchievement(
-    userAchievement: InsertUserAchievement
-  ): Promise<UserAchievement>;
+  createUserAchievement(userAchievement: InsertUserAchievement): Promise<UserAchievement>;
 
   // Settings methods
   getUserSettings(userId: number): Promise<UserSettings | undefined>;
   createUserSettings(settings: InsertUserSettings): Promise<UserSettings>;
-  updateUserSettings(
-    userId: number,
-    updates: Partial<UserSettings>
-  ): Promise<UserSettings | undefined>;
+  updateUserSettings(userId: number, updates: Partial<UserSettings>): Promise<UserSettings | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -150,7 +109,7 @@ export class MemStorage implements IStorage {
       schoolId: null,
       firstName: "System",
       lastName: "Administrator",
-      createdAt: new Date(),
+      createdAt: new Date()
     };
     this.users.set(1, superAdmin);
     this.currentUserId = 2;
@@ -160,8 +119,7 @@ export class MemStorage implements IStorage {
       {
         id: 1,
         title: "Web Development Fundamentals",
-        description:
-          "Master HTML, CSS, and JavaScript to build modern websites",
+        description: "Master HTML, CSS, and JavaScript to build modern websites",
         totalModules: 3,
         totalPages: 15,
         estimatedDuration: 40,
@@ -170,15 +128,17 @@ export class MemStorage implements IStorage {
         learningObjectives: [
           "Build responsive websites with HTML and CSS",
           "Add interactivity with JavaScript",
-          "Deploy websites to production",
+          "Deploy websites to production"
         ],
-        createdAt: new Date(),
+        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        category: "Frontend",
+        hasCoursePage: true,
+        createdAt: new Date()
       },
       {
         id: 2,
         title: "Python Programming",
-        description:
-          "Learn Python programming from basics to advanced concepts",
+        description: "Learn Python programming from basics to advanced concepts",
         totalModules: 4,
         totalPages: 20,
         estimatedDuration: 50,
@@ -187,13 +147,16 @@ export class MemStorage implements IStorage {
         learningObjectives: [
           "Write Python programs",
           "Work with data structures",
-          "Build simple applications",
+          "Build simple applications"
         ],
-        createdAt: new Date(),
-      },
+        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        category: "Backend",
+        hasCoursePage: true,
+        createdAt: new Date()
+      }
     ];
 
-    courses.forEach((course) => {
+    courses.forEach(course => {
       this.courses.set(course.id, course);
     });
     this.currentCourseId = 3;
@@ -207,7 +170,7 @@ export class MemStorage implements IStorage {
         description: "Learn HTML structure and elements",
         orderIndex: 1,
         totalActivities: 3,
-        isLocked: false,
+        isLocked: false
       },
       {
         id: 2,
@@ -216,7 +179,7 @@ export class MemStorage implements IStorage {
         description: "Master CSS for beautiful websites",
         orderIndex: 2,
         totalActivities: 3,
-        isLocked: false,
+        isLocked: false
       },
       {
         id: 3,
@@ -225,7 +188,7 @@ export class MemStorage implements IStorage {
         description: "Add interactivity with JavaScript",
         orderIndex: 3,
         totalActivities: 3,
-        isLocked: false,
+        isLocked: false
       },
       {
         id: 4,
@@ -234,11 +197,11 @@ export class MemStorage implements IStorage {
         description: "Introduction to Python programming",
         orderIndex: 1,
         totalActivities: 3,
-        isLocked: false,
-      },
+        isLocked: false
+      }
     ];
 
-    modules.forEach((module) => {
+    modules.forEach(module => {
       this.modules.set(module.id, module);
     });
     this.currentModuleId = 5;
@@ -255,11 +218,10 @@ export class MemStorage implements IStorage {
         isLocked: false,
         content: {
           type: "lesson",
-          content:
-            "HTML is the standard markup language for creating web pages.",
+          content: "HTML is the standard markup language for creating web pages."
         },
         videoUrl: null,
-        duration: 15,
+        duration: 15
       },
       {
         id: 2,
@@ -276,20 +238,17 @@ export class MemStorage implements IStorage {
               id: "q1",
               type: "multiple-choice",
               question: "What does HTML stand for?",
-              options: [
-                "HyperText Markup Language",
-                "High Tech Modern Language",
-              ],
-              correct: 0,
-            },
-          ],
+              options: ["HyperText Markup Language", "High Tech Modern Language"],
+              correct: 0
+            }
+          ]
         },
         videoUrl: null,
-        duration: 10,
-      },
+        duration: 10
+      }
     ];
 
-    activities.forEach((activity) => {
+    activities.forEach(activity => {
       this.activities.set(activity.id, activity);
     });
     this.currentActivityId = 3;
@@ -300,21 +259,21 @@ export class MemStorage implements IStorage {
         id: 1,
         title: "First Steps",
         description: "Complete your first lesson",
-        icon: "🎯",
-        criteria: "Complete any lesson",
-        points: 10,
+        iconType: "trophy",
+        badgeColor: "blue",
+        criteria: { type: "lesson_completion", count: 1 }
       },
       {
         id: 2,
         title: "Quiz Master",
         description: "Score 100% on a quiz",
-        icon: "🏆",
-        criteria: "Perfect quiz score",
-        points: 25,
-      },
+        iconType: "medal",
+        badgeColor: "gold",
+        criteria: { type: "quiz_perfect_score", count: 1 }
+      }
     ];
 
-    achievementsList.forEach((achievement) => {
+    achievementsList.forEach(achievement => {
       this.achievements.set(achievement.id, achievement);
     });
     this.currentAchievementId = 3;
@@ -344,19 +303,16 @@ export class MemStorage implements IStorage {
       coursesCount: insertSchool.coursesCount || 0,
       isWhiteLabelEnabled: insertSchool.isWhiteLabelEnabled || false,
       isActive: insertSchool.isActive !== false,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
     this.schools.set(school.id, school);
     return school;
   }
 
-  async updateSchool(
-    id: number,
-    updates: Partial<School>
-  ): Promise<School | undefined> {
+  async updateSchool(id: number, updates: Partial<School>): Promise<School | undefined> {
     const school = this.schools.get(id);
     if (!school) return undefined;
-
+    
     const updatedSchool = { ...school, ...updates };
     this.schools.set(id, updatedSchool);
     return updatedSchool;
@@ -368,9 +324,7 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username
-    );
+    return Array.from(this.users.values()).find(user => user.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -381,21 +335,19 @@ export class MemStorage implements IStorage {
       schoolId: insertUser.schoolId || null,
       firstName: insertUser.firstName || null,
       lastName: insertUser.lastName || null,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
     this.users.set(user.id, user);
     return user;
   }
 
   async getUsersBySchool(schoolId: number): Promise<User[]> {
-    return Array.from(this.users.values()).filter(
-      (user) => user.schoolId === schoolId
-    );
+    return Array.from(this.users.values()).filter(user => user.schoolId === schoolId);
   }
 
   async getStudentsBySchool(schoolId: number): Promise<User[]> {
     return Array.from(this.users.values()).filter(
-      (user) => user.schoolId === schoolId && user.role === "student"
+      user => user.schoolId === schoolId && user.role === "student"
     );
   }
 
@@ -420,23 +372,27 @@ export class MemStorage implements IStorage {
   async createCourse(insertCourse: InsertCourse): Promise<Course> {
     const course: Course = {
       id: this.currentCourseId++,
-      ...insertCourse,
+      title: insertCourse.title,
+      description: insertCourse.description,
+      totalModules: insertCourse.totalModules,
+      totalPages: insertCourse.totalPages,
+      estimatedDuration: insertCourse.estimatedDuration,
       difficulty: insertCourse.difficulty || null,
       prerequisites: insertCourse.prerequisites || null,
       learningObjectives: insertCourse.learningObjectives || null,
-      createdAt: new Date(),
+      image: insertCourse.image || null,
+      category: insertCourse.category || null,
+      hasCoursePage: insertCourse.hasCoursePage !== undefined ? insertCourse.hasCoursePage : true,
+      createdAt: new Date()
     };
     this.courses.set(course.id, course);
     return course;
   }
 
-  async updateCourse(
-    id: number,
-    updates: Partial<Course>
-  ): Promise<Course | undefined> {
+  async updateCourse(id: number, updates: Partial<Course>): Promise<Course | undefined> {
     const course = this.courses.get(id);
     if (!course) return undefined;
-
+    
     const updatedCourse = { ...course, ...updates };
     this.courses.set(id, updatedCourse);
     return updatedCourse;
@@ -445,36 +401,28 @@ export class MemStorage implements IStorage {
   // School-Course methods
   async getSchoolCourses(schoolId: number): Promise<Course[]> {
     const schoolCourseIds = Array.from(this.schoolCourses.values())
-      .filter((sc) => sc.schoolId === schoolId)
-      .map((sc) => sc.courseId);
-
-    return Array.from(this.courses.values()).filter((course) =>
-      schoolCourseIds.includes(course.id)
-    );
+      .filter(sc => sc.schoolId === schoolId)
+      .map(sc => sc.courseId);
+    
+    return Array.from(this.courses.values())
+      .filter(course => schoolCourseIds.includes(course.id));
   }
 
-  async assignCourseToSchool(
-    schoolId: number,
-    courseId: number
-  ): Promise<SchoolCourse> {
+  async assignCourseToSchool(schoolId: number, courseId: number): Promise<SchoolCourse> {
     const assignment: SchoolCourse = {
       id: this.currentSchoolCourseId++,
       schoolId,
       courseId,
-      assignedAt: new Date(),
+      assignedAt: new Date()
     };
     this.schoolCourses.set(assignment.id, assignment);
     return assignment;
   }
 
-  async unassignCourseFromSchool(
-    schoolId: number,
-    courseId: number
-  ): Promise<boolean> {
-    const assignment = Array.from(this.schoolCourses.entries()).find(
-      ([_, sc]) => sc.schoolId === schoolId && sc.courseId === courseId
-    );
-
+  async unassignCourseFromSchool(schoolId: number, courseId: number): Promise<boolean> {
+    const assignment = Array.from(this.schoolCourses.entries())
+      .find(([_, sc]) => sc.schoolId === schoolId && sc.courseId === courseId);
+    
     if (assignment) {
       this.schoolCourses.delete(assignment[0]);
       return true;
@@ -485,38 +433,29 @@ export class MemStorage implements IStorage {
   // Student-Course methods
   async getStudentCourses(studentId: number): Promise<Course[]> {
     const studentCourseIds = Array.from(this.studentCourses.values())
-      .filter((sc) => sc.studentId === studentId)
-      .map((sc) => sc.courseId);
-
-    return Array.from(this.courses.values()).filter((course) =>
-      studentCourseIds.includes(course.id)
-    );
+      .filter(sc => sc.studentId === studentId)
+      .map(sc => sc.courseId);
+    
+    return Array.from(this.courses.values())
+      .filter(course => studentCourseIds.includes(course.id));
   }
 
-  async assignCourseToStudent(
-    studentId: number,
-    courseId: number,
-    assignedBy: number
-  ): Promise<StudentCourse> {
+  async assignCourseToStudent(studentId: number, courseId: number, assignedBy: number): Promise<StudentCourse> {
     const assignment: StudentCourse = {
       id: this.currentStudentCourseId++,
       studentId,
       courseId,
       assignedBy,
-      assignedAt: new Date(),
+      assignedAt: new Date()
     };
     this.studentCourses.set(assignment.id, assignment);
     return assignment;
   }
 
-  async unassignCourseFromStudent(
-    studentId: number,
-    courseId: number
-  ): Promise<boolean> {
-    const assignment = Array.from(this.studentCourses.entries()).find(
-      ([_, sc]) => sc.studentId === studentId && sc.courseId === courseId
-    );
-
+  async unassignCourseFromStudent(studentId: number, courseId: number): Promise<boolean> {
+    const assignment = Array.from(this.studentCourses.entries())
+      .find(([_, sc]) => sc.studentId === studentId && sc.courseId === courseId);
+    
     if (assignment) {
       this.studentCourses.delete(assignment[0]);
       return true;
@@ -527,7 +466,7 @@ export class MemStorage implements IStorage {
   // Module methods
   async getModulesByCourse(courseId: number): Promise<Module[]> {
     return Array.from(this.modules.values())
-      .filter((module) => module.courseId === courseId)
+      .filter(module => module.courseId === courseId)
       .sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
@@ -536,7 +475,7 @@ export class MemStorage implements IStorage {
       id: this.currentModuleId++,
       ...insertModule,
       description: insertModule.description || null,
-      isLocked: insertModule.isLocked || null,
+      isLocked: insertModule.isLocked || null
     };
     this.modules.set(module.id, module);
     return module;
@@ -545,17 +484,17 @@ export class MemStorage implements IStorage {
   // Activity methods
   async getActivitiesByModule(moduleId: number): Promise<Activity[]> {
     return Array.from(this.activities.values())
-      .filter((activity) => activity.moduleId === moduleId)
+      .filter(activity => activity.moduleId === moduleId)
       .sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
   async getActivitiesByCourse(courseId: number): Promise<Activity[]> {
     const moduleIds = Array.from(this.modules.values())
-      .filter((module) => module.courseId === courseId)
-      .map((module) => module.id);
-
+      .filter(module => module.courseId === courseId)
+      .map(module => module.id);
+    
     return Array.from(this.activities.values())
-      .filter((activity) => moduleIds.includes(activity.moduleId))
+      .filter(activity => moduleIds.includes(activity.moduleId))
       .sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
@@ -567,7 +506,7 @@ export class MemStorage implements IStorage {
       isLocked: insertActivity.isLocked || null,
       content: insertActivity.content || {},
       videoUrl: insertActivity.videoUrl || null,
-      duration: insertActivity.duration || null,
+      duration: insertActivity.duration || null
     };
     this.activities.set(activity.id, activity);
     return activity;
@@ -575,23 +514,16 @@ export class MemStorage implements IStorage {
 
   // Progress methods
   async getUserProgress(userId: number): Promise<UserProgress[]> {
-    return Array.from(this.userProgressRecords.values()).filter(
-      (progress) => progress.userId === userId
-    );
+    return Array.from(this.userProgressRecords.values())
+      .filter(progress => progress.userId === userId);
   }
 
-  async getUserProgressForCourse(
-    userId: number,
-    courseId: number
-  ): Promise<UserProgress[]> {
-    return Array.from(this.userProgressRecords.values()).filter(
-      (progress) => progress.userId === userId && progress.courseId === courseId
-    );
+  async getUserProgressForCourse(userId: number, courseId: number): Promise<UserProgress[]> {
+    return Array.from(this.userProgressRecords.values())
+      .filter(progress => progress.userId === userId && progress.courseId === courseId);
   }
 
-  async createUserProgress(
-    insertProgress: InsertUserProgress
-  ): Promise<UserProgress> {
+  async createUserProgress(insertProgress: InsertUserProgress): Promise<UserProgress> {
     const progress: UserProgress = {
       id: this.currentProgressId++,
       ...insertProgress,
@@ -600,19 +532,16 @@ export class MemStorage implements IStorage {
       completed: insertProgress.completed || null,
       completedAt: insertProgress.completedAt || null,
       progressPercentage: insertProgress.progressPercentage || null,
-      timeSpent: insertProgress.timeSpent || null,
+      timeSpent: insertProgress.timeSpent || null
     };
     this.userProgressRecords.set(progress.id, progress);
     return progress;
   }
 
-  async updateUserProgress(
-    id: number,
-    updates: Partial<UserProgress>
-  ): Promise<UserProgress | undefined> {
+  async updateUserProgress(id: number, updates: Partial<UserProgress>): Promise<UserProgress | undefined> {
     const progress = this.userProgressRecords.get(id);
     if (!progress) return undefined;
-
+    
     const updatedProgress = { ...progress, ...updates };
     this.userProgressRecords.set(id, updatedProgress);
     return updatedProgress;
@@ -624,18 +553,15 @@ export class MemStorage implements IStorage {
   }
 
   async getUserAchievements(userId: number): Promise<UserAchievement[]> {
-    return Array.from(this.userAchievements.values()).filter(
-      (ua) => ua.userId === userId
-    );
+    return Array.from(this.userAchievements.values())
+      .filter(ua => ua.userId === userId);
   }
 
-  async createUserAchievement(
-    insertUserAchievement: InsertUserAchievement
-  ): Promise<UserAchievement> {
+  async createUserAchievement(insertUserAchievement: InsertUserAchievement): Promise<UserAchievement> {
     const userAchievement: UserAchievement = {
       id: this.currentUserAchievementId++,
       ...insertUserAchievement,
-      earnedAt: new Date(),
+      earnedAt: new Date()
     };
     this.userAchievements.set(userAchievement.id, userAchievement);
     return userAchievement;
@@ -643,36 +569,29 @@ export class MemStorage implements IStorage {
 
   // Settings methods
   async getUserSettings(userId: number): Promise<UserSettings | undefined> {
-    return Array.from(this.userSettings.values()).find(
-      (settings) => settings.userId === userId
-    );
+    return Array.from(this.userSettings.values())
+      .find(settings => settings.userId === userId);
   }
 
-  async createUserSettings(
-    insertSettings: InsertUserSettings
-  ): Promise<UserSettings> {
+  async createUserSettings(insertSettings: InsertUserSettings): Promise<UserSettings> {
     const settings: UserSettings = {
       id: this.currentUserSettingsId++,
       ...insertSettings,
       audioMuted: insertSettings.audioMuted || null,
       videoQuality: insertSettings.videoQuality || null,
       language: insertSettings.language || null,
-      notifications: insertSettings.notifications || null,
+      notifications: insertSettings.notifications || null
     };
     this.userSettings.set(settings.id, settings);
     return settings;
   }
 
-  async updateUserSettings(
-    userId: number,
-    updates: Partial<UserSettings>
-  ): Promise<UserSettings | undefined> {
-    const settings = Array.from(this.userSettings.values()).find(
-      (s) => s.userId === userId
-    );
-
+  async updateUserSettings(userId: number, updates: Partial<UserSettings>): Promise<UserSettings | undefined> {
+    const settings = Array.from(this.userSettings.values())
+      .find(s => s.userId === userId);
+    
     if (!settings) return undefined;
-
+    
     const updatedSettings = { ...settings, ...updates };
     this.userSettings.set(settings.id, updatedSettings);
     return updatedSettings;

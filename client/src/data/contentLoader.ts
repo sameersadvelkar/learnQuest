@@ -47,8 +47,14 @@ export class ContentLoader {
     // Load course
     const courseData = await import('./content/courses/react-course/course.json');
     const course: Course = {
-      ...courseData,
-      createdAt: new Date(courseData.createdAt)
+      ...courseData.default,
+      difficulty: 'Intermediate',
+      prerequisites: [],
+      learningObjectives: [],
+      image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400',
+      category: 'Programming',
+      hasCoursePage: true,
+      createdAt: new Date(courseData.default.createdAt)
     };
     this.courses.push(course);
 

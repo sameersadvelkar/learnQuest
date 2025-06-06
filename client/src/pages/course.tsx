@@ -316,56 +316,89 @@ export default function Course() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Navigation */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-xl font-semibold text-gray-900">
-            TechEdu Institute
-          </h2>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleGoHome}
-            className="p-2"
-            title="Go to Dashboard"
-          >
-            <Home className="w-4 h-4 text-gray-600" />
-          </Button>
-          
-          <Button variant="ghost" size="sm" className="p-2" title="Help">
-            <HelpCircle className="w-4 h-4 text-gray-600" />
-          </Button>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="p-2" title="Settings">
-                <Settings className="w-4 h-4 text-gray-600" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="flex items-center space-x-2">
-                <User className="w-4 h-4" />
-                <span>John Doe</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center space-x-2">
-                <Globe className="w-4 h-4" />
-                <span>Language: English</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={handleLogout}
-                className="flex items-center space-x-2 text-red-600 focus:text-red-600"
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Enhanced Top Navigation */}
+      <header className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <Book className="w-4 h-4 text-white" />
+                </div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  TechEdu Institute
+                </h2>
+              </div>
+              
+              {/* Course Progress Indicator */}
+              <div className="hidden md:flex items-center space-x-4 px-4 py-2 bg-gradient-to-r from-green-50 to-blue-50 rounded-full border border-green-200/50">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {courseState.currentActivity?.title || 'Select Activity'}
+                  </span>
+                </div>
+                <div className="w-px h-4 bg-gray-300"></div>
+                <div className="text-sm text-gray-600">
+                  Module {courseState.currentModule?.orderIndex || 1}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleGoHome}
+                className="flex items-center space-x-2 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <Home className="w-4 h-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="flex items-center space-x-2 hover:bg-purple-50 text-gray-600 hover:text-purple-600 transition-colors"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span className="hidden sm:inline">Help</span>
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="flex items-center space-x-2 hover:bg-gray-50 text-gray-600 transition-colors"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span className="hidden sm:inline">Settings</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span>John Doe</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="flex items-center space-x-2">
+                    <Globe className="w-4 h-4" />
+                    <span>Language: English</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 text-red-600 focus:text-red-600"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
         </div>
       </header>
 

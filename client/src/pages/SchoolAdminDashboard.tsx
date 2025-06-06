@@ -9,9 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertCircle, Users, BookOpen, Clock, TrendingUp, Download, MessageCircle, LogOut, Building2 } from 'lucide-react';
+import { AlertCircle, Users, BookOpen, Clock, TrendingUp, Download, MessageCircle, LogOut, Building2, Activity, Award, Star, Plus } from 'lucide-react';
 import { ContactSupportDialog } from '@/components/ContactSupportDialog';
-import { ThemeToggle } from '@/components/ThemeToggle';
+
+import { AnimatedStats, ProgressRing } from '@/components/AnimatedStats';
+import { InteractiveCard } from '@/components/InteractiveCard';
+import { AdminHeaderDropdown } from '@/components/AdminHeaderDropdown';
+import { SkeletonStats } from '@/components/LoadingStates';
 
 interface Student {
   id: number;
@@ -176,28 +180,26 @@ export function SchoolAdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+      <div className="shadow-sm border-b dark:border-gray-700" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
               {schoolData.isWhiteLabelEnabled && schoolData.logo && (
-                <img src={schoolData.logo} alt="School Logo" className="h-10 w-10" />
+                <img src={schoolData.logo} alt="School Logo" className="h-10 w-10 rounded-full bg-white/20 p-1" />
               )}
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-2xl font-bold text-white">
                   {schoolData.isWhiteLabelEnabled ? schoolData.name : "School Admin Dashboard"}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300">Manage students and track their progress</p>
+                <p className="text-white/80">Manage students and track their progress</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
-              <Badge variant="secondary">SCHOOL ADMIN</Badge>
               <ContactSupportDialog />
-              <Button variant="outline" onClick={logout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
+              <AdminHeaderDropdown 
+                userRole="admin" 
+                username="School Admin"
+              />
             </div>
           </div>
         </div>
@@ -256,10 +258,10 @@ export function SchoolAdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="students" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="students">Student Management</TabsTrigger>
-            <TabsTrigger value="courses">Course Assignment</TabsTrigger>
-            <TabsTrigger value="progress">Progress Tracking</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3" style={{ backgroundColor: '#05aa6d' }}>
+            <TabsTrigger value="students" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Student Management</TabsTrigger>
+            <TabsTrigger value="courses" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Course Assignment</TabsTrigger>
+            <TabsTrigger value="progress" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Progress Tracking</TabsTrigger>
           </TabsList>
 
           {/* Students Tab */}
@@ -271,7 +273,7 @@ export function SchoolAdminDashboard() {
                     <CardTitle>Student Management</CardTitle>
                     <CardDescription>View and manage all students in your school</CardDescription>
                   </div>
-                  <Button onClick={exportToCSV}>
+                  <Button onClick={exportToCSV} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                     <Download className="w-4 h-4 mr-2" />
                     Export CSV
                   </Button>
@@ -370,6 +372,8 @@ export function SchoolAdminDashboard() {
                               <Button 
                                 variant="outline" 
                                 size="sm"
+                                className="border-2 hover:bg-green-50"
+                                style={{ borderColor: '#05aa6d', color: '#05aa6d' }}
                                 onClick={() => setSelectedStudent(student)}
                               >
                                 Assign Courses
@@ -403,7 +407,8 @@ export function SchoolAdminDashboard() {
                                 <Button 
                                   onClick={() => assignCoursesToStudent(student.id)}
                                   disabled={coursesToAssign.length === 0}
-                                  className="w-full"
+                                  className="w-full text-white btn-green-hover"
+                                  style={{ backgroundColor: '#05aa6d' }}
                                 >
                                   Assign Selected Courses
                                 </Button>
@@ -458,6 +463,8 @@ export function SchoolAdminDashboard() {
                           <Button 
                             variant="outline" 
                             size="sm"
+                            className="border-2 hover:bg-green-50"
+                            style={{ borderColor: '#05aa6d', color: '#05aa6d' }}
                             onClick={() => window.open(`/course-preview/${course.id}`, '_blank')}
                           >
                             Preview Course

@@ -25,9 +25,7 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  role: text("role", { enum: ["student", "admin", "super_admin"] })
-    .default("student")
-    .notNull(),
+  role: text("role", { enum: ["student", "admin", "super_admin"] }).default("student").notNull(),
   schoolId: integer("school_id").references(() => schools.id),
   firstName: text("first_name"),
   lastName: text("last_name"),
@@ -44,6 +42,9 @@ export const courses = pgTable("courses", {
   difficulty: text("difficulty").default("Beginner"),
   prerequisites: text("prerequisites").array(),
   learningObjectives: text("learning_objectives").array(),
+  image: text("image"),
+  category: text("category"),
+  hasCoursePage: boolean("has_course_page").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -72,23 +73,15 @@ export const activities = pgTable("activities", {
 
 export const schoolCourses = pgTable("school_courses", {
   id: serial("id").primaryKey(),
-  schoolId: integer("school_id")
-    .notNull()
-    .references(() => schools.id),
-  courseId: integer("course_id")
-    .notNull()
-    .references(() => courses.id),
+  schoolId: integer("school_id").notNull().references(() => schools.id),
+  courseId: integer("course_id").notNull().references(() => courses.id),
   assignedAt: timestamp("assigned_at").defaultNow().notNull(),
 });
 
 export const studentCourses = pgTable("student_courses", {
   id: serial("id").primaryKey(),
-  studentId: integer("student_id")
-    .notNull()
-    .references(() => users.id),
-  courseId: integer("course_id")
-    .notNull()
-    .references(() => courses.id),
+  studentId: integer("student_id").notNull().references(() => users.id),
+  courseId: integer("course_id").notNull().references(() => courses.id),
   assignedBy: integer("assigned_by").references(() => users.id),
   assignedAt: timestamp("assigned_at").defaultNow().notNull(),
 });
@@ -132,20 +125,12 @@ export const userSettings = pgTable("user_settings", {
 
 export const supportRequests = pgTable("support_requests", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
+  userId: integer("user_id").notNull().references(() => users.id),
   schoolId: integer("school_id").references(() => schools.id),
   subject: text("subject").notNull(),
   message: text("message").notNull(),
-  priority: text("priority", { enum: ["low", "medium", "high", "urgent"] })
-    .default("medium")
-    .notNull(),
-  status: text("status", {
-    enum: ["open", "in_progress", "resolved", "closed"],
-  })
-    .default("open")
-    .notNull(),
+  priority: text("priority", { enum: ["low", "medium", "high", "urgent"] }).default("medium").notNull(),
+  status: text("status", { enum: ["open", "in_progress", "resolved", "closed"] }).default("open").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -179,9 +164,7 @@ export const insertSchoolCourseSchema = createInsertSchema(schoolCourses).omit({
   assignedAt: true,
 });
 
-export const insertStudentCourseSchema = createInsertSchema(
-  studentCourses
-).omit({
+export const insertStudentCourseSchema = createInsertSchema(studentCourses).omit({
   id: true,
   assignedAt: true,
 });
@@ -194,9 +177,7 @@ export const insertAchievementSchema = createInsertSchema(achievements).omit({
   id: true,
 });
 
-export const insertUserAchievementSchema = createInsertSchema(
-  userAchievements
-).omit({
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
   id: true,
 });
 
@@ -204,9 +185,7 @@ export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   id: true,
 });
 
-export const insertSupportRequestSchema = createInsertSchema(
-  supportRequests
-).omit({
+export const insertSupportRequestSchema = createInsertSchema(supportRequests).omit({
   id: true,
   createdAt: true,
   updatedAt: true,

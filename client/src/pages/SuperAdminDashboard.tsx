@@ -9,10 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
-import { AlertCircle, Building2, Users, BookOpen, BarChart3, Plus, Settings, LogOut, Upload, MessageSquare, Clock, CheckCircle, XCircle, Key, FileText, Edit } from 'lucide-react';
+import { AlertCircle, Building2, Users, BookOpen, BarChart3, Plus, Settings, LogOut, Upload, MessageSquare, Clock, CheckCircle, XCircle, Key, FileText, Edit, TrendingUp, Star, Award, Activity } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CourseManagement } from '@/components/CourseManagement';
-import { ThemeToggle } from '@/components/ThemeToggle';
+
+import { AnimatedStats, ProgressRing } from '@/components/AnimatedStats';
+import { InteractiveCard, StatsGrid } from '@/components/InteractiveCard';
+import { AdminHeaderDropdown } from '@/components/AdminHeaderDropdown';
+import { SkeletonStats, SkeletonCard } from '@/components/LoadingStates';
 
 interface School {
   id: number;
@@ -39,6 +42,7 @@ interface Course {
   totalModules: number;
   estimatedDuration: number;
   assignedSchools: number;
+  difficulty?: string;
 }
 
 interface SupportRequest {
@@ -111,7 +115,8 @@ export function SuperAdminDashboard() {
       description: "Fundamental concepts of programming and computer science",
       totalModules: 8,
       estimatedDuration: 120,
-      assignedSchools: 15
+      assignedSchools: 15,
+      difficulty: "Beginner"
     },
     {
       id: 2,
@@ -119,7 +124,8 @@ export function SuperAdminDashboard() {
       description: "Learn the fundamentals of digital marketing",
       totalModules: 6,
       estimatedDuration: 90,
-      assignedSchools: 12
+      assignedSchools: 12,
+      difficulty: "Beginner"
     },
     {
       id: 3,
@@ -127,7 +133,8 @@ export function SuperAdminDashboard() {
       description: "Introduction to data analysis and visualization",
       totalModules: 10,
       estimatedDuration: 150,
-      assignedSchools: 8
+      assignedSchools: 8,
+      difficulty: "Intermediate"
     }
   ]);
 
@@ -282,83 +289,136 @@ export function SuperAdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+      <div className="shadow-sm border-b dark:border-gray-700" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Super Admin Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-300">Manage schools, courses, and platform settings</p>
+              <h1 className="text-2xl font-bold text-white">Super Admin Dashboard</h1>
+              <p className="text-white/80">Manage schools, courses, and platform settings</p>
             </div>
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
-              <Badge variant="default">SUPER ADMIN</Badge>
-              <Button variant="outline" onClick={logout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
+              <AdminHeaderDropdown 
+                userRole="super_admin" 
+                username="Super Admin"
+              />
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center">
-                <Building2 className="w-8 h-8 text-blue-500" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Schools</p>
-                  <p className="text-2xl font-bold">{schools.length}</p>
-                </div>
+        {/* Enhanced Animated Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <AnimatedStats
+            title="Total Schools"
+            value={schools.length}
+            icon={Building2}
+            color="bg-blue-500"
+            trend={12}
+            delay={0}
+          />
+          <AnimatedStats
+            title="Total Students"
+            value={schools.reduce((sum, school) => sum + school.studentsCount, 0)}
+            icon={Users}
+            color="bg-green-500"
+            trend={8}
+            delay={100}
+          />
+          <AnimatedStats
+            title="Available Courses"
+            value={courses.length}
+            icon={BookOpen}
+            color="bg-purple-500"
+            trend={15}
+            delay={200}
+          />
+          <AnimatedStats
+            title="Active Assignments"
+            value={courses.reduce((sum, course) => sum + course.assignedSchools, 0)}
+            icon={BarChart3}
+            color="bg-orange-500"
+            trend={5}
+            delay={300}
+          />
+        </div>
+
+        {/* System Health Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <InteractiveCard
+            title="System Performance"
+            description="Real-time system metrics"
+            icon={Activity}
+            variant="glassmorphism"
+            className="fade-in-up"
+          >
+            <div className="flex justify-center py-4">
+              <ProgressRing
+                progress={98.5}
+                size={120}
+                color="#10b981"
+                label="Performance"
+              />
+            </div>
+          </InteractiveCard>
+
+          <InteractiveCard
+            title="Platform Overview"
+            description="Key platform statistics"
+            icon={TrendingUp}
+            variant="gradient"
+            className="fade-in-up"
+            style={{ animationDelay: '100ms' }}
+          >
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Active Schools</span>
+                <span className="font-semibold">{schools.filter(s => s.isActive).length}/{schools.length}</span>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center">
-                <Users className="w-8 h-8 text-green-500" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Students</p>
-                  <p className="text-2xl font-bold">{schools.reduce((sum, school) => sum + school.studentsCount, 0).toLocaleString()}</p>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">White Label</span>
+                <span className="font-semibold">{schools.filter(s => s.isWhiteLabelEnabled).length} enabled</span>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center">
-                <BookOpen className="w-8 h-8 text-purple-500" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Available Courses</p>
-                  <p className="text-2xl font-bold">{courses.length}</p>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Avg Students/School</span>
+                <span className="font-semibold">{Math.round(schools.reduce((sum, s) => sum + s.studentsCount, 0) / schools.length)}</span>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center">
-                <BarChart3 className="w-8 h-8 text-orange-500" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Active Assignments</p>
-                  <p className="text-2xl font-bold">{courses.reduce((sum, course) => sum + course.assignedSchools, 0)}</p>
-                </div>
+            </div>
+          </InteractiveCard>
+
+          <InteractiveCard
+            title="Recent Activity"
+            description="Latest platform updates"
+            icon={Clock}
+            className="fade-in-up"
+            style={{ animationDelay: '200ms' }}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm">New school registered</span>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-sm">Course assignment updated</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span className="text-sm">System maintenance completed</span>
+              </div>
+            </div>
+          </InteractiveCard>
         </div>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="schools" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="schools">School Management</TabsTrigger>
-            <TabsTrigger value="courses">Course Assignment</TabsTrigger>
-            <TabsTrigger value="content">Course Content</TabsTrigger>
-            <TabsTrigger value="support">Support Requests</TabsTrigger>
-            <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-6" style={{ backgroundColor: '#05aa6d' }}>
+            <TabsTrigger value="schools" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">School Management</TabsTrigger>
+            <TabsTrigger value="courses" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Course Assignment</TabsTrigger>
+            <TabsTrigger value="content" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Course Content</TabsTrigger>
+            <TabsTrigger value="support" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Support Requests</TabsTrigger>
+            <TabsTrigger value="onboarding" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Onboarding</TabsTrigger>
+            <TabsTrigger value="analytics" className="text-white data-[state=active]:text-white data-[state=active]:bg-white/20">Analytics</TabsTrigger>
           </TabsList>
 
           {/* Schools Tab */}
@@ -419,7 +479,7 @@ export function SuperAdminDashboard() {
                           <div className="flex space-x-2">
                             <Dialog>
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm">
+                                <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                                   Edit
                                 </Button>
                               </DialogTrigger>
@@ -449,13 +509,13 @@ export function SuperAdminDashboard() {
                                     />
                                   </div>
                                   <div className="flex justify-end space-x-2">
-                                    <Button variant="outline">Cancel</Button>
-                                    <Button>Save Changes</Button>
+                                    <Button variant="outline" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>Cancel</Button>
+                                    <Button className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>Save Changes</Button>
                                   </div>
                                 </div>
                               </DialogContent>
                             </Dialog>
-                            <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                               <Upload className="w-4 h-4 mr-1" />
                               Import Students
                             </Button>
@@ -502,7 +562,7 @@ export function SuperAdminDashboard() {
                         <TableCell>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                                 View Details
                               </Button>
                             </DialogTrigger>
@@ -562,7 +622,60 @@ export function SuperAdminDashboard() {
 
           {/* Course Content Management Tab */}
           <TabsContent value="content">
-            <CourseManagement />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {courses.map((course, index) => (
+                <InteractiveCard
+                  key={course.id}
+                  title={course.title}
+                  description={course.description}
+                  icon={BookOpen}
+                  badges={[course.difficulty || 'Beginner', `${course.totalModules} modules`]}
+                  variant="default"
+                  expandable={true}
+                  rating={4.5}
+                  progress={(course.assignedSchools / 20) * 100}
+                  className="slide-in-left"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Duration:</span>
+                      <span>{course.estimatedDuration} minutes</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Assigned Schools:</span>
+                      <span>{course.assignedSchools}</span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button size="sm" className="btn-interactive text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Content
+                      </Button>
+                      <Button size="sm" variant="outline" className="btn-interactive border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
+                        <Users className="w-4 h-4 mr-2" />
+                        Assign Schools
+                      </Button>
+                    </div>
+                  </div>
+                </InteractiveCard>
+              ))}
+              
+              <InteractiveCard
+                title="Create New Course"
+                description="Design a new course with modules and activities"
+                icon={Plus}
+                variant="gradient"
+                className="card-hover"
+                onClick={() => console.log('Create new course clicked')}
+              >
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-center">
+                    <Plus className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-muted-foreground">Click to create a new course</p>
+                  </div>
+                </div>
+              </InteractiveCard>
+            </div>
           </TabsContent>
 
           {/* Support Requests Tab */}
@@ -630,7 +743,7 @@ export function SuperAdminDashboard() {
                           <div className="flex space-x-2">
                             <Dialog>
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm">
+                                <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                                   View Details
                                 </Button>
                               </DialogTrigger>
@@ -694,7 +807,7 @@ export function SuperAdminDashboard() {
                             {request.status !== 'resolved' && request.status !== 'closed' && (
                               <Dialog>
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" size="sm">
+                                  <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                                     Update Status
                                   </Button>
                                 </DialogTrigger>
@@ -724,11 +837,11 @@ export function SuperAdminDashboard() {
                                       </Select>
                                     </div>
                                     <div className="flex justify-end space-x-2">
-                                      <Button variant="outline">Cancel</Button>
+                                      <Button variant="outline" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>Cancel</Button>
                                       <Button onClick={() => {
                                         // Handle status update
                                         console.log(`Update request ${request.id} status`);
-                                      }}>
+                                      }} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                                         Update Status
                                       </Button>
                                     </div>
@@ -757,7 +870,7 @@ export function SuperAdminDashboard() {
                 <CardContent>
                   <Dialog open={isCreatingSchool} onOpenChange={setIsCreatingSchool}>
                     <DialogTrigger asChild>
-                      <Button className="w-full">
+                      <Button className="w-full text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                         <Plus className="w-4 h-4 mr-2" />
                         Create New School
                       </Button>
@@ -860,10 +973,10 @@ export function SuperAdminDashboard() {
                           </p>
                         </div>
                         <div className="flex justify-end space-x-2">
-                          <Button variant="outline" onClick={() => setIsCreatingSchool(false)}>
+                          <Button variant="outline" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }} onClick={() => setIsCreatingSchool(false)}>
                             Cancel
                           </Button>
-                          <Button onClick={handleCreateSchool}>
+                          <Button onClick={handleCreateSchool} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                             Create School & Admin Account
                           </Button>
                         </div>
@@ -927,7 +1040,7 @@ export function SuperAdminDashboard() {
                       </div>
                     </div>
                     
-                    <Button className="w-full">
+                    <Button className="w-full text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                       <Upload className="w-4 h-4 mr-2" />
                       Import Students
                     </Button>
@@ -945,54 +1058,152 @@ export function SuperAdminDashboard() {
 
           {/* Analytics Tab */}
           <TabsContent value="analytics">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Platform Usage</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span>Total Active Users</span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <InteractiveCard
+                title="Platform Usage"
+                description="Real-time platform metrics"
+                icon={BarChart3}
+                variant="glassmorphism"
+                className="fade-in-up"
+              >
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Active Users</span>
+                    <div className="flex items-center space-x-2">
                       <span className="font-bold">2,456</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Course Completions</span>
-                      <span className="font-bold">1,234</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Average Session Time</span>
-                      <span className="font-bold">45 min</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Platform Uptime</span>
-                      <span className="font-bold text-green-600">99.9%</span>
+                      <TrendingUp className="w-4 h-4 text-green-500" />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Course Completions</span>
+                    <span className="font-bold">1,234</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Avg Session Time</span>
+                    <span className="font-bold">45 min</span>
+                  </div>
+                </div>
+              </InteractiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>School Performance</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {schools.map((school) => (
-                      <div key={school.id} className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium">{school.name}</p>
-                          <p className="text-sm text-gray-500">{school.studentsCount} students</p>
+              <InteractiveCard
+                title="System Health"
+                description="Platform performance indicators"
+                icon={Activity}
+                variant="default"
+                className="fade-in-up"
+                style={{ animationDelay: '100ms' }}
+              >
+                <div className="flex justify-center py-4">
+                  <ProgressRing
+                    progress={99.9}
+                    size={100}
+                    color="#10b981"
+                    label="Uptime"
+                  />
+                </div>
+              </InteractiveCard>
+
+              <InteractiveCard
+                title="Top Performing Schools"
+                description="Schools with highest completion rates"
+                icon={Award}
+                variant="gradient"
+                className="fade-in-up"
+                style={{ animationDelay: '200ms' }}
+              >
+                <div className="space-y-3">
+                  {schools.slice(0, 3).map((school, index) => (
+                    <div key={school.id} className="flex items-center space-x-3">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+                        index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-orange-500'
+                      }`}>
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{school.name}</p>
+                        <p className="text-xs text-muted-foreground">{school.studentsCount} students</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold">
+                          {Math.floor(Math.random() * 20) + 80}%
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </InteractiveCard>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <InteractiveCard
+                title="School Performance Overview"
+                description="Detailed completion rates by school"
+                icon={Building2}
+                expandable={true}
+                className="card-hover"
+              >
+                <div className="space-y-4">
+                  {schools.map((school) => {
+                    const completionRate = Math.floor(Math.random() * 30) + 70;
+                    return (
+                      <div key={school.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-medium">{school.name}</p>
+                            <p className="text-sm text-muted-foreground">{school.studentsCount} students</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold">{completionRate}%</p>
+                            <Badge variant={school.isActive ? "default" : "secondary"}>
+                              {school.isActive ? "Active" : "Inactive"}
+                            </Badge>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold">85%</p>
-                          <p className="text-sm text-gray-500">completion</p>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div 
+                            className="bg-primary h-2 rounded-full transition-all duration-1000"
+                            style={{ width: `${completionRate}%` }}
+                          />
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                    );
+                  })}
+                </div>
+              </InteractiveCard>
+
+              <InteractiveCard
+                title="Course Analytics"
+                description="Performance metrics by course"
+                icon={BookOpen}
+                expandable={true}
+                className="card-hover"
+              >
+                <div className="space-y-4">
+                  {courses.map((course) => {
+                    const enrollmentRate = Math.floor(Math.random() * 40) + 60;
+                    return (
+                      <div key={course.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-medium">{course.title}</p>
+                            <p className="text-sm text-muted-foreground">{course.assignedSchools} schools</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold">{enrollmentRate}%</p>
+                            <Badge variant="outline">{course.difficulty}</Badge>
+                          </div>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div 
+                            className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
+                            style={{ width: `${enrollmentRate}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </InteractiveCard>
             </div>
           </TabsContent>
         </Tabs>

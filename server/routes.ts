@@ -9,16 +9,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-
+      
       if (!username || !password) {
-        return res
-          .status(400)
-          .json({ message: "Username and password are required" });
+        return res.status(400).json({ message: "Username and password are required" });
       }
 
       // Find user by username
       const user = await storage.getUserByUsername(username);
-
+      
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -43,11 +41,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const schoolId = parseInt(req.params.id);
       const school = await storage.getSchool(schoolId);
-
+      
       if (!school) {
         return res.status(404).json({ message: "School not found" });
       }
-
+      
       res.json(school);
     } catch (error) {
       console.error("Error fetching school:", error);
@@ -58,30 +56,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create school with admin account
   app.post("/api/schools", async (req, res) => {
     try {
-      const {
-        name,
-        email,
-        adminName,
-        address,
-        city,
-        state,
-        pincode,
-        isWhiteLabelEnabled,
-        adminPassword,
-      } = req.body;
-
-      if (
-        !name ||
-        !email ||
-        !adminName ||
-        !address ||
-        !city ||
-        !state ||
-        !pincode
-      ) {
-        return res
-          .status(400)
-          .json({ message: "All required fields must be provided" });
+      const { name, email, adminName, address, city, state, pincode, isWhiteLabelEnabled, adminPassword } = req.body;
+      
+      if (!name || !email || !adminName || !address || !city || !state || !pincode) {
+        return res.status(400).json({ message: "All required fields must be provided" });
       }
 
       // Create the school
@@ -98,18 +76,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         coursesCount: 0,
         isWhiteLabelEnabled: isWhiteLabelEnabled || false,
         isActive: true,
-        logo: null,
+        logo: null
       });
 
       // Create the admin user for this school
       const adminUser = await storage.createUser({
-        username: adminName.toLowerCase().replace(/\s+/g, ""),
+        username: adminName.toLowerCase().replace(/\s+/g, ''),
         email,
         password: adminPassword,
-        role: "admin",
-        firstName: adminName.split(" ")[0] || adminName,
-        lastName: adminName.split(" ").slice(1).join(" ") || "",
-        schoolId: school.id,
+        role: 'admin',
+        firstName: adminName.split(' ')[0] || adminName,
+        lastName: adminName.split(' ').slice(1).join(' ') || '',
+        schoolId: school.id
       });
 
       res.json({ school, adminUser: { ...adminUser, password: undefined } });
@@ -134,11 +112,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const courseId = parseInt(req.params.id);
       const course = await storage.getCourse(courseId);
-
+      
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
       }
-
+      
       res.json(course);
     } catch (error) {
       console.error("Error fetching course:", error);
@@ -151,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const courseId = parseInt(req.params.id);
       const course = await storage.getCourse(courseId);
-
+      
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
       }
@@ -160,15 +138,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const modules = await storage.getModulesByCourse(courseId);
       const courseWithModules = {
         ...course,
-        modules: await Promise.all(
-          modules.map(async (module) => {
-            const activities = await storage.getActivitiesByModule(module.id);
-            return {
-              ...module,
-              activities,
-            };
-          })
-        ),
+        modules: await Promise.all(modules.map(async (module) => {
+          const activities = await storage.getActivitiesByModule(module.id);
+          return {
+            ...module,
+            activities
+          };
+        }))
       };
 
       res.json(courseWithModules);
@@ -185,9 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(course);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res
-          .status(400)
-          .json({ message: "Invalid course data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid course data", errors: error.errors });
       }
       console.error("Error creating course:", error);
       res.status(500).json({ message: "Failed to create course" });
@@ -213,9 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(module);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res
-          .status(400)
-          .json({ message: "Invalid module data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid module data", errors: error.errors });
       }
       console.error("Error creating module:", error);
       res.status(500).json({ message: "Failed to create module" });
@@ -252,9 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(activity);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res
-          .status(400)
-          .json({ message: "Invalid activity data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid activity data", errors: error.errors });
       }
       console.error("Error creating activity:", error);
       res.status(500).json({ message: "Failed to create activity" });
@@ -278,15 +248,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = parseInt(req.params.userId);
       const validatedProgress = insertUserProgressSchema.parse({
         ...req.body,
-        userId,
+        userId
       });
       const progress = await storage.createUserProgress(validatedProgress);
       res.status(201).json(progress);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res
-          .status(400)
-          .json({ message: "Invalid progress data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid progress data", errors: error.errors });
       }
       console.error("Error creating user progress:", error);
       res.status(500).json({ message: "Failed to create user progress" });
@@ -298,11 +266,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const progressId = parseInt(req.params.progressId);
       const updates = req.body;
       const progress = await storage.updateUserProgress(progressId, updates);
-
+      
       if (!progress) {
         return res.status(404).json({ message: "Progress record not found" });
       }
-
+      
       res.json(progress);
     } catch (error) {
       console.error("Error updating user progress:", error);
@@ -327,15 +295,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = parseInt(req.params.userId);
       const validatedSettings = insertUserSettingsSchema.parse({
         ...req.body,
-        userId,
+        userId
       });
       const settings = await storage.createUserSettings(validatedSettings);
       res.status(201).json(settings);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res
-          .status(400)
-          .json({ message: "Invalid settings data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid settings data", errors: error.errors });
       }
       console.error("Error creating user settings:", error);
       res.status(500).json({ message: "Failed to create user settings" });
@@ -347,11 +313,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = parseInt(req.params.userId);
       const updates = req.body;
       const settings = await storage.updateUserSettings(userId, updates);
-
+      
       if (!settings) {
         return res.status(404).json({ message: "User settings not found" });
       }
-
+      
       res.json(settings);
     } catch (error) {
       console.error("Error updating user settings:", error);
@@ -385,16 +351,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = parseInt(req.params.userId);
       const { achievementId } = req.body;
-
+      
       if (!achievementId) {
         return res.status(400).json({ message: "Achievement ID is required" });
       }
-
+      
       const userAchievement = await storage.createUserAchievement({
         userId,
-        achievementId: parseInt(achievementId),
+        achievementId: parseInt(achievementId)
       });
-
+      
       res.status(201).json(userAchievement);
     } catch (error) {
       console.error("Error creating user achievement:", error);

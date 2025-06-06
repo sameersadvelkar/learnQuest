@@ -5,6 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Users, BookOpen, Settings, BarChart3, Shield, LogOut } from 'lucide-react';
 
+import { InteractiveCard } from '@/components/InteractiveCard';
+import { AnimatedStats } from '@/components/AnimatedStats';
+import { AdminHeaderDropdown } from '@/components/AdminHeaderDropdown';
+
 export function AdminDashboard() {
   const { state, logout, hasAnyRole } = useAuth();
 
@@ -59,23 +63,20 @@ export function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="shadow-sm border-b dark:border-gray-700" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {state.user?.username}</p>
+              <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+              <p className="text-white/80">Welcome back, {state.user?.username}</p>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant={state.user?.role === 'super_admin' ? 'default' : 'secondary'}>
-                {state.user?.role?.replace('_', ' ').toUpperCase()}
-              </Badge>
-              <Button variant="outline" onClick={logout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
+              <AdminHeaderDropdown 
+                userRole={state.user?.role || 'admin'} 
+                username={state.user?.username || 'Admin'}
+              />
             </div>
           </div>
         </div>
@@ -133,39 +134,26 @@ export function AdminDashboard() {
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {adminFeatures.map((feature) => (
-            <Card 
+          {adminFeatures.map((feature, index) => (
+            <InteractiveCard
               key={feature.title}
-              className={`transition-all duration-200 ${
-                feature.available 
-                  ? 'hover:shadow-lg cursor-pointer' 
-                  : 'opacity-50 cursor-not-allowed'
-              }`}
+              title={feature.title}
+              description={feature.description}
+              icon={feature.icon}
+              badges={!feature.available ? ['Super Admin Only'] : []}
+              variant={index % 3 === 0 ? 'glassmorphism' : index % 3 === 1 ? 'gradient' : 'default'}
+              className={`fade-in-up ${!feature.available ? 'opacity-50' : ''}`}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${feature.color}`}>
-                    <feature.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                    {!feature.available && (
-                      <Badge variant="outline" className="text-xs">
-                        Super Admin Only
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{feature.description}</CardDescription>
-                {feature.available && (
-                  <Button className="mt-4 w-full" variant="outline">
-                    Open {feature.title}
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+              {feature.available && (
+                <Button 
+                  className="mt-4 w-full text-white rounded-full btn-green-hover"
+                  style={{ backgroundColor: '#05aa6d' }}
+                >
+                  Open {feature.title}
+                </Button>
+              )}
+            </InteractiveCard>
           ))}
         </div>
 

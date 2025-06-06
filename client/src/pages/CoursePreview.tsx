@@ -178,7 +178,7 @@ export function CoursePreview() {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
-                      {courseData.prerequisites.map((prereq, index) => (
+                      {courseData.prerequisites.map((prereq: string, index: number) => (
                         <li key={index} className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">{prereq}</span>
@@ -222,7 +222,7 @@ export function CoursePreview() {
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
-                  {courseData.modules.map((module) => (
+                  {courseData.modules.map((module: any) => (
                     <AccordionItem key={module.id} value={`module-${module.id}`}>
                       <AccordionTrigger className="text-left">
                         <div className="flex items-center justify-between w-full mr-4">
@@ -241,7 +241,7 @@ export function CoursePreview() {
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="space-y-3 pt-2">
-                          {module.activities.map((activity) => (
+                          {module.activities.map((activity: any) => (
                             <div key={activity.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                               <div className={`p-2 rounded ${getActivityTypeColor(activity.type)}`}>
                                 {getActivityIcon(activity.type)}
@@ -275,7 +275,7 @@ export function CoursePreview() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {courseData.learningObjectives.map((objective, index) => (
+                  {courseData.learningObjectives.map((objective: string, index: number) => (
                     <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">{objective}</span>

@@ -194,7 +194,7 @@ export function CourseManagement() {
                     placeholder="Add a prerequisite"
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addPrerequisite())}
                   />
-                  <Button type="button" onClick={addPrerequisite}>Add</Button>
+                  <Button type="button" onClick={addPrerequisite} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>Add</Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {formData.prerequisites.map((prereq, index) => (
@@ -215,7 +215,7 @@ export function CourseManagement() {
                     placeholder="Add a learning objective"
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addObjective())}
                   />
-                  <Button type="button" onClick={addObjective}>Add</Button>
+                  <Button type="button" onClick={addObjective} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>Add</Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {formData.learningObjectives.map((objective, index) => (
@@ -228,11 +228,11 @@ export function CourseManagement() {
               </div>
 
               <div className="flex space-x-2">
-                <Button type="submit" disabled={createCourseMutation.isPending}>
+                <Button type="submit" disabled={createCourseMutation.isPending} className="text-white btn-green-hover" style={{ backgroundColor: '#05aa6d' }}>
                   <Save className="w-4 h-4 mr-2" />
                   {createCourseMutation.isPending ? 'Creating...' : 'Create Course'}
                 </Button>
-                <Button type="button" variant="outline" onClick={() => {
+                <Button type="button" variant="outline" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }} onClick={() => {
                   setIsCreating(false);
                   resetForm();
                 }}>
@@ -268,11 +268,13 @@ export function CourseManagement() {
                     <Button
                       variant="outline"
                       size="sm"
+                      className="border-2 hover:bg-green-50"
+                      style={{ borderColor: '#05aa6d', color: '#05aa6d' }}
                       onClick={() => window.open(`/course-preview/${course.id}`, '_blank')}
                     >
                       Preview
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="border-2 hover:bg-green-50" style={{ borderColor: '#05aa6d', color: '#05aa6d' }}>
                       <Edit className="w-4 h-4" />
                       Edit
                     </Button>

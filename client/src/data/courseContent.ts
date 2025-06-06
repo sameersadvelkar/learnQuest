@@ -7,6 +7,12 @@ export const sampleCourse: Course = {
   totalModules: 3,
   totalPages: 12,
   estimatedDuration: 480, // 8 hours
+  difficulty: 'Intermediate',
+  prerequisites: ['Basic JavaScript knowledge', 'HTML/CSS fundamentals'],
+  learningObjectives: ['Build React applications', 'Understand component lifecycle', 'Master state management'],
+  image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400',
+  category: 'Frontend Development',
+  hasCoursePage: true,
   createdAt: new Date(),
 };
 
