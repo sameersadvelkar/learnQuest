@@ -44,7 +44,9 @@ cd LearnQuest
 2. Install dependencies:
 
   ```- npm install```
+  
 3. Start the development servers:
+
 Option 1: Using separate terminals
 
 # Terminal 1 - Backend
