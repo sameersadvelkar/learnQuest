@@ -24,7 +24,7 @@ export async function setupVite(app: Express, server: Server) {
     middlewareMode: true,
     hmr: { server },
     server: {
-    allowedHosts: 'all'
+      allowedHosts: 'course-wind-ec2-lb-1374365900.ap-south-1.elb.amazonaws.com'
     }
   };
 
