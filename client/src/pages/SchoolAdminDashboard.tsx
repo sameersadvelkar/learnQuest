@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -178,9 +179,9 @@ export function SchoolAdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="shadow-sm border-b dark:border-gray-700" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
+      <div className="shadow-sm border-b" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
@@ -547,6 +548,7 @@ export function SchoolAdminDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
     </div>
   );
 }

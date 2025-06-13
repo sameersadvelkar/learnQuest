@@ -63,9 +63,9 @@ export function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="shadow-sm border-b dark:border-gray-700" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
+      <div className="shadow-sm border-b" style={{ background: 'linear-gradient(135deg, #0097b2 0%, #7bbe84 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>

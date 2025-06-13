@@ -76,7 +76,7 @@ export function AnimatedStats({
             </div>
           )}
         </div>
-        <div className="mt-2 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
           <div 
             className={`h-full ${color} progress-animate transition-all duration-1000`}
             style={{ 

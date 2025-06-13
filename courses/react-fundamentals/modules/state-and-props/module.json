@@ -1,0 +1,10 @@
+{
+  "id": 3,
+  "courseId": 101,
+  "title": "State and Props",
+  "description": "Master data flow in React through props and state management.",
+  "orderIndex": 2,
+  "totalActivities": 4,
+  "isLocked": false,
+  "activities": ["understanding-props", "state-management", "event-handling", "lifting-state-up"]
+}

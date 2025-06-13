@@ -1,0 +1,21 @@
+{
+  "id": 102,
+  "title": "JavaScript Essentials",
+  "description": "Master the fundamental concepts of JavaScript programming language including variables, functions, objects, and modern ES6+ features.",
+  "totalModules": 3,
+  "totalPages": 12,
+  "estimatedDuration": 240,
+  "difficulty": "Beginner",
+  "prerequisites": ["Basic HTML knowledge"],
+  "learningObjectives": [
+    "Understand JavaScript syntax and data types",
+    "Work with functions and scope",
+    "Manipulate objects and arrays",
+    "Use modern ES6+ features"
+  ],
+  "category": "Programming",
+  "image": "/images/courses/javascript-essentials.jpg",
+  "hasCoursePage": true,
+  "createdAt": "2024-01-20T00:00:00.000Z",
+  "modules": ["basics", "functions-scope", "objects-arrays"]
+}

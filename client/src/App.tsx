@@ -15,6 +15,9 @@ import { LoginForm } from "@/components/LoginForm";
 import { SuperAdminDashboard } from "@/pages/SuperAdminDashboard";
 import { SchoolAdminDashboard } from "@/pages/SchoolAdminDashboard";
 import { CoursePreview } from "@/pages/CoursePreview";
+import FileBasedCourses from "@/pages/FileBasedCourses";
+import SuperAdminCourseApproval from "@/pages/SuperAdminCourseApproval";
+
 import Home from "@/pages/home";
 import Course from "@/pages/course";
 import CourseComplete from "@/pages/course-complete";
@@ -44,6 +47,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/course-preview/:courseId" component={CoursePreview} />
+      <Route path="/file-based-courses" component={FileBasedCourses} />
+      <Route path="/admin/course-approval" component={SuperAdminCourseApproval} />
       <Route path="*">
         {/* Role-based routing for main dashboard */}
         {state.user?.role === 'super_admin' && <SuperAdminDashboard />}
