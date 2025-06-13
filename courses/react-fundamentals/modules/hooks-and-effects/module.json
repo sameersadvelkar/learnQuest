@@ -1,0 +1,10 @@
+{
+  "id": 4,
+  "courseId": 101,
+  "title": "Hooks and Effects",
+  "description": "Learn React hooks for state management and side effects in functional components.",
+  "orderIndex": 3,
+  "totalActivities": 4,
+  "isLocked": false,
+  "activities": ["usestate-hook", "useeffect-hook", "custom-hooks", "hook-best-practices"]
+}

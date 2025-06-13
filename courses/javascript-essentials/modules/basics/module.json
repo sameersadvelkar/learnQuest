@@ -1,0 +1,10 @@
+{
+  "id": 5,
+  "courseId": 102,
+  "title": "JavaScript Basics",
+  "description": "Learn the fundamental building blocks of JavaScript including variables, data types, and basic operations.",
+  "orderIndex": 0,
+  "totalActivities": 3,
+  "isLocked": false,
+  "activities": ["variables-datatypes", "operators-expressions", "basics-quiz"]
+}

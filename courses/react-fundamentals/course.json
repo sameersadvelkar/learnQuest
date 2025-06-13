@@ -1,0 +1,22 @@
+{
+  "id": 101,
+  "title": "React Fundamentals",
+  "description": "Master the core concepts of React including components, props, state, and hooks. Build modern, interactive web applications with confidence.",
+  "totalModules": 4,
+  "totalPages": 16,
+  "estimatedDuration": 360,
+  "difficulty": "Beginner",
+  "prerequisites": ["JavaScript ES6", "HTML/CSS Basics"],
+  "learningObjectives": [
+    "Understand React components and JSX syntax",
+    "Master props and state management",
+    "Implement React hooks effectively",
+    "Build interactive user interfaces",
+    "Handle events and forms in React"
+  ],
+  "category": "Frontend Development",
+  "image": "/images/courses/react-fundamentals.jpg",
+  "hasCoursePage": true,
+  "createdAt": "2024-01-15T00:00:00.000Z",
+  "modules": ["introduction", "components-and-jsx", "state-and-props", "hooks-and-effects"]
+}

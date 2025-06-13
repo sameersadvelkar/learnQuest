@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useCourse } from '@/contexts/CourseContext';
 import { useAuth } from '@/contexts/AuthContext';
+
 import { useProgressTracking } from '@/hooks/useProgress';
 import { contentLoader } from '@/data/contentLoader';
 import { AnimatedStats, ProgressRing } from '@/components/AnimatedStats';
@@ -509,6 +510,7 @@ export default function Home() {
           </div>
         </div>
       </main>
+
     </div>
   );
 }

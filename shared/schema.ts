@@ -45,6 +45,12 @@ export const courses = pgTable("courses", {
   image: text("image"),
   category: text("category"),
   hasCoursePage: boolean("has_course_page").default(true),
+  status: text("status", { enum: ["draft", "pending_approval", "approved", "published", "archived"] }).default("draft").notNull(),
+  sourceType: text("source_type", { enum: ["database", "file_based"] }).default("database").notNull(),
+  sourceIdentifier: text("source_identifier"), // file path for file-based courses
+  approvedBy: integer("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

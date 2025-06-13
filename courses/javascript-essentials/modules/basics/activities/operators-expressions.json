@@ -1,0 +1,35 @@
+{
+  "id": 21,
+  "moduleId": 5,
+  "title": "Operators and Expressions",
+  "description": "Learn about JavaScript operators and how to build expressions",
+  "type": "interactive",
+  "orderIndex": 1,
+  "content": {
+    "instructions": "Practice using different JavaScript operators:",
+    "steps": [
+      {
+        "title": "Arithmetic Operators",
+        "description": "Basic mathematical operations",
+        "code": "let a = 10;\nlet b = 3;\n\nconsole.log(a + b); // Addition: 13\nconsole.log(a - b); // Subtraction: 7\nconsole.log(a * b); // Multiplication: 30\nconsole.log(a / b); // Division: 3.333...\nconsole.log(a % b); // Modulus: 1"
+      },
+      {
+        "title": "Comparison Operators",
+        "description": "Compare values and return boolean results",
+        "code": "let x = 5;\nlet y = '5';\n\nconsole.log(x == y);  // true (loose equality)\nconsole.log(x === y); // false (strict equality)\nconsole.log(x != y);  // false\nconsole.log(x !== y); // true\nconsole.log(x > 3);   // true\nconsole.log(x <= 5);  // true"
+      },
+      {
+        "title": "Logical Operators",
+        "description": "Combine boolean expressions",
+        "code": "let isAdult = true;\nlet hasLicense = false;\n\nconsole.log(isAdult && hasLicense); // AND: false\nconsole.log(isAdult || hasLicense); // OR: true\nconsole.log(!isAdult);              // NOT: false"
+      },
+      {
+        "title": "Assignment Operators",
+        "description": "Assign and modify variable values",
+        "code": "let score = 10;\n\nscore += 5;  // score = score + 5 (15)\nscore -= 3;  // score = score - 3 (12)\nscore *= 2;  // score = score * 2 (24)\nscore /= 4;  // score = score / 4 (6)\n\nconsole.log(score); // 6"
+      }
+    ]
+  },
+  "isRequired": true,
+  "estimatedDuration": 25
+}

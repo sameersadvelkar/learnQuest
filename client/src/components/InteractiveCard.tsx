@@ -109,7 +109,7 @@ export function InteractiveCard({
               <span>Progress</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-gray-200 bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-primary h-2 rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${progress}%` }}

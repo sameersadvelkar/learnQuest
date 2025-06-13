@@ -93,35 +93,7 @@ input[type="email"]:focus {
   --sidebar-ring: 217 91% 60%;
 }
 
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --primary: 221 83% 53%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 142 76% 36%;
-  --secondary-foreground: 355 7% 97%;
-  --accent: 45 93% 47%;
-  --accent-foreground: 26 83% 14%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --ring: 221 83% 53%;
-  --sidebar-background: 240 5.9% 10%;
-  --sidebar-foreground: 240 4.8% 95.9%;
-  --sidebar-primary: 221 83% 53%;
-  --sidebar-primary-foreground: 210 40% 98%;
-  --sidebar-accent: 240 3.7% 15.9%;
-  --sidebar-accent-foreground: 240 4.8% 95.9%;
-  --sidebar-border: 240 3.7% 15.9%;
-  --sidebar-ring: 217 91% 60%;
-}
+
 
 
 
@@ -180,10 +152,7 @@ input[type="email"]:focus {
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .dark .glassmorphism {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+
 
   .card-hover {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -195,9 +164,7 @@ input[type="email"]:focus {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
-  .dark .card-hover:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  }
+
 
   .gradient-border {
     background: linear-gradient(45deg, #3b82f6, #10b981, #8b5cf6);
@@ -210,9 +177,7 @@ input[type="email"]:focus {
     border-radius: 6px;
   }
 
-  .dark .gradient-border-content {
-    background: rgb(3 7 18);
-  }
+
 
   .animate-counter {
     animation: countUp 1s ease-out forwards;

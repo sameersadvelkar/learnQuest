@@ -32,6 +32,10 @@ export interface IStorage {
   getCourse(id: number): Promise<Course | undefined>;
   createCourse(course: InsertCourse): Promise<Course>;
   updateCourse(id: number, updates: Partial<Course>): Promise<Course | undefined>;
+  getCoursesByStatus(status: string): Promise<Course[]>;
+  approveCourse(courseId: number, approvedBy: number): Promise<Course | undefined>;
+  publishCourse(courseId: number): Promise<Course | undefined>;
+  importFileBasedCourse(coursePath: string): Promise<Course>;
 
   // School-Course assignment methods
   getSchoolCourses(schoolId: number): Promise<Course[]>;
@@ -383,6 +387,12 @@ export class MemStorage implements IStorage {
       image: insertCourse.image || null,
       category: insertCourse.category || null,
       hasCoursePage: insertCourse.hasCoursePage !== undefined ? insertCourse.hasCoursePage : true,
+      status: "draft",
+      sourceType: "database",
+      sourceIdentifier: null,
+      approvedBy: null,
+      approvedAt: null,
+      publishedAt: null,
       createdAt: new Date()
     };
     this.courses.set(course.id, course);
@@ -396,6 +406,65 @@ export class MemStorage implements IStorage {
     const updatedCourse = { ...course, ...updates };
     this.courses.set(id, updatedCourse);
     return updatedCourse;
+  }
+
+  async getCoursesByStatus(status: string): Promise<Course[]> {
+    return Array.from(this.courses.values()).filter(course => course.status === status);
+  }
+
+  async approveCourse(courseId: number, approvedBy: number): Promise<Course | undefined> {
+    const course = this.courses.get(courseId);
+    if (!course) return undefined;
+    
+    const updatedCourse = { 
+      ...course, 
+      status: 'approved' as const,
+      approvedBy,
+      approvedAt: new Date()
+    };
+    this.courses.set(courseId, updatedCourse);
+    return updatedCourse;
+  }
+
+  async publishCourse(courseId: number): Promise<Course | undefined> {
+    const course = this.courses.get(courseId);
+    if (!course || course.status !== 'approved') return undefined;
+    
+    const updatedCourse = { 
+      ...course, 
+      status: 'published' as const,
+      publishedAt: new Date()
+    };
+    this.courses.set(courseId, updatedCourse);
+    return updatedCourse;
+  }
+
+  async importFileBasedCourse(coursePath: string): Promise<Course> {
+    // This would load from file system and create a database entry
+    // For now, creating a placeholder that represents file-based course
+    const course: Course = {
+      id: this.currentCourseId++,
+      title: `File-Based Course from ${coursePath}`,
+      description: 'Imported from file-based content system',
+      totalModules: 0,
+      totalPages: 0,
+      estimatedDuration: 0,
+      difficulty: 'Beginner',
+      prerequisites: null,
+      learningObjectives: null,
+      image: null,
+      category: null,
+      hasCoursePage: true,
+      status: 'pending_approval',
+      sourceType: 'file_based',
+      sourceIdentifier: coursePath,
+      approvedBy: null,
+      approvedAt: null,
+      publishedAt: null,
+      createdAt: new Date()
+    };
+    this.courses.set(course.id, course);
+    return course;
   }
 
   // School-Course methods
