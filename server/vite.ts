@@ -24,6 +24,7 @@ export async function setupVite(app: Express, server: Server) {
     middlewareMode: true,
     hmr: { server },
     server: {
+      host: true, // allows external access
       allowedHosts: [
         'course-wind-ec2-lb-1374365900.ap-south-1.elb.amazonaws.com', // Your ALB DNS
         'localhost' // For local development (optional)
