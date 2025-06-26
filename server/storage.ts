@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+import path from 'path';
 import type {
   School, InsertSchool,
   User, InsertUser,
@@ -9,7 +11,8 @@ import type {
   UserProgress, InsertUserProgress,
   Achievement, InsertAchievement,
   UserAchievement, InsertUserAchievement,
-  UserSettings, InsertUserSettings
+  UserSettings, InsertUserSettings,
+  CourseTranslation, InsertCourseTranslation
 } from "@shared/schema";
 
 export interface IStorage {
@@ -32,6 +35,10 @@ export interface IStorage {
   getCourse(id: number): Promise<Course | undefined>;
   createCourse(course: InsertCourse): Promise<Course>;
   updateCourse(id: number, updates: Partial<Course>): Promise<Course | undefined>;
+  getCoursesByStatus(status: string): Promise<Course[]>;
+  approveCourse(courseId: number, approvedBy: number): Promise<Course | undefined>;
+  publishCourse(courseId: number): Promise<Course | undefined>;
+  importFileBasedCourse(coursePath: string): Promise<Course>;
 
   // School-Course assignment methods
   getSchoolCourses(schoolId: number): Promise<Course[]>;
@@ -44,6 +51,7 @@ export interface IStorage {
   unassignCourseFromStudent(studentId: number, courseId: number): Promise<boolean>;
 
   // Module methods
+  getModule(id: number): Promise<Module | undefined>;
   getModulesByCourse(courseId: number): Promise<Module[]>;
   createModule(module: InsertModule): Promise<Module>;
 
@@ -67,9 +75,16 @@ export interface IStorage {
   getUserSettings(userId: number): Promise<UserSettings | undefined>;
   createUserSettings(settings: InsertUserSettings): Promise<UserSettings>;
   updateUserSettings(userId: number, updates: Partial<UserSettings>): Promise<UserSettings | undefined>;
+
+  // Course Translation methods
+  getCourseTranslations(courseId: number): Promise<CourseTranslation[]>;
+  getCourseTranslation(courseId: number, language: string): Promise<CourseTranslation | undefined>;
+  createCourseTranslation(translation: InsertCourseTranslation): Promise<CourseTranslation>;
+  updateCourseTranslation(id: number, updates: Partial<CourseTranslation>): Promise<CourseTranslation | undefined>;
 }
 
-export class MemStorage implements IStorage {
+export class FileBasedStorage implements IStorage {
+  private dataDir: string;
   private schools: Map<number, School> = new Map();
   private users: Map<number, User> = new Map();
   private courses: Map<number, Course> = new Map();
@@ -81,6 +96,7 @@ export class MemStorage implements IStorage {
   private achievements: Map<number, Achievement> = new Map();
   private userAchievements: Map<number, UserAchievement> = new Map();
   private userSettings: Map<number, UserSettings> = new Map();
+  private courseTranslations: Map<number, CourseTranslation> = new Map();
 
   private currentSchoolId = 1;
   private currentUserId = 1;
@@ -93,9 +109,124 @@ export class MemStorage implements IStorage {
   private currentAchievementId = 1;
   private currentUserAchievementId = 1;
   private currentUserSettingsId = 1;
+  private currentCourseTranslationId = 1;
 
   constructor() {
+    this.dataDir = process.cwd() + '/data';
+    this.initializeFileBasedStorage();
+  }
+
+  private async initializeFileBasedStorage() {
+    await this.ensureDataDirectory();
+    await this.loadAllData();
     this.initializeData();
+  }
+
+  private async ensureDataDirectory() {
+    try {
+      await fs.access(this.dataDir);
+    } catch {
+      await fs.mkdir(this.dataDir, { recursive: true });
+    }
+  }
+
+  private async loadAllData() {
+    try {
+      await Promise.all([
+        this.loadFromFile('schools', this.schools),
+        this.loadFromFile('users', this.users),
+        this.loadFromFile('courses', this.courses),
+        this.loadFromFile('modules', this.modules),
+        this.loadFromFile('activities', this.activities),
+        this.loadFromFile('schoolCourses', this.schoolCourses),
+        this.loadFromFile('studentCourses', this.studentCourses),
+        this.loadFromFile('userProgress', this.userProgressRecords),
+        this.loadFromFile('achievements', this.achievements),
+        this.loadFromFile('userAchievements', this.userAchievements),
+        this.loadFromFile('userSettings', this.userSettings),
+        this.loadFromFile('courseTranslations', this.courseTranslations),
+        this.loadCounters()
+      ]);
+    } catch (error) {
+      console.log('No existing data files found, starting with fresh data');
+    }
+  }
+
+  private async loadFromFile<T>(filename: string, map: Map<number, T>) {
+    try {
+      const filePath = path.join(this.dataDir, `${filename}.json`);
+      const data = await fs.readFile(filePath, 'utf-8');
+      const items: T[] = JSON.parse(data);
+      items.forEach((item: any) => map.set(item.id, item));
+    } catch (error) {
+      // File doesn't exist, which is fine for initial setup
+    }
+  }
+
+  private async loadCounters() {
+    try {
+      const filePath = path.join(this.dataDir, 'counters.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const counters = JSON.parse(data);
+      
+      this.currentSchoolId = counters.currentSchoolId || 1;
+      this.currentUserId = counters.currentUserId || 1;
+      this.currentCourseId = counters.currentCourseId || 1;
+      this.currentModuleId = counters.currentModuleId || 1;
+      this.currentActivityId = counters.currentActivityId || 1;
+      this.currentSchoolCourseId = counters.currentSchoolCourseId || 1;
+      this.currentStudentCourseId = counters.currentStudentCourseId || 1;
+      this.currentProgressId = counters.currentProgressId || 1;
+      this.currentAchievementId = counters.currentAchievementId || 1;
+      this.currentUserAchievementId = counters.currentUserAchievementId || 1;
+      this.currentUserSettingsId = counters.currentUserSettingsId || 1;
+      this.currentCourseTranslationId = counters.currentCourseTranslationId || 1;
+    } catch (error) {
+      // File doesn't exist, use defaults
+    }
+  }
+
+  private async saveToFile<T>(filename: string, map: Map<number, T>) {
+    const filePath = path.join(this.dataDir, `${filename}.json`);
+    const items = Array.from(map.values());
+    await fs.writeFile(filePath, JSON.stringify(items, null, 2));
+  }
+
+  private async saveCounters() {
+    const counters = {
+      currentSchoolId: this.currentSchoolId,
+      currentUserId: this.currentUserId,
+      currentCourseId: this.currentCourseId,
+      currentModuleId: this.currentModuleId,
+      currentActivityId: this.currentActivityId,
+      currentSchoolCourseId: this.currentSchoolCourseId,
+      currentStudentCourseId: this.currentStudentCourseId,
+      currentProgressId: this.currentProgressId,
+      currentAchievementId: this.currentAchievementId,
+      currentUserAchievementId: this.currentUserAchievementId,
+      currentUserSettingsId: this.currentUserSettingsId,
+      currentCourseTranslationId: this.currentCourseTranslationId
+    };
+    const filePath = path.join(this.dataDir, 'counters.json');
+    await fs.writeFile(filePath, JSON.stringify(counters, null, 2));
+  }
+
+  private async persistData() {
+    await Promise.all([
+      this.saveToFile('schools', this.schools),
+      this.saveToFile('users', this.users),
+      this.saveToFile('courses', this.courses),
+      this.saveToFile('modules', this.modules),
+      this.saveToFile('activities', this.activities),
+      this.saveToFile('schoolCourses', this.schoolCourses),
+      this.saveToFile('studentCourses', this.studentCourses),
+      this.saveToFile('userProgress', this.userProgressRecords),
+      this.saveToFile('achievements', this.achievements),
+      this.saveToFile('userAchievements', this.userAchievements),
+      this.saveToFile('userSettings', this.userSettings),
+      this.saveToFile('courseTranslations', this.courseTranslations),
+      this.saveCounters()
+    ]);
   }
 
   private initializeData() {
@@ -114,144 +245,14 @@ export class MemStorage implements IStorage {
     this.users.set(1, superAdmin);
     this.currentUserId = 2;
 
-    // Create operational courses
-    const courses: Course[] = [
-      {
-        id: 1,
-        title: "Web Development Fundamentals",
-        description: "Master HTML, CSS, and JavaScript to build modern websites",
-        totalModules: 3,
-        totalPages: 15,
-        estimatedDuration: 40,
-        difficulty: "Beginner",
-        prerequisites: ["Basic computer skills"],
-        learningObjectives: [
-          "Build responsive websites with HTML and CSS",
-          "Add interactivity with JavaScript",
-          "Deploy websites to production"
-        ],
-        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-        category: "Frontend",
-        hasCoursePage: true,
-        createdAt: new Date()
-      },
-      {
-        id: 2,
-        title: "Python Programming",
-        description: "Learn Python programming from basics to advanced concepts",
-        totalModules: 4,
-        totalPages: 20,
-        estimatedDuration: 50,
-        difficulty: "Beginner",
-        prerequisites: ["Basic programming concepts"],
-        learningObjectives: [
-          "Write Python programs",
-          "Work with data structures",
-          "Build simple applications"
-        ],
-        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-        category: "Backend",
-        hasCoursePage: true,
-        createdAt: new Date()
-      }
-    ];
+    // No demo courses - ready for real course data
+    this.currentCourseId = 1;
 
-    courses.forEach(course => {
-      this.courses.set(course.id, course);
-    });
-    this.currentCourseId = 3;
+    // No demo modules - ready for real module data
+    this.currentModuleId = 1;
 
-    // Create modules
-    const modules: Module[] = [
-      {
-        id: 1,
-        courseId: 1,
-        title: "HTML Fundamentals",
-        description: "Learn HTML structure and elements",
-        orderIndex: 1,
-        totalActivities: 3,
-        isLocked: false
-      },
-      {
-        id: 2,
-        courseId: 1,
-        title: "CSS Styling",
-        description: "Master CSS for beautiful websites",
-        orderIndex: 2,
-        totalActivities: 3,
-        isLocked: false
-      },
-      {
-        id: 3,
-        courseId: 1,
-        title: "JavaScript Basics",
-        description: "Add interactivity with JavaScript",
-        orderIndex: 3,
-        totalActivities: 3,
-        isLocked: false
-      },
-      {
-        id: 4,
-        courseId: 2,
-        title: "Python Basics",
-        description: "Introduction to Python programming",
-        orderIndex: 1,
-        totalActivities: 3,
-        isLocked: false
-      }
-    ];
-
-    modules.forEach(module => {
-      this.modules.set(module.id, module);
-    });
-    this.currentModuleId = 5;
-
-    // Create activities
-    const activities: Activity[] = [
-      {
-        id: 1,
-        moduleId: 1,
-        type: "lesson",
-        title: "What is HTML?",
-        description: "Introduction to HTML",
-        orderIndex: 1,
-        isLocked: false,
-        content: {
-          type: "lesson",
-          content: "HTML is the standard markup language for creating web pages."
-        },
-        videoUrl: null,
-        duration: 15
-      },
-      {
-        id: 2,
-        moduleId: 1,
-        type: "quiz",
-        title: "HTML Quiz",
-        description: "Test your HTML knowledge",
-        orderIndex: 2,
-        isLocked: false,
-        content: {
-          type: "quiz",
-          questions: [
-            {
-              id: "q1",
-              type: "multiple-choice",
-              question: "What does HTML stand for?",
-              options: ["HyperText Markup Language", "High Tech Modern Language"],
-              correct: 0
-            }
-          ]
-        },
-        videoUrl: null,
-        duration: 10
-      }
-    ];
-
-    activities.forEach(activity => {
-      this.activities.set(activity.id, activity);
-    });
-    this.currentActivityId = 3;
+    // No demo activities - ready for real activity data
+    this.currentActivityId = 1;
 
     // Create achievements
     const achievementsList: Achievement[] = [
@@ -306,6 +307,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date()
     };
     this.schools.set(school.id, school);
+    await this.persistData();
     return school;
   }
 
@@ -315,6 +317,7 @@ export class MemStorage implements IStorage {
     
     const updatedSchool = { ...school, ...updates };
     this.schools.set(id, updatedSchool);
+    await this.persistData();
     return updatedSchool;
   }
 
@@ -338,6 +341,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date()
     };
     this.users.set(user.id, user);
+    await this.persistData();
     return user;
   }
 
@@ -383,9 +387,19 @@ export class MemStorage implements IStorage {
       image: insertCourse.image || null,
       category: insertCourse.category || null,
       hasCoursePage: insertCourse.hasCoursePage !== undefined ? insertCourse.hasCoursePage : true,
-      createdAt: new Date()
+      status: insertCourse.status || "draft",
+      sourceType: insertCourse.sourceType || "database",
+      sourceIdentifier: insertCourse.sourceIdentifier || null,
+      approvedBy: null,
+      approvedAt: null,
+      publishedAt: null,
+      createdAt: new Date(),
+      instructorName: insertCourse.instructorName || null,
+      defaultLanguage: insertCourse.defaultLanguage || "en",
+      supportedLanguages: insertCourse.supportedLanguages || ["en"]
     };
     this.courses.set(course.id, course);
+    await this.persistData();
     return course;
   }
 
@@ -395,7 +409,70 @@ export class MemStorage implements IStorage {
     
     const updatedCourse = { ...course, ...updates };
     this.courses.set(id, updatedCourse);
+    await this.persistData();
     return updatedCourse;
+  }
+
+  async getCoursesByStatus(status: string): Promise<Course[]> {
+    return Array.from(this.courses.values()).filter(course => course.status === status);
+  }
+
+  async approveCourse(courseId: number, approvedBy: number): Promise<Course | undefined> {
+    const course = this.courses.get(courseId);
+    if (!course) return undefined;
+    
+    const updatedCourse = { 
+      ...course, 
+      status: 'approved' as const,
+      approvedBy,
+      approvedAt: new Date()
+    };
+    this.courses.set(courseId, updatedCourse);
+    return updatedCourse;
+  }
+
+  async publishCourse(courseId: number): Promise<Course | undefined> {
+    const course = this.courses.get(courseId);
+    if (!course || course.status !== 'approved') return undefined;
+    
+    const updatedCourse = { 
+      ...course, 
+      status: 'published' as const,
+      publishedAt: new Date()
+    };
+    this.courses.set(courseId, updatedCourse);
+    return updatedCourse;
+  }
+
+  async importFileBasedCourse(coursePath: string): Promise<Course> {
+    // This would load from file system and create a database entry
+    // For now, creating a placeholder that represents file-based course
+    const course: Course = {
+      id: this.currentCourseId++,
+      title: `File-Based Course from ${coursePath}`,
+      description: 'Imported from file-based content system',
+      totalModules: 0,
+      totalPages: 0,
+      estimatedDuration: 0,
+      difficulty: 'Beginner',
+      prerequisites: null,
+      learningObjectives: null,
+      image: null,
+      category: null,
+      hasCoursePage: true,
+      status: 'pending_approval',
+      sourceType: 'file_based',
+      sourceIdentifier: coursePath,
+      approvedBy: null,
+      approvedAt: null,
+      publishedAt: null,
+      createdAt: new Date(),
+      instructorName: null,
+      defaultLanguage: "en",
+      supportedLanguages: ["en"]
+    };
+    this.courses.set(course.id, course);
+    return course;
   }
 
   // School-Course methods
@@ -464,6 +541,10 @@ export class MemStorage implements IStorage {
   }
 
   // Module methods
+  async getModule(id: number): Promise<Module | undefined> {
+    return this.modules.get(id);
+  }
+
   async getModulesByCourse(courseId: number): Promise<Module[]> {
     return Array.from(this.modules.values())
       .filter(module => module.courseId === courseId)
@@ -506,9 +587,11 @@ export class MemStorage implements IStorage {
       isLocked: insertActivity.isLocked || null,
       content: insertActivity.content || {},
       videoUrl: insertActivity.videoUrl || null,
-      duration: insertActivity.duration || null
+      duration: insertActivity.duration || null,
+      media: insertActivity.media || null
     };
     this.activities.set(activity.id, activity);
+    await this.persistData();
     return activity;
   }
 
@@ -535,6 +618,7 @@ export class MemStorage implements IStorage {
       timeSpent: insertProgress.timeSpent || null
     };
     this.userProgressRecords.set(progress.id, progress);
+    await this.persistData();
     return progress;
   }
 
@@ -544,6 +628,7 @@ export class MemStorage implements IStorage {
     
     const updatedProgress = { ...progress, ...updates };
     this.userProgressRecords.set(id, updatedProgress);
+    await this.persistData();
     return updatedProgress;
   }
 
@@ -564,6 +649,7 @@ export class MemStorage implements IStorage {
       earnedAt: new Date()
     };
     this.userAchievements.set(userAchievement.id, userAchievement);
+    await this.persistData();
     return userAchievement;
   }
 
@@ -583,6 +669,7 @@ export class MemStorage implements IStorage {
       notifications: insertSettings.notifications || null
     };
     this.userSettings.set(settings.id, settings);
+    await this.persistData();
     return settings;
   }
 
@@ -594,8 +681,54 @@ export class MemStorage implements IStorage {
     
     const updatedSettings = { ...settings, ...updates };
     this.userSettings.set(settings.id, updatedSettings);
+    await this.persistData();
     return updatedSettings;
+  }
+
+  // Course Translation methods
+  async getCourseTranslations(courseId: number): Promise<CourseTranslation[]> {
+    return Array.from(this.courseTranslations.values())
+      .filter(translation => translation.courseId === courseId);
+  }
+
+  async getCourseTranslation(courseId: number, language: string): Promise<CourseTranslation | undefined> {
+    return Array.from(this.courseTranslations.values())
+      .find(translation => translation.courseId === courseId && translation.language === language);
+  }
+
+  async createCourseTranslation(insertTranslation: InsertCourseTranslation): Promise<CourseTranslation> {
+    const translation: CourseTranslation = {
+      id: this.currentCourseTranslationId++,
+      courseId: insertTranslation.courseId,
+      language: insertTranslation.language,
+      title: insertTranslation.title || null,
+      description: insertTranslation.description || null,
+      prerequisites: insertTranslation.prerequisites || null,
+      learningObjectives: insertTranslation.learningObjectives || null,
+      instructorName: insertTranslation.instructorName || null,
+      category: insertTranslation.category || null,
+      additionalContent: insertTranslation.additionalContent || null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.courseTranslations.set(translation.id, translation);
+    await this.persistData();
+    return translation;
+  }
+
+  async updateCourseTranslation(id: number, updates: Partial<CourseTranslation>): Promise<CourseTranslation | undefined> {
+    const translation = this.courseTranslations.get(id);
+    if (!translation) return undefined;
+    
+    const updatedTranslation = { 
+      ...translation, 
+      ...updates,
+      updatedAt: new Date()
+    };
+    this.courseTranslations.set(id, updatedTranslation);
+    await this.persistData();
+    return updatedTranslation;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new FileBasedStorage();

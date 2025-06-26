@@ -1,0 +1,19 @@
+{
+  "id": 2,
+  "title": "उदाहरण कोर्स",
+  "description": "यह स्वचालित कोर्स खोज का परीक्षण करने के लिए एक उदाहरण कोर्स है",
+  "totalModules": 1,
+  "totalPages": 1,
+  "estimatedDuration": 30,
+  "difficulty": "शुरुआती",
+  "prerequisites": ["बुनियादी कंप्यूटर कौशल"],
+  "learningObjectives": ["सीखें कि कोर्स खोज कैसे काम करती है"],
+  "instructorName": "परीक्षण प्रशिक्षक",
+  "images": {
+    "hero": "course_1750246597008.png",
+    "logo": "course_1750246597008.png",
+    "banner": "course_1750246597008.png",
+    "thumbnail": "course_1750246597008.png"
+  },
+  "modules": ["module-1"]
+}

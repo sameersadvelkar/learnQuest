@@ -1,0 +1,66 @@
+{
+  "id": 5,
+  "moduleId": 5,
+  "title": "Review & Final Quiz",
+  "description": "Participate in a role-play challenge and complete the final interactive quiz.",
+  "type": "assessment",
+  "orderIndex": 0,
+  "estimatedDuration": 20,
+
+  "media": {
+    "hero": "/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png",
+    "banner": "/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png",
+    "images": [
+      "/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png"
+    ]
+  },
+
+  "content": {
+    "story": "Alex has learned so much about digital wellness and safety! Now it's time to put all these skills together. Alex's friend Maya needs help with some digital challenges. Can you help Alex give the right advice?",
+    "components": [
+      {
+        "type": "dragdrop",
+        "title": "Match Digital Issues to Solutions",
+        "data": {
+          "instruction": "Help Alex match each digital problem with the best solution. Drag the solutions to the correct problems.",
+          "items": [
+            "Use privacy settings and report the behavior",
+            "Cross-check with multiple credible sources",
+            "Set specific times for social media use",
+            "Think before posting and consider consequences",
+            "Get permission before sharing photos of others"
+          ],
+          "categories": [
+            {
+              "name": "Maya is being cyberbullied",
+              "items": ["Use privacy settings and report the behavior"]
+            },
+            {
+              "name": "Maya saw shocking news online",
+              "items": ["Cross-check with multiple credible sources"]
+            },
+            {
+              "name": "Maya feels addicted to social media",
+              "items": ["Set specific times for social media use"]
+            }
+          ]
+        }
+      },
+      {
+        "type": "multiplechoice",
+        "title": "Final Challenge Quiz",
+        "data": {
+          "question": "Which digital strategies will you adopt today?",
+          "options": [
+            "Adjusting privacy settings on all my accounts",
+            "Fact-checking suspicious news before sharing",
+            "Setting specific times for social media use",
+            "All of the above"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Adopting all these strategies creates a comprehensive approach to digital wellness and safety."
+        }
+      }
+    ]
+  }
+}

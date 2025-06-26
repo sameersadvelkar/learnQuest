@@ -1,0 +1,14 @@
+{
+  "currentSchoolId": 1,
+  "currentUserId": 2,
+  "currentCourseId": 3,
+  "currentModuleId": 7,
+  "currentActivityId": 7,
+  "currentSchoolCourseId": 1,
+  "currentStudentCourseId": 1,
+  "currentProgressId": 1,
+  "currentAchievementId": 3,
+  "currentUserAchievementId": 1,
+  "currentUserSettingsId": 1,
+  "currentCourseTranslationId": 1
+}

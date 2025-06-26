@@ -1,0 +1,58 @@
+{
+  "id": 4,
+  "moduleId": 4,
+  "title": "Digital Balance & Wellness",
+  "description": "Practice digital detox and set screen time goals.",
+  "type": "interactive",
+  "orderIndex": 0,
+  "estimatedDuration": 15,
+
+  "media": {
+    "hero": "/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png",
+    "banner": "/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png",
+    "images": [
+      "/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png"
+    ]
+  },
+
+  "content": {
+    "story": "Alex notices feeling tired and stressed after spending hours scrolling through social media. Friends seem happier online than in person, and Alex wonders if social media is affecting mood and sleep. Alex decides to track screen time and try some digital wellness strategies.",
+    "components": [
+      {
+        "type": "tabs",
+        "title": "Daily/Weekly Digital Wellness Plan",
+        "data": {
+          "tabs": [
+            {
+              "title": "Daily Plan",
+              "content": "Morning: Check messages for 10 minutes max. School hours: Phone in airplane mode during classes. Evening: 1 hour social media limit. Before bed: No screens 1 hour before sleep."
+            },
+            {
+              "title": "Weekly Plan", 
+              "content": "Tech-free Sunday morning. One evening per week without devices. Weekend outdoor activity with friends. Weekly review of screen time statistics and goals."
+            },
+            {
+              "title": "Healthy Alternatives",
+              "content": "Instead of endless scrolling: Read a book, call a friend, exercise, practice a hobby, help family with tasks, listen to music, or journal."
+            }
+          ]
+        }
+      },
+      {
+        "type": "multiplechoice",
+        "title": "Digital Wellness Quiz",
+        "data": {
+          "question": "What is one benefit of having designated 'offline' periods?",
+          "options": [
+            "It reduces distractions and improves mood",
+            "It increases the number of notifications",
+            "It isolates you from your friends",
+            "It leads to unlimited screen time"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Offline time supports mental wellness and reduces screen fatigue."
+        }
+      }
+    ]
+  }
+}

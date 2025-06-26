@@ -3,7 +3,7 @@ import { useProgress, calculateCourseProgress, calculateModuleProgress } from '@
 import { useCourse } from '@/contexts/CourseContext';
 
 export function useProgressTracking() {
-  const { state: progressState, dispatch: progressDispatch } = useProgress();
+  const { state: progressState, dispatch: progressDispatch, setCourseId } = useProgress();
   const { state: courseState } = useCourse();
 
   const completeActivity = useCallback((activityId: number, moduleId: number) => {
@@ -120,6 +120,24 @@ export function useProgressTracking() {
     return !isModuleCompleted(previousModule.id);
   }, [courseState.modules, isModuleCompleted]);
 
+  const clearAllProgressData = useCallback(() => {
+    // Clear all course-specific progress data
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('courseProgress_')) {
+        keysToRemove.push(key);
+      }
+    }
+    
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+    
+    // Reset progress state
+    progressDispatch({ type: 'CLEAR_ALL_DATA' });
+    
+    console.log('Cleared all course-specific progress data:', keysToRemove);
+  }, [progressDispatch]);
+
   const getModuleStatus = useCallback((moduleId: number, orderIndex: number) => {
     if (isModuleLocked(moduleId, orderIndex)) return 'locked';
     if (isModuleCompleted(moduleId)) return 'completed';
@@ -142,5 +160,7 @@ export function useProgressTracking() {
     isModuleLocked,
     getModuleStatus,
     checkAchievements,
+    clearAllProgressData,
+    setCourseId,
   };
 }

@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "courseId": 1,
+    "title": "Creating a Responsible Online Persona",
+    "description": "Learn how to create and maintain a positive digital identity through responsible online behavior and digital footprint awareness.",
+    "orderIndex": 1,
+    "totalActivities": 1,
+    "isLocked": null
+  },
+  {
+    "id": 2,
+    "courseId": 1,
+    "title": "Privacy Protection and Cyberbullying",
+    "description": "Understand privacy settings, learn to protect personal information, and develop strategies for dealing with cyberbullying.",
+    "orderIndex": 2,
+    "totalActivities": 1,
+    "isLocked": null
+  },
+  {
+    "id": 3,
+    "courseId": 1,
+    "title": "Misinformation and Scams",
+    "description": "Learn to identify misinformation, verify sources, and protect yourself from online scams and phishing attempts.",
+    "orderIndex": 3,
+    "totalActivities": 1,
+    "isLocked": null
+  },
+  {
+    "id": 4,
+    "courseId": 1,
+    "title": "Digital Balance & Wellness",
+    "description": "Learn strategies for healthy digital habits, screen time management, and maintaining balance between online and offline activities.",
+    "orderIndex": 4,
+    "totalActivities": 1,
+    "isLocked": null
+  },
+  {
+    "id": 5,
+    "courseId": 1,
+    "title": "Review & Final Assessment",
+    "description": "Apply all learned concepts through interactive challenges and complete the comprehensive digital wellness and safety assessment.",
+    "orderIndex": 5,
+    "totalActivities": 1,
+    "isLocked": null
+  },
+  {
+    "id": 6,
+    "courseId": 2,
+    "title": "Introduction Module",
+    "description": "Basic introduction to the example course",
+    "orderIndex": 1,
+    "totalActivities": 1,
+    "isLocked": null
+  }
+]

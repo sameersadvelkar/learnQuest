@@ -1,0 +1,121 @@
+{
+  "app": {
+    "title": "EduQuest",
+    "subtitle": "गेमिफाइड लर्निंग मॅनेजमेंट सिस्टम"
+  },
+  "navigation": {
+    "home": "होम",
+    "course": "कोर्स",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्ज",
+    "help": "मदत",
+    "previous": "मागील",
+    "next": "पुढील",
+    "markComplete": "पूर्ण म्हणून चिन्हांकित करा",
+    "completed": "पूर्ण",
+    "backToCourse": "कोर्सकडे परत",
+    "menu": "मेनू"
+  },
+  "buttons": {
+    "listen": "ऐका",
+    "pause": "थांबवा",
+    "dashboard": "डॅशबोर्ड",
+    "viewCourse": "कोर्स पहा",
+    "startCourse": "कोर्स सुरू करा",
+    "continueCourse": "कोर्स सुरू ठेवा"
+  },
+  "course": {
+    "progress": "कोर्स प्रगती",
+    "modules": "मॉड्यूल",
+    "activities": "क्रियाकलाप",
+    "estimatedTime": "अंदाजित वेळ",
+    "completedPages": "पूर्ण झालेली पाने",
+    "timeLeft": "उरलेला वेळ",
+    "learningObjectives": "शिकण्याचे उद्दिष्ट",
+    "keyTakeaways": "मुख्य मुद्दे",
+    "nextSteps": "पुढील पावले",
+    "resources": "संसाधने",
+    "transcript": "ट्रान्सक्रिप्ट",
+    "quiz": "प्रश्नमंजुषा",
+    "overview": "विहंगावलोकन",
+    "instructor": "प्रशिक्षक",
+    "duration": "कालावधी",
+    "difficulty": "अडचण",
+    "prerequisites": "पूर्वअपेक्षा",
+    "activity": "क्रियाकलाप",
+    "courseStructure": "कोर्स रचना",
+    "totalModules": "एकूण मॉड्यूल",
+    "totalPages": "एकूण पाने",
+    "modulePreview": "मॉड्यूल पूर्वावलोकन",
+    "moreModules": "अधिक मॉड्यूल",
+    "minutes": "मिनिटे"
+  },
+  "progress": {
+    "courseProgress": "कोर्स प्रगती",
+    "moduleProgress": "मॉड्यूल प्रगती",
+    "completed": "पूर्ण",
+    "inProgress": "प्रगतीपथावर",
+    "locked": "लॉक केले",
+    "unlockCondition": "अनलॉक करण्यासाठी मागील मॉड्यूल पूर्ण करा"
+  },
+  "achievements": {
+    "title": "यश",
+    "unlocked": "यश अनलॉक झाले!",
+    "recentAchievements": "अलीकडील यश",
+    "totalPoints": "एकूण गुण",
+    "streak": "सध्याची स्ट्रीक",
+    "noAchievements": "अजून कोणतेही यश नाही",
+    "earnAchievements": "यश मिळवण्यासाठी क्रियाकलाप पूर्ण करा!"
+  },
+  "common": {
+    "loading": "लोड होत आहे...",
+    "error": "त्रुटी",
+    "success": "यशस्वी",
+    "cancel": "रद्द करा",
+    "save": "जतन करा",
+    "delete": "हटवा",
+    "edit": "संपादित करा",
+    "back": "मागे",
+    "next": "पुढे",
+    "previous": "मागील",
+    "close": "बंद करा",
+    "minutes": "मिनिटे"
+  },
+  "video": {
+    "play": "प्ले करा",
+    "pause": "थांबवा",
+    "mute": "म्यूट करा",
+    "unmute": "अनम्यूट करा",
+    "fullscreen": "फुल स्क्रीन",
+    "settings": "व्हिडिओ सेटिंग्ज",
+    "quality": "गुणवत्ता",
+    "speed": "प्लेबॅक स्पीड"
+  },
+  "quiz": {
+    "question": "प्रश्न",
+    "of": "चा",
+    "timeRemaining": "उरलेला वेळ",
+    "submit": "प्रश्नमंजुषा सबमिट करा",
+    "next": "पुढील प्रश्न",
+    "previous": "मागील प्रश्न",
+    "results": "प्रश्नमंजुषाचे निकाल",
+    "score": "तुमचा स्कोअर",
+    "correct": "बरोबर",
+    "incorrect": "चुकीचे",
+    "explanation": "स्पष्टीकरण",
+    "review": "तुमची उत्तरे पुन्हा पहा",
+    "excellent": "उत्कृष्ट!",
+    "goodJob": "चांगले काम!",
+    "keepPracticing": "सराव करत राहा!"
+  },
+  "settings": {
+    "title": "सेटिंग्ज",
+    "audio": "ऑडिओ",
+    "globalAudio": "ग्लोबल ऑडिओ",
+    "muteAllSounds": "कोर्समधील सर्व आवाज म्यूट करा",
+    "videoQuality": "व्हिडिओ गुणवत्ता",
+    "autoRecommended": "ऑटो (शिफारसीत)",
+    "playbackSpeed": "प्लेबॅक स्पीड",
+    "notifications": "सूचना"
+  }
+}

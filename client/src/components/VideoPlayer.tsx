@@ -27,7 +27,13 @@ export function VideoPlayer({ url, title, onProgress, onComplete }: VideoPlayerP
     const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime);
       if (onProgress && duration > 0) {
-        onProgress((video.currentTime / duration) * 100);
+        const progressPercent = (video.currentTime / duration) * 100;
+        onProgress(progressPercent);
+        
+        // Mark as complete when video reaches 100%
+        if (progressPercent >= 99.5 && onComplete) {
+          onComplete();
+        }
       }
     };
 

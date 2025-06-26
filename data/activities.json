@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "moduleId": 1,
+    "title": "Understanding Digital Footprints",
+    "description": "Explore how online posts affect your reputation.",
+    "type": "interactive",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Meet Alex, a curious teen who loves sharing moments online. One day, Alex realizes that a silly post from two years ago is still visible to everyone. This makes Alex wonder: 'What kind of digital footprint am I creating?'\",\"components\":[{\"type\":\"flipcard\",\"title\":\"Do's and Don'ts of Posting Online\",\"data\":{\"cards\":[{\"front\":\"Think Before You Post\",\"back\":\"DO: Ask yourself - Would I be comfortable if my teacher, family, or future employer saw this?\"},{\"front\":\"Share Personal Information\",\"back\":\"DON'T: Avoid posting your full name, address, phone number, or school details publicly.\"},{\"front\":\"Use Privacy Settings\",\"back\":\"DO: Regularly check and update your privacy settings on all social media platforms.\"},{\"front\":\"Post When Emotional\",\"back\":\"DON'T: Wait until you're calm before posting something when you're angry or upset.\"}]}},{\"type\":\"multiplechoice\",\"title\":\"Digital Safety Quiz\",\"data\":{\"question\":\"Why is it important to manage your online persona?\",\"options\":[\"Because it determines who can see your posts\",\"Because it affects how others perceive you in the long term\",\"Because it can help secure your personal information\",\"All of the above\"],\"correctAnswer\":3,\"explanation\":\"Managing your online persona affects your privacy, security, and reputation.\"}}]}",
+    "videoUrl": null,
+    "duration": 15,
+    "isLocked": null,
+    "media": "{\"hero\":\"/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png\",\"banner\":\"/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png\",\"images\":[\"/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png\",\"/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-5.png\"]}"
+  },
+  {
+    "id": 2,
+    "moduleId": 2,
+    "title": "Protecting Your Privacy",
+    "description": "Learn why and how to manage privacy settings.",
+    "type": "interactive",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Alex receives a friend request from someone they don't know. While checking their profile settings, Alex discovers that their posts are visible to everyone! Alex also witnesses a classmate being mean to another student in the comments. What should Alex do in both situations?\",\"components\":[{\"type\":\"accordion\",\"title\":\"Tips for Adjusting Privacy Settings\",\"data\":{\"sections\":[{\"title\":\"Profile Visibility\",\"content\":\"Set your profile to private so only friends can see your posts, photos, and personal information. Review who can find you using your email or phone number.\"},{\"title\":\"Post Sharing Controls\",\"content\":\"Before posting, choose who can see it: Public, Friends, or Custom groups. Remember that even 'friends only' posts can be screenshot and shared.\"},{\"title\":\"Contact Information\",\"content\":\"Hide your phone number and email from your public profile. Be selective about who can contact you directly through the platform.\"}]}},{\"type\":\"multiplechoice\",\"title\":\"Cyberbullying Response Quiz\",\"data\":{\"question\":\"Which of the following is a recommended action when witnessing cyberbullying?\",\"options\":[\"Ignore the situation\",\"Join in\",\"Report the incident and support the victim\",\"Share the post with friends\"],\"correctAnswer\":2,\"explanation\":\"Supporting victims and reporting abuse creates a safer online space.\"}}]}",
+    "videoUrl": null,
+    "duration": 15,
+    "isLocked": null,
+    "media": "{\"hero\":\"/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png\",\"banner\":\"/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png\",\"images\":[\"/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png\"]}"
+  },
+  {
+    "id": 3,
+    "moduleId": 3,
+    "title": "Identifying Misinformation",
+    "description": "Learn how to verify information using trusted sources.",
+    "type": "interactive",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Alex sees a shocking news headline shared by a friend: 'Local School Bans All Technology Forever!' Alex is surprised and worried, but then remembers to check if this is real news. Alex also receives a suspicious email claiming to be from a popular gaming platform asking for account details.\",\"components\":[{\"type\":\"slider\",\"title\":\"Examples of Real vs Fake Headlines\",\"data\":{\"instruction\":\"Slide through these headlines and learn to spot the differences between real and fake news.\",\"slides\":[{\"title\":\"REAL News Example\",\"content\":\"Source: Local News Channel 7 | Date: Today | Author: Sarah Martinez, Education Reporter\",\"headline\":\"District Implements New Technology Guidelines for Student Safety\"},{\"title\":\"FAKE News Red Flags\",\"content\":\"Source: Unknown blog | Date: Unclear | Author: Anonymous\",\"headline\":\"SHOCKING: Schools BANNED Technology FOREVER! Parents FURIOUS!\"}]}},{\"type\":\"multiplechoice\",\"title\":\"Misinformation Detection Quiz\",\"data\":{\"question\":\"Which strategy is most effective for identifying misinformation online?\",\"options\":[\"Sharing the post immediately with friends\",\"Checking the information against multiple credible sources\",\"Accepting it at face value\",\"Hiding the post without verification\"],\"correctAnswer\":1,\"explanation\":\"Verifying with credible sources is key to identifying misinformation.\"}}]}",
+    "videoUrl": null,
+    "duration": 15,
+    "isLocked": null,
+    "media": "{\"hero\":\"/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png\",\"banner\":\"/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png\",\"images\":[\"/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png\"]}"
+  },
+  {
+    "id": 4,
+    "moduleId": 4,
+    "title": "Digital Balance & Wellness",
+    "description": "Practice digital detox and set screen time goals.",
+    "type": "interactive",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Alex notices feeling tired and stressed after spending hours scrolling through social media. Friends seem happier online than in person, and Alex wonders if social media is affecting mood and sleep. Alex decides to track screen time and try some digital wellness strategies.\",\"components\":[{\"type\":\"tabs\",\"title\":\"Daily/Weekly Digital Wellness Plan\",\"data\":{\"tabs\":[{\"title\":\"Daily Plan\",\"content\":\"Morning: Check messages for 10 minutes max. School hours: Phone in airplane mode during classes. Evening: 1 hour social media limit. Before bed: No screens 1 hour before sleep.\"},{\"title\":\"Weekly Plan\",\"content\":\"Tech-free Sunday morning. One evening per week without devices. Weekend outdoor activity with friends. Weekly review of screen time statistics and goals.\"},{\"title\":\"Healthy Alternatives\",\"content\":\"Instead of endless scrolling: Read a book, call a friend, exercise, practice a hobby, help family with tasks, listen to music, or journal.\"}]}},{\"type\":\"multiplechoice\",\"title\":\"Digital Wellness Quiz\",\"data\":{\"question\":\"What is one benefit of having designated 'offline' periods?\",\"options\":[\"It reduces distractions and improves mood\",\"It increases the number of notifications\",\"It isolates you from your friends\",\"It leads to unlimited screen time\"],\"correctAnswer\":0,\"explanation\":\"Offline time supports mental wellness and reduces screen fatigue.\"}}]}",
+    "videoUrl": null,
+    "duration": 15,
+    "isLocked": null,
+    "media": "{\"hero\":\"/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png\",\"banner\":\"/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png\",\"images\":[\"/courses/digital-wellness-safety/modules/module-4/assets/media/images/activity-4.png\"]}"
+  },
+  {
+    "id": 5,
+    "moduleId": 5,
+    "title": "Review & Final Quiz",
+    "description": "Participate in a role-play challenge and complete the final interactive quiz.",
+    "type": "assessment",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Alex has learned so much about digital wellness and safety! Now it's time to put all these skills together. Alex's friend Maya needs help with some digital challenges. Can you help Alex give the right advice?\",\"components\":[{\"type\":\"dragdrop\",\"title\":\"Match Digital Issues to Solutions\",\"data\":{\"instruction\":\"Help Alex match each digital problem with the best solution. Drag the solutions to the correct problems.\",\"items\":[\"Use privacy settings and report the behavior\",\"Cross-check with multiple credible sources\",\"Set specific times for social media use\",\"Think before posting and consider consequences\",\"Get permission before sharing photos of others\"],\"categories\":[{\"name\":\"Maya is being cyberbullied\",\"items\":[\"Use privacy settings and report the behavior\"]},{\"name\":\"Maya saw shocking news online\",\"items\":[\"Cross-check with multiple credible sources\"]},{\"name\":\"Maya feels addicted to social media\",\"items\":[\"Set specific times for social media use\"]}]}},{\"type\":\"multiplechoice\",\"title\":\"Final Challenge Quiz\",\"data\":{\"question\":\"Which digital strategies will you adopt today?\",\"options\":[\"Adjusting privacy settings on all my accounts\",\"Fact-checking suspicious news before sharing\",\"Setting specific times for social media use\",\"All of the above\"],\"correctAnswer\":3,\"explanation\":\"Adopting all these strategies creates a comprehensive approach to digital wellness and safety.\"}}]}",
+    "videoUrl": null,
+    "duration": 20,
+    "isLocked": null,
+    "media": "{\"hero\":\"/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png\",\"banner\":\"/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png\",\"images\":[\"/courses/digital-wellness-safety/modules/module-5/assets/media/images/activity-5.png\"]}"
+  },
+  {
+    "id": 6,
+    "moduleId": 6,
+    "title": "Example Activity",
+    "description": "A simple activity to test the course system",
+    "type": "interactive",
+    "orderIndex": 1,
+    "content": "{\"story\":\"Meet Alex, a curious teen who loves sharing moments online. One day, Alex realizes that a silly post from two years ago is still visible to everyone. This makes Alex wonder: 'What kind of digital footprint am I creating?'\",\"components\":[{\"type\":\"flipcard\",\"title\":\"Do's and Don'ts of Posting Online\",\"data\":{\"cards\":[{\"front\":\"Think Before You Post\",\"back\":\"DO: Ask yourself - Would I be comfortable if my teacher, family, or future employer saw this?\"},{\"front\":\"Share Personal Information\",\"back\":\"DON'T: Avoid posting your full name, address, phone number, or school details publicly.\"},{\"front\":\"Use Privacy Settings\",\"back\":\"DO: Regularly check and update your privacy settings on all social media platforms.\"},{\"front\":\"Post When Emotional\",\"back\":\"DON'T: Wait until you're calm before posting something when you're angry or upset.\"}]}},{\"type\":\"multiplechoice\",\"title\":\"Digital Safety Quiz\",\"data\":{\"question\":\"Why is it important to manage your online persona?\",\"options\":[\"Because it determines who can see your posts\",\"Because it affects how others perceive you in the long term\",\"Because it can help secure your personal information\",\"All of the above\"],\"correctAnswer\":3,\"explanation\":\"Managing your online persona affects your privacy, security, and reputation.\"}}]}",
+    "videoUrl": null,
+    "duration": 10,
+    "isLocked": null,
+    "media": null
+  }
+]

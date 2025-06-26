@@ -1,0 +1,8 @@
+{
+  "id": 4,
+  "title": "Digital Balance & Wellness",
+  "description": "Learn strategies for healthy digital habits, screen time management, and maintaining balance between online and offline activities.",
+  "orderIndex": 4,
+  "estimatedDuration": 25,
+  "activities": ["activity-1"]
+}

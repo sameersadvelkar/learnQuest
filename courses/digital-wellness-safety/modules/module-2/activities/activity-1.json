@@ -1,0 +1,58 @@
+{
+  "id": 2,
+  "moduleId": 2,
+  "title": "Protecting Your Privacy",
+  "description": "Learn why and how to manage privacy settings.",
+  "type": "interactive",
+  "orderIndex": 0,
+  "estimatedDuration": 15,
+
+  "media": {
+    "hero": "/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png",
+    "banner": "/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png",
+    "images": [
+      "/courses/digital-wellness-safety/modules/module-2/assets/media/images/activity-2.png"
+    ]
+  },
+
+  "content": {
+    "story": "Alex receives a friend request from someone they don't know. While checking their profile settings, Alex discovers that their posts are visible to everyone! Alex also witnesses a classmate being mean to another student in the comments. What should Alex do in both situations?",
+    "components": [
+      {
+        "type": "accordion",
+        "title": "Tips for Adjusting Privacy Settings",
+        "data": {
+          "sections": [
+            {
+              "title": "Profile Visibility",
+              "content": "Set your profile to private so only friends can see your posts, photos, and personal information. Review who can find you using your email or phone number."
+            },
+            {
+              "title": "Post Sharing Controls",
+              "content": "Before posting, choose who can see it: Public, Friends, or Custom groups. Remember that even 'friends only' posts can be screenshot and shared."
+            },
+            {
+              "title": "Contact Information",
+              "content": "Hide your phone number and email from your public profile. Be selective about who can contact you directly through the platform."
+            }
+          ]
+        }
+      },
+      {
+        "type": "multiplechoice",
+        "title": "Cyberbullying Response Quiz",
+        "data": {
+          "question": "Which of the following is a recommended action when witnessing cyberbullying?",
+          "options": [
+            "Ignore the situation",
+            "Join in",
+            "Report the incident and support the victim",
+            "Share the post with friends"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Supporting victims and reporting abuse creates a safer online space."
+        }
+      }
+    ]
+  }
+}
