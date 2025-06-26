@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { User, Lock, AlertCircle } from 'lucide-react';
-import coursewindLogo from '../assets/coursewing.png';
+import { getCourseImage } from '@/utils/mediaUtils';
 
 export function LoginForm() {
   const [username, setUsername] = useState('');
@@ -112,9 +112,13 @@ export function LoginForm() {
           {/* Logo aligned with welcome text - Responsive */}
           <div className="absolute top-8 sm:top-16 left-8 sm:left-16 z-10">
             <img 
-              src={coursewindLogo} 
+              src={getCourseImage(1, 'coursewing.png')} 
               alt="CourseWind" 
               className="h-12 sm:h-16 mb-4 sm:mb-8"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = getCourseImage(1, 'coursewindLogo.png');
+              }}
             />
           </div>
           
@@ -133,9 +137,13 @@ export function LoginForm() {
             {/* Mobile Logo */}
             <div className="flex justify-center mb-6 sm:hidden">
               <img 
-                src={coursewindLogo} 
+                src={getCourseImage(1, 'coursewing.png')} 
                 alt="CourseWind" 
                 className="h-12"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = getCourseImage(1, 'coursewindLogo.png');
+                }}
               />
             </div>
             

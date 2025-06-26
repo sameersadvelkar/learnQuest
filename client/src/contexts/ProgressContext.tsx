@@ -21,7 +21,8 @@ type ProgressAction =
   | { type: 'EARN_ACHIEVEMENT'; payload: Achievement }
   | { type: 'SET_COURSE_PROGRESS'; payload: number }
   | { type: 'SET_MODULE_PROGRESS'; payload: { moduleId: number; progress: number } }
-  | { type: 'RESET_PROGRESS' };
+  | { type: 'RESET_PROGRESS' }
+  | { type: 'CLEAR_ALL_DATA' };
 
 const initialState: ProgressState = {
   userProgress: [],
@@ -47,8 +48,9 @@ function progressReducer(state: ProgressState, action: ProgressAction): Progress
       
       // Calculate new streak
       const today = new Date();
-      const isConsecutiveDay = state.lastActivity && 
-        (today.getTime() - state.lastActivity.getTime()) <= 24 * 60 * 60 * 1000;
+      const lastActivityDate = state.lastActivity ? new Date(state.lastActivity) : null;
+      const isConsecutiveDay = lastActivityDate && 
+        (today.getTime() - lastActivityDate.getTime()) <= 24 * 60 * 60 * 1000;
       
       return {
         ...state,
@@ -103,6 +105,9 @@ function progressReducer(state: ProgressState, action: ProgressAction): Progress
         achievements: state.achievements, // Keep achievements definitions
       };
     
+    case 'CLEAR_ALL_DATA':
+      return initialState;
+    
     default:
       return state;
   }
@@ -111,47 +116,64 @@ function progressReducer(state: ProgressState, action: ProgressAction): Progress
 const ProgressContext = createContext<{
   state: ProgressState;
   dispatch: React.Dispatch<ProgressAction>;
+  currentCourseId: number | null;
+  setCourseId: (courseId: number) => void;
 } | null>(null);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(progressReducer, initialState);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [currentCourseId, setCurrentCourseId] = useState<number | null>(null);
 
-  // Load progress from localStorage on mount
+  // Generate course-specific localStorage key
+  const getProgressKey = useCallback((courseId: number) => {
+    return `courseProgress_${courseId}`;
+  }, []);
+
+  // Load progress from localStorage when course changes
   useEffect(() => {
+    if (currentCourseId === null) return;
+    
     try {
-      const stored = localStorage.getItem('course-progress');
-      if (stored) {
-        const progressData = JSON.parse(stored);
-        dispatch({ 
-          type: 'LOAD_PROGRESS', 
-          payload: {
-            ...progressData,
-            completedActivities: new Set(progressData.completedActivities || []),
-            lastActivity: progressData.lastActivity ? new Date(progressData.lastActivity) : null,
-          }
-        });
+      const progressKey = getProgressKey(currentCourseId);
+      const savedProgress = localStorage.getItem(progressKey);
+      if (savedProgress) {
+        const parsed = JSON.parse(savedProgress);
+        // Convert completedActivities array back to Set
+        if (parsed.completedActivities) {
+          parsed.completedActivities = new Set(parsed.completedActivities);
+        }
+        dispatch({ type: 'LOAD_PROGRESS', payload: parsed });
+      } else {
+        // No saved progress for this course, reset to initial state
+        dispatch({ type: 'RESET_PROGRESS' });
       }
     } catch (error) {
-      console.error('Error loading progress from localStorage:', error);
+      console.error('Error loading course progress from localStorage:', error);
+      dispatch({ type: 'RESET_PROGRESS' });
     }
     setIsInitialized(true);
-  }, []);
+  }, [currentCourseId, getProgressKey]);
 
   // Save progress to localStorage when state changes
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && currentCourseId !== null) {
       try {
+        const progressKey = getProgressKey(currentCourseId);
         const progressToSave = {
           ...state,
           completedActivities: Array.from(state.completedActivities),
         };
-        localStorage.setItem('course-progress', JSON.stringify(progressToSave));
+        localStorage.setItem(progressKey, JSON.stringify(progressToSave));
       } catch (error) {
-        console.error('Error saving progress to localStorage:', error);
+        console.error('Error saving course progress to localStorage:', error);
       }
     }
-  }, [state, isInitialized]);
+  }, [state, isInitialized, currentCourseId, getProgressKey]);
+
+  const setCourseId = useCallback((courseId: number) => {
+    setCurrentCourseId(courseId);
+  }, []);
 
   // Method to clear all progress (for testing)
   const clearProgress = useCallback(() => {
@@ -160,7 +182,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [dispatch]);
 
   return (
-    <ProgressContext.Provider value={{ state, dispatch }}>
+    <ProgressContext.Provider value={{ state, dispatch, currentCourseId, setCourseId }}>
       {children}
     </ProgressContext.Provider>
   );

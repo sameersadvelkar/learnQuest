@@ -1,0 +1,8 @@
+{
+  "id": 2,
+  "title": "Privacy Protection and Cyberbullying",
+  "description": "Understand privacy settings, learn to protect personal information, and develop strategies for dealing with cyberbullying.",
+  "orderIndex": 2,
+  "estimatedDuration": 25,
+  "activities": ["activity-1"]
+}

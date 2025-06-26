@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Course, Module, Activity } from '@shared/schema';
 
 interface CourseState {
+  courses: Course[];
   currentCourse: Course | null;
   modules: Module[];
   activities: Activity[];
@@ -14,18 +15,25 @@ interface CourseState {
 }
 
 type CourseAction =
+  | { type: 'SET_COURSES'; payload: Course[] }
   | { type: 'SET_COURSE'; payload: Course }
   | { type: 'SET_MODULES'; payload: Module[] }
   | { type: 'SET_ACTIVITIES'; payload: Activity[] }
   | { type: 'SET_CURRENT_MODULE'; payload: Module }
   | { type: 'SET_CURRENT_ACTIVITY'; payload: Activity }
+  | { type: 'SET_MODULE'; payload: Module }
+  | { type: 'SET_ACTIVITY'; payload: Activity }
   | { type: 'SET_CURRENT_PAGE'; payload: number }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'CLEAR_CURRENT_COURSE' }
+  | { type: 'CLEAR_CURRENT_MODULE' }
+  | { type: 'CLEAR_CURRENT_ACTIVITY' }
   | { type: 'NEXT_PAGE' }
   | { type: 'PREVIOUS_PAGE' };
 
 const initialState: CourseState = {
+  courses: [],
   currentCourse: null,
   modules: [],
   activities: [],
@@ -39,6 +47,8 @@ const initialState: CourseState = {
 
 function courseReducer(state: CourseState, action: CourseAction): CourseState {
   switch (action.type) {
+    case 'SET_COURSES':
+      return { ...state, courses: action.payload };
     case 'SET_COURSE':
       return { ...state, currentCourse: action.payload };
     case 'SET_MODULES':
@@ -49,12 +59,22 @@ function courseReducer(state: CourseState, action: CourseAction): CourseState {
       return { ...state, currentModule: action.payload };
     case 'SET_CURRENT_ACTIVITY':
       return { ...state, currentActivity: action.payload };
+    case 'SET_MODULE':
+      return { ...state, currentModule: action.payload };
+    case 'SET_ACTIVITY':
+      return { ...state, currentActivity: action.payload };
     case 'SET_CURRENT_PAGE':
       return { ...state, currentPage: action.payload };
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
     case 'SET_ERROR':
       return { ...state, error: action.payload };
+    case 'CLEAR_CURRENT_COURSE':
+      return { ...state, currentCourse: null };
+    case 'CLEAR_CURRENT_MODULE':
+      return { ...state, currentModule: null };
+    case 'CLEAR_CURRENT_ACTIVITY':
+      return { ...state, currentActivity: null };
     case 'NEXT_PAGE':
       return { 
         ...state, 

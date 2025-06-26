@@ -1,0 +1,63 @@
+{
+  "id": 1,
+  "moduleId": 1,
+  "title": "Understanding Digital Footprints",
+  "description": "Explore how online posts affect your reputation.",
+  "type": "interactive",
+  "orderIndex": 0,
+  "estimatedDuration": 15,
+
+  "media": {
+    "hero": "/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png",
+    "banner": "/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png",
+    "images": [
+      "/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-1.png",
+      "/courses/digital-wellness-safety/modules/module-1/assets/media/images/activity-5.png"
+    ]
+  },
+
+  "content": {
+    "story": "Meet Alex, a curious teen who loves sharing moments online. One day, Alex realizes that a silly post from two years ago is still visible to everyone. This makes Alex wonder: 'What kind of digital footprint am I creating?'",
+    "components": [
+      {
+        "type": "flipcard",
+        "title": "Do's and Don'ts of Posting Online",
+        "data": {
+          "cards": [
+            {
+              "front": "Think Before You Post",
+              "back": "DO: Ask yourself - Would I be comfortable if my teacher, family, or future employer saw this?"
+            },
+            {
+              "front": "Share Personal Information",
+              "back": "DON'T: Avoid posting your full name, address, phone number, or school details publicly."
+            },
+            {
+              "front": "Use Privacy Settings",
+              "back": "DO: Regularly check and update your privacy settings on all social media platforms."
+            },
+            {
+              "front": "Post When Emotional",
+              "back": "DON'T: Wait until you're calm before posting something when you're angry or upset."
+            }
+          ]
+        }
+      },
+      {
+        "type": "multiplechoice",
+        "title": "Digital Safety Quiz",
+        "data": {
+          "question": "Why is it important to manage your online persona?",
+          "options": [
+            "Because it determines who can see your posts",
+            "Because it affects how others perceive you in the long term",
+            "Because it can help secure your personal information",
+            "All of the above"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Managing your online persona affects your privacy, security, and reputation."
+        }
+      }
+    ]
+  }
+}

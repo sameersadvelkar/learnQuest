@@ -10,12 +10,13 @@ import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
-import { AlertCircle, Building2, Users, BookOpen, BarChart3, Plus, LogOut, Upload, MessageSquare, Clock, CheckCircle, XCircle, FileText, Edit, TrendingUp, Activity, Phone, Search } from 'lucide-react';
+import { AlertCircle, Building2, Users, BookOpen, BarChart3, Plus, LogOut, Upload, MessageSquare, Clock, CheckCircle, XCircle, FileText, Edit, TrendingUp, Activity, Phone, Search, Zap } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { AnimatedStats, ProgressRing } from '@/components/AnimatedStats';
 import { InteractiveCard } from '@/components/InteractiveCard';
 import { AdminHeaderDropdown } from '@/components/AdminHeaderDropdown';
+
 
 interface School {
   id: number;
@@ -454,7 +455,8 @@ export function SuperAdminDashboard() {
     { id: 'approval', label: 'Course Approval', icon: CheckCircle },
     { id: 'support', label: 'Support Requests', icon: MessageSquare },
     { id: 'onboarding', label: 'School Onboarding Process', icon: Users },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'interactive', label: 'Interactive Components', icon: Zap }
   ];
 
   const renderSchoolsContent = () => (
@@ -1378,6 +1380,176 @@ export function SuperAdminDashboard() {
     </div>
   );
 
+  const renderInteractiveContent = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Zap className="w-5 h-5" />
+          Interactive Learning Components
+        </CardTitle>
+        <CardDescription>
+          Explore and test interactive educational components available in the platform
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <InteractiveCard
+              title="Flip Cards"
+              description="Interactive cards that reveal information on hover or click"
+              icon={Edit}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Perfect for vocabulary, definitions, and Q&A content</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Hover & Click modes
+                </div>
+              </div>
+            </InteractiveCard>
+
+            <InteractiveCard
+              title="Accordion"
+              description="Expandable content sections for organized information"
+              icon={FileText}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Organize content in collapsible sections</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Multiple variants
+                </div>
+              </div>
+            </InteractiveCard>
+
+            <InteractiveCard
+              title="Content Slider"
+              description="Navigate through content with interactive controls"
+              icon={Activity}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Present multiple pieces of content sequentially</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Auto-play & manual
+                </div>
+              </div>
+            </InteractiveCard>
+
+            <InteractiveCard
+              title="Interactive Tabs"
+              description="Organize content into accessible tabbed sections"
+              icon={BarChart3}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Group related content in tabs</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Horizontal & vertical
+                </div>
+              </div>
+            </InteractiveCard>
+
+            <InteractiveCard
+              title="Drag & Drop Assessment"
+              description="Interactive sorting exercise to test understanding"
+              icon={Users}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Students drag items to correct categories</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Instant feedback
+                </div>
+              </div>
+            </InteractiveCard>
+
+            <InteractiveCard
+              title="Multiple Choice Quiz"
+              description="Quiz component with instant feedback and explanations"
+              icon={BookOpen}
+              variant="default"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Single and multiple selection questions</p>
+                <div className="flex items-center text-xs text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Detailed explanations
+                </div>
+              </div>
+            </InteractiveCard>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 className="font-semibold text-blue-900 mb-3">Interactive Components Demo</h3>
+            <p className="text-blue-800 mb-4">
+              Experience all interactive components in action with sample educational content. 
+              This demonstration showcases how these components can enhance student engagement and learning outcomes.
+            </p>
+            <Button 
+              onClick={() => window.open('/interactive-demo', '_blank')}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              View Interactive Demo
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-4">
+              <h4 className="font-semibold mb-3">Component Features</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Fully responsive design
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Accessible keyboard navigation
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Customizable styling
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Progress tracking integration
+                </li>
+              </ul>
+            </Card>
+
+            <Card className="p-4">
+              <h4 className="font-semibold mb-3">Implementation Ready</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Props-based configuration
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  TypeScript support
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Reusable across courses
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  Easy content management
+                </li>
+              </ul>
+            </Card>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case 'schools':
@@ -1392,6 +1564,8 @@ export function SuperAdminDashboard() {
         return renderOnboardingContent();
       case 'analytics':
         return renderAnalyticsContent();
+      case 'interactive':
+        return renderInteractiveContent();
       default:
         return renderSchoolsContent();
     }

@@ -21,7 +21,18 @@ const activityIcons = {
 export function AccordionNavigation() {
   const { state: courseState, dispatch } = useCourse();
   const { progressState, isModuleLocked, getModuleStatus } = useProgressTracking();
-  const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set([1])); // First module expanded by default
+  // Only expand the module containing the current activity
+  const currentModuleId = courseState.currentActivity?.moduleId;
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(
+    currentModuleId ? new Set([currentModuleId]) : new Set([1])
+  );
+
+  // Update expanded modules when current activity changes
+  React.useEffect(() => {
+    if (currentModuleId) {
+      setExpandedModules(new Set([currentModuleId]));
+    }
+  }, [currentModuleId]);
 
   const toggleModule = (moduleId: number) => {
     const module = courseState.modules.find(m => m.id === moduleId);
@@ -32,13 +43,8 @@ export function AccordionNavigation() {
       return;
     }
     
-    const newExpanded = new Set(expandedModules);
-    if (newExpanded.has(moduleId)) {
-      newExpanded.delete(moduleId);
-    } else {
-      newExpanded.add(moduleId);
-    }
-    setExpandedModules(newExpanded);
+    // Only allow one module to be expanded at a time (current module)
+    setExpandedModules(new Set([moduleId]));
   };
 
   const handleActivityClick = (activityId: number) => {
@@ -90,6 +96,9 @@ export function AccordionNavigation() {
     }
     
     dispatch({ type: 'SET_CURRENT_PAGE', payload: pageNumber });
+    
+    // Scroll to top when navigating to new activity
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const getActivityStatus = (activityId: number) => {
@@ -152,17 +161,17 @@ export function AccordionNavigation() {
 
         return (
           <div key={module.id} className={cn(
-            "border border-sidebar-border rounded-lg overflow-hidden bg-sidebar",
+            "border border-gray-200/50 rounded-xl overflow-hidden bg-white/70 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/80",
             isLocked && "opacity-50"
           )}>
             {/* Module Header */}
             <button
               onClick={() => toggleModule(module.id)}
               className={cn(
-                "w-full px-4 py-3 flex items-center justify-between transition-colors",
+                "w-full px-4 py-3 flex items-center justify-between transition-all duration-300 group",
                 isLocked 
                   ? "cursor-not-allowed" 
-                  : "hover:bg-sidebar/50"
+                  : "hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50"
               )}
               aria-expanded={isExpanded}
               aria-controls={`module-${module.id}-content`}
@@ -171,23 +180,23 @@ export function AccordionNavigation() {
               <div className="flex items-center space-x-3 flex-1">
                 <div className="flex-shrink-0">
                   {isExpanded ? (
-                    <ChevronDown className="w-4 h-4 text-sidebar-foreground" />
+                    <ChevronDown className="w-4 h-4 text-gray-600 transition-all duration-300 group-hover:text-blue-600" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 text-sidebar-foreground" />
+                    <ChevronRight className="w-4 h-4 text-gray-600 transition-all duration-300 group-hover:text-blue-600 group-hover:translate-x-0.5" />
                   )}
                 </div>
                 <div className="text-left flex-1">
-                  <h3 className="font-medium text-sidebar-foreground text-sm">
+                  <h3 className="font-medium text-gray-900 text-sm transition-colors duration-300 group-hover:text-blue-800">
                     {module.title}
                   </h3>
-                  <p className="text-xs text-sidebar-foreground/60 mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5 transition-colors duration-300 group-hover:text-blue-600">
                     {completedActivities}/{totalActivities} activities • {Math.round(moduleProgress)}%
                   </p>
                 </div>
               </div>
-              <div className="flex-shrink-0 w-8 h-2 bg-sidebar-border rounded-full overflow-hidden">
+              <div className="flex-shrink-0 w-8 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-primary transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 transition-all duration-500 group-hover:from-blue-500 group-hover:to-indigo-500"
                   style={{ width: `${moduleProgress}%` }}
                 />
               </div>
@@ -197,7 +206,7 @@ export function AccordionNavigation() {
             {isExpanded && (
               <div 
                 id={`module-${module.id}-content`}
-                className="border-t border-sidebar-border bg-sidebar/30"
+                className="border-t border-gray-200/50 bg-gradient-to-b from-blue-50/30 to-indigo-50/30 animate-slide-up"
               >
                 {activities.length > 0 ? (
                   <div className="p-2 space-y-1">
@@ -212,9 +221,9 @@ export function AccordionNavigation() {
                           onClick={() => handleActivityClick(activity.id)}
                           disabled={isActivityLocked}
                           className={cn(
-                            "w-full p-3 rounded-md border text-left transition-all duration-200 flex items-center space-x-3",
+                            "w-full p-3 rounded-xl border text-left transition-all duration-300 flex items-center space-x-3 group transform hover:scale-[1.02] hover:shadow-sm",
                             getStatusColors(status),
-                            courseState.currentActivity?.id === activity.id && "ring-2 ring-primary/20",
+                            courseState.currentActivity?.id === activity.id && "ring-2 ring-blue-500/30 shadow-md",
                             isActivityLocked && "cursor-not-allowed opacity-60"
                           )}
                         >
@@ -222,18 +231,18 @@ export function AccordionNavigation() {
                             {getStatusIcon(status)}
                           </div>
                           <div className="flex-shrink-0">
-                            <IconComponent className="w-4 h-4" />
+                            <IconComponent className="w-4 h-4 transition-all duration-300 group-hover:scale-110" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium truncate">
+                            <h4 className="text-sm font-medium truncate transition-colors duration-300 group-hover:text-gray-900">
                               {activity.title}
                             </h4>
                             <div className="flex items-center space-x-2 mt-1">
-                              <span className="text-xs opacity-70">
+                              <span className="text-xs opacity-70 transition-opacity duration-300 group-hover:opacity-90">
                                 {activity.duration}min
                               </span>
                               <span className="text-xs opacity-50">•</span>
-                              <span className="text-xs opacity-70 capitalize">
+                              <span className="text-xs opacity-70 capitalize transition-opacity duration-300 group-hover:opacity-90">
                                 {activity.type}
                               </span>
                             </div>
@@ -243,7 +252,7 @@ export function AccordionNavigation() {
                     })}
                   </div>
                 ) : (
-                  <div className="p-4 text-center text-sm text-sidebar-foreground/60">
+                  <div className="p-4 text-center text-sm text-gray-500">
                     No activities in this module
                   </div>
                 )}

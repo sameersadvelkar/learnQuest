@@ -1,0 +1,57 @@
+{
+  "id": 3,
+  "moduleId": 3,
+  "title": "Identifying Misinformation",
+  "description": "Learn how to verify information using trusted sources.",
+  "type": "interactive",
+  "orderIndex": 0,
+  "estimatedDuration": 15,
+
+  "media": {
+    "hero": "/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png",
+    "banner": "/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png",
+    "images": [
+      "/courses/digital-wellness-safety/modules/module-3/assets/media/images/activity-3.png"
+    ]
+  },
+
+  "content": {
+    "story": "Alex sees a shocking news headline shared by a friend: 'Local School Bans All Technology Forever!' Alex is surprised and worried, but then remembers to check if this is real news. Alex also receives a suspicious email claiming to be from a popular gaming platform asking for account details.",
+    "components": [
+      {
+        "type": "slider",
+        "title": "Examples of Real vs Fake Headlines",
+        "data": {
+          "instruction": "Slide through these headlines and learn to spot the differences between real and fake news.",
+          "slides": [
+            {
+              "title": "REAL News Example",
+              "content": "Source: Local News Channel 7 | Date: Today | Author: Sarah Martinez, Education Reporter",
+              "headline": "District Implements New Technology Guidelines for Student Safety"
+            },
+            {
+              "title": "FAKE News Red Flags",
+              "content": "Source: Unknown blog | Date: Unclear | Author: Anonymous",
+              "headline": "SHOCKING: Schools BANNED Technology FOREVER! Parents FURIOUS!"
+            }
+          ]
+        }
+      },
+      {
+        "type": "multiplechoice",
+        "title": "Misinformation Detection Quiz",
+        "data": {
+          "question": "Which strategy is most effective for identifying misinformation online?",
+          "options": [
+            "Sharing the post immediately with friends",
+            "Checking the information against multiple credible sources",
+            "Accepting it at face value",
+            "Hiding the post without verification"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Verifying with credible sources is key to identifying misinformation."
+        }
+      }
+    ]
+  }
+}

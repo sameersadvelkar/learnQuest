@@ -6,6 +6,12 @@ import { VideoPlayer } from '@/components/VideoPlayer';
 import { ImageDisplay } from '@/components/ImageDisplay';
 import { QuizComponent } from '@/components/QuizComponent';
 import { AssetRenderer, AssetGallery } from '@/components/AssetRenderer';
+import { FlipCard } from '@/components/interactive/FlipCard';
+import { MultipleChoiceAssessment } from '@/components/interactive/MultipleChoiceAssessment';
+import { InteractiveSlider } from '@/components/interactive/InteractiveSlider';
+import { InteractiveAccordion } from '@/components/interactive/InteractiveAccordion';
+import { InteractiveTabs } from '@/components/interactive/InteractiveTabs';
+import { DragDropAssessment } from '@/components/interactive/DragDropAssessment';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
 import { Video, BookOpen, CheckCircle, PlayCircle, Award, Image } from 'lucide-react';
@@ -28,17 +34,170 @@ export function ModuleContent() {
   };
 
   const renderActivityContent = () => {
-    const content = currentActivity.content as any;
+    let content;
+    try {
+      // Parse content if it's a JSON string
+      content = typeof currentActivity.content === 'string' 
+        ? JSON.parse(currentActivity.content) 
+        : currentActivity.content;
+    } catch (error) {
+      console.error('Error parsing activity content:', error);
+      content = currentActivity.content;
+    }
     
-    // Handle different activity types
+    // Handle different activity types based on real course content
     switch (currentActivity.type) {
+      case 'interactive':
+      case 'assessment':
+        return (
+          <div className="space-y-6">
+            {/* Interactive Components */}
+            {content?.components?.map((component: any, index: number) => (
+              <div key={index}>
+                {component.type === 'flipcard' && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-6">{component.title}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {component.data.cards?.map((card: any, cardIndex: number) => (
+                        <FlipCard
+                          key={cardIndex}
+                          frontText={card.front}
+                          backText={card.back}
+                          triggerMode="click"
+                          width="w-full"
+                          height="h-56"
+                          variant={cardIndex % 2 === 0 ? "default" : "gradient"}
+                          onFlip={(isFlipped) => console.log(`Card ${cardIndex + 1} flipped:`, isFlipped)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {component.type === 'dragdrop' && (
+                  <DragDropAssessment
+                    title={component.title}
+                    instructions={component.data.instruction || component.data.instructions || "Match the items to their correct categories"}
+                    items={component.data.items?.map((item: string, itemIndex: number) => {
+                      // Find which category this item belongs to
+                      const category = component.data.categories?.find((cat: any) => 
+                        cat.items && Array.isArray(cat.items) && cat.items.includes(item)
+                      );
+                      return {
+                        id: `item-${itemIndex}`,
+                        content: item,
+                        correctZone: category ? `zone-${component.data.categories.indexOf(category)}` : `zone-0`
+                      };
+                    }) || []}
+                    zones={component.data.categories?.map((category: any, catIndex: number) => ({
+                      id: `zone-${catIndex}`,
+                      label: category.name || category.title || category.label || `Zone ${catIndex + 1}`,
+                      acceptsItems: Array.isArray(category.items) ? category.items : []
+                    })) || []}
+                    onComplete={(score: number, totalItems: number) => {
+                      console.log('Drag drop completed:', score, totalItems);
+                      if (score === totalItems) {
+                        handleCompleteActivity();
+                      }
+                    }}
+                    instanceId={`activity_${currentActivity.id}_component_${index}`}
+                  />
+                )}
+                
+                {component.type === 'multiplechoice' && (
+                  <MultipleChoiceAssessment
+                    title={component.title}
+                    questions={[
+                      {
+                        id: `q_${index}`,
+                        question: component.data.question,
+                        type: 'single',
+                        options: component.data.options?.map((option: string, optIndex: number) => ({
+                          id: `opt_${optIndex}`,
+                          text: option,
+                          isCorrect: optIndex === component.data.correctAnswer
+                        })) || [],
+                        explanation: component.data.explanation
+                      }
+                    ]}
+                    onComplete={(score, total) => {
+                      console.log(`Quiz completed: ${score}/${total}`);
+                      if (score === total) {
+                        handleCompleteActivity();
+                      }
+                    }}
+                    showExplanations={true}
+                    instanceId={`activity_${currentActivity.id}_component_${index}`}
+                  />
+                )}
+
+                {component.type === 'slider' && (
+                  <Card className="border border-gray-200 shadow-sm">
+                    <CardContent className="p-6">
+                      <InteractiveSlider
+                        slides={component.data.slides?.map((slide: any, slideIndex: number) => ({
+                          id: `slide_${slideIndex}`,
+                          title: slide.title,
+                          content: slide.content || slide.headline || '',
+                          image: slide.image,
+                          imageAlt: slide.imageAlt
+                        })) || []}
+                        autoPlay={component.data.autoPlay || false}
+                        showDots={component.data.showDots !== false}
+                        showArrows={component.data.showArrows !== false}
+                        onSlideChange={(slideId) => console.log('Slide changed:', slideId)}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+
+                {component.type === 'accordion' && (
+                  <Card className="bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-100/20 hover:shadow-2xl hover:shadow-blue-200/30 transition-all duration-300 rounded-2xl">
+                    <CardContent className="p-8">
+                      <InteractiveAccordion
+                        items={component.data.sections?.map((section: any, sectionIndex: number) => ({
+                          id: `section_${sectionIndex}`,
+                          title: section.title,
+                          content: section.content,
+                          image: section.image,
+                          imageAlt: section.imageAlt
+                        })) || component.data.items || []}
+                        allowMultiple={component.data.allowMultiple || false}
+                        variant={component.data.variant || 'default'}
+                        onItemClick={(itemId) => console.log('Accordion item clicked:', itemId)}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+
+                {component.type === 'tabs' && (
+                  <InteractiveTabs
+                    tabs={component.data.tabs?.map((tab: any, tabIndex: number) => ({
+                      id: `tab_${tabIndex}`,
+                      label: tab.title,
+                      content: tab.content,
+                      image: tab.image,
+                      imageAlt: tab.imageAlt
+                    })) || []}
+                    defaultTab={`tab_0`}
+                    variant={component.data.variant || 'default'}
+                    onTabChange={(tabId) => console.log('Tab changed:', tabId)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        );
+        
       case 'video':
         if (currentActivity.videoUrl) {
           return (
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <Video className="w-5 h-5 mr-2" />
+            <Card className="bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-100/20 hover:shadow-2xl hover:shadow-blue-200/30 transition-all duration-300 rounded-2xl">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-6 flex items-center bg-gradient-to-r from-emerald-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center mr-3">
+                    <Video className="w-4 h-4 text-white" />
+                  </div>
                   Video Content
                 </h3>
                 <VideoPlayer
@@ -49,38 +208,14 @@ export function ModuleContent() {
               </CardContent>
             </Card>
           );
-        } else {
-          return (
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <PlayCircle className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {currentActivity.title}
-                  </h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    {currentActivity.description || 'This lesson content is being prepared. Check back soon for updates.'}
-                  </p>
-                  <Button 
-                    onClick={handleCompleteActivity}
-                    className="mt-4 bg-blue-600 hover:bg-blue-700"
-                  >
-                    Mark as Complete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
         }
         break;
         
       case 'quiz':
         if (content && content.type === 'quiz') {
           return (
-            <Card>
-              <CardContent className="p-6">
+            <Card className="bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-100/20 hover:shadow-2xl hover:shadow-blue-200/30 transition-all duration-300 rounded-2xl">
+              <CardContent className="p-8">
                 <QuizComponent
                   content={content}
                   onComplete={(score) => {
@@ -96,10 +231,12 @@ export function ModuleContent() {
         
       case 'reading':
         return (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <BookOpen className="w-5 h-5 mr-2" />
+          <Card className="bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-100/20 hover:shadow-2xl hover:shadow-blue-200/30 transition-all duration-300 rounded-2xl">
+            <CardContent className="p-8">
+              <h3 className="text-xl font-bold mb-6 flex items-center bg-gradient-to-r from-emerald-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center mr-3">
+                  <BookOpen className="w-4 h-4 text-white" />
+                </div>
                 Reading Material
               </h3>
               {renderReadingContent(content)}
@@ -110,33 +247,14 @@ export function ModuleContent() {
       // Asset rendering cases
       case 'image':
       case 'audio':
+      case 'pdf':
       case 'document':
-        return (
-          <AssetRenderer
-            content={content}
-            onComplete={handleCompleteActivity}
-          />
-        );
+        // Handle asset-based activities
+        return null;
         
       default:
-        // For other activity types, show a placeholder with activity info
-        return (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">
-                {currentActivity.type.charAt(0).toUpperCase() + currentActivity.type.slice(1)} Activity
-              </h3>
-              <p className="text-gray-600 mb-4">
-                This is a {currentActivity.type} activity. Duration: {currentActivity.duration} minutes.
-              </p>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-500">
-                  Activity content will be displayed here based on the activity type and configuration.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        );
+        // Return null if no authentic content is available
+        return null;
     }
     
     return null;
@@ -173,161 +291,86 @@ export function ModuleContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center space-x-2 text-sm text-blue-600 mb-2">
-            <span>Module {currentModule.orderIndex + 1}</span>
-            <span>•</span>
-            <span>Activity {currentActivity.orderIndex + 1}</span>
+    <div className="space-y-8 p-6">
+      {/* Activity Status and Completion */}
+      <div className="bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg shadow-blue-100/20 rounded-2xl p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            {(() => {
+              const getActivityBadge = () => {
+                switch (currentActivity.type) {
+                  case 'video':
+                    return (
+                      <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200">
+                        <Video className="w-4 h-4 mr-1" />
+                        Video
+                      </Badge>
+                    );
+                  case 'quiz':
+                  case 'assessment':
+                    return (
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Assessment
+                      </Badge>
+                    );
+                  case 'interactive':
+                    return (
+                      <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                        <PlayCircle className="w-4 h-4 mr-1" />
+                        Interactive
+                      </Badge>
+                    );
+                  case 'reading':
+                    return (
+                      <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                        <BookOpen className="w-4 h-4 mr-1" />
+                        Reading
+                      </Badge>
+                    );
+                  case 'image':
+                    return (
+                      <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
+                        <Image className="w-4 h-4 mr-1" />
+                        Image
+                      </Badge>
+                    );
+                  default:
+                    return (
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-800 border-gray-200">
+                        <PlayCircle className="w-4 h-4 mr-1" />
+                        {currentActivity.type.charAt(0).toUpperCase() + currentActivity.type.slice(1)}
+                      </Badge>
+                    );
+                }
+              };
+              return getActivityBadge();
+            })()}
+            <span className="text-sm text-gray-500">
+              Duration: {currentActivity.duration || 15} minutes
+            </span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {currentActivity.title}
-          </h1>
-          <p className="text-gray-600">
-            {currentActivity.description || 'Learn the fundamentals you need to understand and apply these concepts in real-world scenarios.'}
-          </p>
-        </div>
+        
         <div className="flex items-center space-x-3">
-          {(() => {
-            const getActivityBadge = () => {
-              switch (currentActivity.type) {
-                case 'video':
-                  return (
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200">
-                      <Video className="w-4 h-4 mr-1" />
-                      Video
-                    </Badge>
-                  );
-                case 'quiz':
-                  return (
-                    <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200">
-                      <CheckCircle className="w-4 h-4 mr-1" />
-                      Quiz
-                    </Badge>
-                  );
-                case 'reading':
-                  return (
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-                      <BookOpen className="w-4 h-4 mr-1" />
-                      Reading
-                    </Badge>
-                  );
-                case 'image':
-                  return (
-                    <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
-                      <Image className="w-4 h-4 mr-1" />
-                      Image
-                    </Badge>
-                  );
-                default:
-                  return (
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-800 border-gray-200">
-                      <PlayCircle className="w-4 h-4 mr-1" />
-                      {currentActivity.type.charAt(0).toUpperCase() + currentActivity.type.slice(1)}
-                    </Badge>
-                  );
-              }
-            };
-            return getActivityBadge();
-          })()}
           {isCompleted ? (
             <Badge className="bg-green-600 text-white">
               <CheckCircle className="w-4 h-4 mr-1" />
               Completed
             </Badge>
           ) : (
-            <Button onClick={handleCompleteActivity} className="bg-blue-600 hover:bg-blue-700">
-              <PlayCircle className="w-4 h-4 mr-2" />
-              Mark as Complete
-            </Button>
+            <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
+              <CheckCircle className="w-4 h-4 mr-1" />
+              Assessment Incomplete
+            </Badge>
           )}
+        </div>
         </div>
       </div>
 
-      {/* About This Lesson */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
-            <BookOpen className="w-5 h-5 mr-2" />
-            About This Lesson
-          </h3>
-          <p className="text-blue-800">
-            This lesson will teach you the fundamentals you need to understand and apply these concepts in real-world scenarios.
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Main Content */}
-      {renderActivityContent()}
-
-      {/* Key Takeaways */}
-      <Card className="bg-amber-50 border-amber-200">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-amber-900 mb-4">
-            Key Takeaways
-          </h3>
-          <ul className="space-y-2 text-amber-800">
-            <li className="flex items-start">
-              <span className="text-amber-600 mr-2">•</span>
-              Understand the core concepts
-            </li>
-            <li className="flex items-start">
-              <span className="text-amber-600 mr-2">•</span>
-              Apply what you learn in practice
-            </li>
-            <li className="flex items-start">
-              <span className="text-amber-600 mr-2">•</span>
-              Build confidence in your skills
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* Module Progress */}
-      <Card className="bg-purple-50 border-purple-200">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-purple-900 mb-4 flex items-center">
-            <Award className="w-5 h-5 mr-2" />
-            Module Progress
-          </h3>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-purple-800">Progress in {currentModule.title}</span>
-              <span className="text-purple-900 font-semibold">{moduleProgress}%</span>
-            </div>
-            <div className="w-full bg-purple-200 rounded-full h-2">
-              <div 
-                className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${moduleProgress}%` }}
-              ></div>
-            </div>
-            {moduleIsCompleted && (
-              <div className="flex items-center text-green-700 font-medium">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Module completed! Next module is now unlocked.
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Next Steps */}
-      <Card className="bg-green-50 border-green-200">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
-            <CheckCircle className="w-5 h-5 mr-2" />
-            Next Steps
-          </h3>
-          <p className="text-green-800">
-            {isCompleted 
-              ? "Great work! Move on to the next activity to continue building your knowledge."
-              : "Complete this activity to progress through the module and unlock new content."
-            }
-          </p>
-        </CardContent>
-      </Card>
+      {/* Interactive Content */}
+      <div className="space-y-6">
+        {renderActivityContent()}
+      </div>
     </div>
   );
 }

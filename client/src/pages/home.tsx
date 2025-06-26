@@ -9,7 +9,8 @@ import { useCourse } from '@/contexts/CourseContext';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useProgressTracking } from '@/hooks/useProgress';
-import { contentLoader } from '@/data/contentLoader';
+import { useState as useReactState } from 'react';
+
 import { AnimatedStats, ProgressRing } from '@/components/AnimatedStats';
 import { 
   BookOpen, 
@@ -40,16 +41,26 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize with file-based content
+    // Load courses from API
     const loadContent = async () => {
       setIsLoading(true);
       try {
-        const { courses, modules, activities } = await contentLoader.loadAllContent();
+        console.log('Home: Starting to load content from API...');
+        
+        // Load courses from API
+        const coursesResponse = await fetch('/api/courses');
+        if (!coursesResponse.ok) throw new Error('Failed to fetch courses');
+        const courses = await coursesResponse.json();
+        
+        console.log('Home: Content loaded - Courses:', courses.length);
+        console.log('Home: Courses data:', courses);
+        
+        // Store all courses in context
+        dispatch({ type: 'SET_COURSES', payload: courses });
         if (courses.length > 0) {
           dispatch({ type: 'SET_COURSE', payload: courses[0] });
+          console.log('Home: Set current course to:', courses[0].title);
         }
-        dispatch({ type: 'SET_MODULES', payload: modules });
-        dispatch({ type: 'SET_ACTIVITIES', payload: activities });
       } catch (error) {
         console.error('Error loading content:', error);
       } finally {
@@ -62,6 +73,37 @@ export default function Home() {
 
   const courseProgress = getCourseProgress();
   const completedActivities = progressState.completedActivities.size;
+
+  // Function to get course-specific progress from localStorage
+  const getCourseSpecificProgress = (courseId: number, totalActivities: number) => {
+    try {
+      const progressKey = `courseProgress_${courseId}`;
+      const savedProgress = localStorage.getItem(progressKey);
+      
+      if (savedProgress) {
+        const parsed = JSON.parse(savedProgress);
+        
+        // Get completed activities count
+        let completedActivitiesCount = 0;
+        if (parsed.completedActivities) {
+          // Handle array format (how it's saved to localStorage)
+          completedActivitiesCount = Array.isArray(parsed.completedActivities) 
+            ? parsed.completedActivities.length 
+            : 0;
+        }
+        
+        const progressPercent = totalActivities > 0 ? Math.round((completedActivitiesCount / totalActivities) * 100) : 0;
+        
+        return {
+          completedCount: completedActivitiesCount,
+          progressPercent: Math.min(100, progressPercent) // Cap at 100%
+        };
+      }
+    } catch (error) {
+      console.error(`Error loading progress for course ${courseId}:`, error);
+    }
+    return { completedCount: 0, progressPercent: 0 };
+  };
 
   if (isLoading) {
     return (
@@ -173,23 +215,7 @@ export default function Home() {
         </div>
 
         {/* Professional Stats Cards - Responsive */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
-          <Card className="border border-gray-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-3 sm:p-4 md:p-6">
-              <div className="flex items-center justify-between mb-2 sm:mb-4">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-emerald-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
-                </div>
-                <div className="text-right">
-                  <div className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">{courseProgress}%</div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Progress</div>
-                </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-full h-1.5 sm:h-2 transition-all duration-1000" style={{ width: `${courseProgress}%` }}></div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
 
           <Card className="border border-gray-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-3 sm:p-4 md:p-6">
@@ -275,61 +301,85 @@ export default function Home() {
               </CardHeader>
               <CardContent className="space-y-4 sm:space-y-6">
                 {/* Course Grid - Responsive */}
-                <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
+                  {courseState.courses?.map((course) => {
+                    const courseModules = courseState.modules.filter(m => m.courseId === course.id);
+                    const courseActivities = courseState.activities.filter(a => 
+                      courseModules.some(m => m.id === a.moduleId)
+                    );
+                    // Use actual course data from backend
+                    const courseTotalActivities = course.totalPages || courseActivities.length || 1;
+                    
+                    console.log(`Course ${course.id} (${course.title}):`, {
+                      courseModules: courseModules.length,
+                      courseActivities: courseActivities.length,
+                      courseTotalPages: course.totalPages,
+                      finalTotal: courseTotalActivities
+                    });
+                    
+                    // Get course-specific progress from localStorage
+                    const courseSpecificProgress = getCourseSpecificProgress(course.id, courseTotalActivities);
+                    const courseCompletedActivities = courseSpecificProgress.completedCount;
+                    const courseProgressPercent = courseSpecificProgress.progressPercent;
 
-                  {/* Current Active Course Card - Responsive */}
-                  {courseState.currentCourse && (
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
-                      <div className="relative h-32 sm:h-40 md:h-48">
-                        <img 
-                          src={courseState.currentCourse.image || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
-                          alt={courseState.currentCourse.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 text-white">
-                          <div className="text-xs opacity-75 mb-1">{courseState.currentCourse.category?.toUpperCase() || 'COURSE'}</div>
-                          <h3 className="text-sm sm:text-lg md:text-xl font-bold line-clamp-2">{courseState.currentCourse.title}</h3>
-                        </div>
-                      </div>
-                      
-                      <div className="p-3 sm:p-4 md:p-6">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0 mb-3">
-                          <div className="flex items-center space-x-1 sm:space-x-2">
-                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />
-                            <span className="text-xs sm:text-sm font-medium text-gray-700">{completedActivities} of {courseState.activities?.length || 16} lessons</span>
-                          </div>
-                          <div className="flex items-center space-x-1 sm:space-x-2">
-                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                            <span className="text-xs sm:text-sm font-medium text-gray-700">~{Math.max(0, Math.ceil(((courseState.activities?.length || 16) - completedActivities) * 10))}min left</span>
+                    return (
+                      <div key={course.id} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
+                        <div className="relative h-48">
+                          <img 
+                            src={course.image || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
+                            alt={course.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <div className="text-xs opacity-75 mb-1">{course.category?.toUpperCase() || 'COURSE'}</div>
+                            <h3 className="text-xl font-bold line-clamp-2">{course.title}</h3>
                           </div>
                         </div>
                         
-                        <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
-                          {courseState.currentCourse.description || "Continue your learning journey with this course."}
-                        </p>
-                        
-                        <div className="mb-3 sm:mb-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs sm:text-sm font-medium text-gray-700">Progress</span>
-                            <span className="text-xs sm:text-sm font-bold text-emerald-600">{courseProgress}%</span>
+                        <div className="p-6">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-2">
+                              <CheckCircle className="w-4 h-4 text-emerald-600" />
+                              <span className="text-sm font-medium text-gray-700">{courseCompletedActivities} of {courseTotalActivities} lessons</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Clock className="w-4 h-4 text-gray-500" />
+                              <span className="text-sm font-medium text-gray-700">{Math.max(0, Math.ceil((courseTotalActivities - courseCompletedActivities) * 10))}min</span>
+                            </div>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                            <div className="bg-gradient-to-r from-blue-500 to-emerald-500 h-1.5 sm:h-2 rounded-full transition-all duration-1000 ease-out" style={{ width: `${courseProgress}%` }}></div>
+                          
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {course.description || "Continue your learning journey with this course."}
+                          </p>
+                          
+                          <div className="mb-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium text-gray-700">Progress</span>
+                              <span className="text-sm font-bold text-emerald-600">{courseProgressPercent}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-gradient-to-r from-blue-500 to-emerald-500 h-2 rounded-full transition-all duration-1000 ease-out" 
+                                style={{ width: `${courseProgressPercent}%` }}
+                              ></div>
+                            </div>
                           </div>
-                        </div>
-                        
-                        {courseState.currentCourse.hasCoursePage !== false ? (
-                          <Link href={`/course/${courseState.currentCourse.id}`}>
-                            <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base">
-                              Continue →
+                          
+                          <Link href={`/course/${course.id}`}>
+                            <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-xl">
+                              {courseProgressPercent > 0 ? 'Continue →' : 'Start Course →'}
                             </Button>
                           </Link>
-                        ) : (
-                          <Button className="w-full bg-gray-400 text-white font-medium py-2 sm:py-3 rounded-lg sm:rounded-xl cursor-not-allowed text-sm sm:text-base" disabled>
-                            Continue →
-                          </Button>
-                        )}
+                        </div>
                       </div>
+                    );
+                  })}
+                  
+                  {(!courseState.courses || courseState.courses.length === 0) && (
+                    <div className="col-span-2 text-center py-12">
+                      <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-2">No courses available</p>
+                      <p className="text-sm text-gray-500">Check back later for new courses</p>
                     </div>
                   )}
                 </div>

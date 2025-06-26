@@ -1,0 +1,8 @@
+{
+  "id": 6,
+  "courseId": 2,
+  "title": "परिचय मॉड्यूल",
+  "description": "यह एक उदाहरण मॉड्यूल है जो फ़ाइल-आधारित कोर्स संरचना का प्रदर्शन करता है",
+  "estimatedDuration": 30,
+  "activities": ["activity-1"]
+}

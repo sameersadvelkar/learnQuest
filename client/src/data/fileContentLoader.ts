@@ -52,6 +52,9 @@ export class FileContentLoader {
       // Load React Fundamentals course
       await this.loadCourse('react-fundamentals');
       
+      // Load Digital Wellness & Safety course
+      await this.loadCourse('digital-wellness');
+      
       return {
         courses: Array.from(this.courses.values()),
         modules: Array.from(this.modules.values()),

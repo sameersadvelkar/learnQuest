@@ -2,11 +2,13 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useCourse } from '@/contexts/CourseContext';
 import { useProgressTracking } from '@/hooks/useProgress';
+import { useTranslation } from '@/hooks/useTranslation';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 
 export function Navigation() {
   const { state: courseState, dispatch } = useCourse();
   const { completeActivity, isActivityCompleted } = useProgressTracking();
+  const { t } = useTranslation();
 
   const currentActivity = courseState.currentActivity;
   const currentModule = courseState.currentModule;
@@ -45,6 +47,9 @@ export function Navigation() {
         }
       }
     }
+    
+    // Scroll to top when navigating
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNext = () => {
@@ -81,6 +86,9 @@ export function Navigation() {
         }
       }
     }
+    
+    // Scroll to top when navigating
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleMarkComplete = () => {
@@ -197,15 +205,15 @@ export function Navigation() {
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="hidden md:inline">
-            {getPreviousActivityTitle() ? `Previous: ${getPreviousActivityTitle()}` : 'Previous'}
+            {getPreviousActivityTitle() ? `${t('navigation.previous')}: ${getPreviousActivityTitle()}` : t('navigation.previous')}
           </span>
-          <span className="md:hidden">Previous</span>
+          <span className="md:hidden">{t('navigation.previous')}</span>
         </Button>
       </div>
 
       <div className="flex items-center space-x-4">
         <div className="text-sm text-gray-600">
-          Activity {courseState.currentActivity?.orderIndex || 0} of{' '}
+          {t('course.activity')} {courseState.currentActivity?.orderIndex || 0} {t('quiz.of')}{' '}
           {courseState.activities.filter(a => a.moduleId === currentModule?.id).length || 0}
         </div>
 
@@ -219,7 +227,7 @@ export function Navigation() {
           }`}
         >
           <Check className="w-4 h-4" />
-          <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
+          <span>{isCompleted ? t('navigation.completed') : t('navigation.markComplete')}</span>
         </Button>
       </div>
 
@@ -231,9 +239,9 @@ export function Navigation() {
           className="flex items-center space-x-2"
         >
           <span className="hidden md:inline">
-            {getNextActivityTitle() ? `Next: ${getNextActivityTitle()}` : 'Next'}
+            {getNextActivityTitle() ? `${t('navigation.next')}: ${getNextActivityTitle()}` : t('navigation.next')}
           </span>
-          <span className="md:hidden">Next</span>
+          <span className="md:hidden">{t('navigation.next')}</span>
           <ChevronRight className="w-4 h-4" />
         </Button>
       </div>

@@ -1,0 +1,8 @@
+{
+  "id": 5,
+  "title": "Review & Final Assessment",
+  "description": "Apply all learned concepts through interactive challenges and complete the comprehensive digital wellness and safety assessment.",
+  "orderIndex": 5,
+  "estimatedDuration": 30,
+  "activities": ["activity-1"]
+}

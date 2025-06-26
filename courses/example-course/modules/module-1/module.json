@@ -1,0 +1,5 @@
+{
+  "title": "Introduction Module",
+  "description": "Basic introduction to the example course",
+  "activities": ["activity-1"]
+}

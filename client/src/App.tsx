@@ -7,13 +7,18 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { CourseProvider } from "@/contexts/CourseContext";
 import { ProgressProvider } from "@/contexts/ProgressContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { AudioProvider } from "@/contexts/AudioContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 import { AchievementNotification, useAchievementNotification } from "@/components/AchievementNotification";
 import { useProgress } from "@/contexts/ProgressContext";
 import { useEffect } from "react";
 import { LoginForm } from "@/components/LoginForm";
+
 import { SuperAdminDashboard } from "@/pages/SuperAdminDashboard";
+import { FlipCardDemo } from "@/components/FlipCardDemo";
 import { SchoolAdminDashboard } from "@/pages/SchoolAdminDashboard";
+import { StudentDashboard } from "@/pages/StudentDashboard";
 import { CoursePreview } from "@/pages/CoursePreview";
 import FileBasedCourses from "@/pages/FileBasedCourses";
 import SuperAdminCourseApproval from "@/pages/SuperAdminCourseApproval";
@@ -21,6 +26,9 @@ import SuperAdminCourseApproval from "@/pages/SuperAdminCourseApproval";
 import Home from "@/pages/home";
 import Course from "@/pages/course";
 import CourseComplete from "@/pages/course-complete";
+import { CourseIntroPage } from "@/pages/CourseIntroPage";
+import { CourseExitPage } from "@/pages/CourseExitPage";
+import { InteractiveDemo } from "@/pages/InteractiveDemo";
 import NotFound from "@/pages/not-found";
 
 function AchievementManager() {
@@ -49,6 +57,7 @@ function Router() {
       <Route path="/course-preview/:courseId" component={CoursePreview} />
       <Route path="/file-based-courses" component={FileBasedCourses} />
       <Route path="/admin/course-approval" component={SuperAdminCourseApproval} />
+      <Route path="/interactive-demo" component={InteractiveDemo} />
       <Route path="*">
         {/* Role-based routing for main dashboard */}
         {state.user?.role === 'super_admin' && <SuperAdminDashboard />}
@@ -56,6 +65,8 @@ function Router() {
         {state.user?.role === 'student' && (
           <Switch>
             <Route path="/" component={Home} />
+            <Route path="/course/:courseId/intro" component={CourseIntroPage} />
+            <Route path="/course/:courseId/complete" component={CourseExitPage} />
             <Route path="/course/:courseId?" component={Course} />
             <Route path="/course-complete" component={CourseComplete} />
             <Route component={NotFound} />
@@ -72,15 +83,19 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <SettingsProvider>
-            <CourseProvider>
-              <ProgressProvider>
-                <Toaster />
-                <AchievementManager />
-                <Router />
-              </ProgressProvider>
-            </CourseProvider>
-          </SettingsProvider>
+          <LanguageProvider>
+            <AudioProvider>
+              <SettingsProvider>
+                <CourseProvider>
+                  <ProgressProvider>
+                    <Toaster />
+                    <AchievementManager />
+                    <Router />
+                  </ProgressProvider>
+                </CourseProvider>
+              </SettingsProvider>
+            </AudioProvider>
+          </LanguageProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>

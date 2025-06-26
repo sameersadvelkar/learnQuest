@@ -13,7 +13,8 @@
     "next": "Next",
     "markComplete": "Mark Complete",
     "completed": "Completed",
-    "backToCourse": "Back to Course"
+    "backToCourse": "Back to Course",
+    "menu": "Menu"
   },
   "course": {
     "progress": "Course Progress",
@@ -28,7 +29,18 @@
     "resources": "Resources",
     "transcript": "Transcript",
     "quiz": "Quiz",
-    "overview": "Overview"
+    "overview": "Overview",
+    "instructor": "Instructor",
+    "duration": "Duration",
+    "modules": "Modules",
+    "difficulty": "Difficulty",
+    "prerequisites": "Prerequisites",
+    "activity": "Activity",
+    "courseStructure": "Course Structure",
+    "totalModules": "Total Modules",
+    "totalPages": "Total Pages",
+    "modulePreview": "Module Preview",
+    "moreModules": "more modules"
   },
   "progress": {
     "courseProgress": "Course Progress",
@@ -46,6 +58,9 @@
     "streak": "Current Streak",
     "noAchievements": "No achievements yet",
     "earnAchievements": "Complete activities to earn achievements!"
+  },
+  "common": {
+    "minutes": "minutes"
   },
   "video": {
     "play": "Play",
@@ -120,5 +135,41 @@
     "studyTime": "Study Time",
     "learningStreak": "Learning Streak",
     "daysInARow": "days in a row"
+  },
+  "buttons": {
+    "dashboard": "Dashboard",
+    "startCourse": "Start Course",
+    "continueCourse": "Continue Course",
+    "play": "Play",
+    "pause": "Pause",
+    "listen": "Listen",
+    "submit": "Submit",
+    "reset": "Reset",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "open": "Open",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "remove": "Remove",
+    "skip": "Skip",
+    "retry": "Retry",
+    "finish": "Finish",
+    "complete": "Complete",
+    "back": "Back",
+    "forward": "Forward",
+    "refresh": "Refresh",
+    "download": "Download",
+    "upload": "Upload",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "confirm": "Confirm",
+    "decline": "Decline",
+    "accept": "Accept"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "id": 3,
+  "title": "Misinformation and Scams",
+  "description": "Learn to identify misinformation, verify sources, and protect yourself from online scams and phishing attempts.",
+  "orderIndex": 3,
+  "estimatedDuration": 20,
+  "activities": ["activity-1"]
+}

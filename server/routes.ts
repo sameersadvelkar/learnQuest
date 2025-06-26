@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCourseSchema, insertModuleSchema, insertActivitySchema, insertUserProgressSchema, insertUserSettingsSchema } from "@shared/schema";
+import { languageLoader } from "./language-loader";
+import { insertCourseSchema, insertModuleSchema, insertActivitySchema, insertUserProgressSchema, insertUserSettingsSchema, type Course } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -111,10 +112,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/courses/:id", async (req, res) => {
     try {
       const courseId = parseInt(req.params.id);
-      const course = await storage.getCourse(courseId);
+      const language = req.query.lang as string || 'en';
+      
+      let course = await storage.getCourse(courseId);
       
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // If requesting non-English content, try to load language-specific version
+      if (language !== 'en') {
+        const courseData = await languageLoader.loadCourseContent(courseId, language);
+        if (courseData) {
+          // Merge with existing course, keeping system fields
+          course = {
+            ...course,
+            title: courseData.title,
+            description: courseData.description,
+            category: courseData.category,
+            difficulty: courseData.difficulty,
+            learningObjectives: courseData.learningObjectives,
+            prerequisites: courseData.prerequisites
+          };
+          console.log(`Loaded ${language} course content:`, courseData.title);
+        }
       }
       
       res.json(course);
@@ -172,7 +193,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/courses/:courseId/modules", async (req, res) => {
     try {
       const courseId = parseInt(req.params.courseId);
-      const modules = await storage.getModulesByCourse(courseId);
+      const language = req.query.lang as string || 'en';
+      
+      let modules = await storage.getModulesByCourse(courseId);
+      
+      // If requesting non-English content, load language-specific module content
+      if (language !== 'en' && modules.length > 0) {
+        modules = await Promise.all(modules.map(async (module) => {
+          const moduleData = await languageLoader.loadModuleContent(module.id, language);
+          if (moduleData) {
+            console.log(`Loaded ${language} module content:`, moduleData.title);
+            return {
+              ...module,
+              title: moduleData.title,
+              description: moduleData.description
+            };
+          }
+          return module;
+        }));
+      }
+      
       res.json(modules);
     } catch (error) {
       console.error("Error fetching modules:", error);
@@ -209,7 +249,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/courses/:courseId/activities", async (req, res) => {
     try {
       const courseId = parseInt(req.params.courseId);
-      const activities = await storage.getActivitiesByCourse(courseId);
+      const language = req.query.lang as string || 'en';
+      
+      let activities = await storage.getActivitiesByCourse(courseId);
+      
+      // If requesting non-English content, load language-specific activity content
+      if (language !== 'en' && activities.length > 0) {
+        activities = await Promise.all(activities.map(async (activity) => {
+          const activityData = await languageLoader.loadActivityContent(activity.id, activity.moduleId, language);
+          if (activityData) {
+            console.log(`Loaded ${language} activity content:`, activityData.title);
+            return {
+              ...activity,
+              title: activityData.title,
+              description: activityData.description,
+              content: activityData.content
+            };
+          }
+          return activity;
+        }));
+      }
+      
       res.json(activities);
     } catch (error) {
       console.error("Error fetching activities:", error);
@@ -228,6 +288,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       console.error("Error creating activity:", error);
       res.status(500).json({ message: "Failed to create activity" });
+    }
+  });
+
+  // Language-specific content routes
+  app.get("/api/courses/:courseId/content", async (req, res) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      const language = req.query.language as string || 'en';
+      
+      const courseData = await languageLoader.loadCourseContent(courseId, language);
+      if (courseData) {
+        res.json(courseData);
+      } else {
+        res.status(404).json({ message: `No ${language} content found for course ${courseId}` });
+      }
+    } catch (error) {
+      console.error("Error fetching course content:", error);
+      res.status(500).json({ message: "Failed to fetch course content" });
+    }
+  });
+
+  app.get("/api/courses/:courseId/modules/:moduleId/content", async (req, res) => {
+    try {
+      const moduleId = parseInt(req.params.moduleId);
+      const language = req.query.language as string || 'en';
+      
+      const moduleData = await languageLoader.loadModuleContent(moduleId, language);
+      if (moduleData) {
+        res.json(moduleData);
+      } else {
+        res.status(404).json({ message: `No ${language} content found for module ${moduleId}` });
+      }
+    } catch (error) {
+      console.error("Error fetching module content:", error);
+      res.status(500).json({ message: "Failed to fetch module content" });
+    }
+  });
+
+  app.get("/api/courses/:courseId/activities/:activityId/content", async (req, res) => {
+    try {
+      const activityId = parseInt(req.params.activityId);
+      const courseId = parseInt(req.params.courseId);
+      const language = req.query.language as string || 'en';
+      
+      // Get module ID for the activity
+      const activity = await storage.getActivity(activityId);
+      if (!activity) {
+        return res.status(404).json({ message: "Activity not found" });
+      }
+      
+      const activityData = await languageLoader.loadActivityContent(activityId, activity.moduleId, language);
+      if (activityData) {
+        res.json(activityData);
+      } else {
+        res.status(404).json({ message: `No ${language} content found for activity ${activityId}` });
+      }
+    } catch (error) {
+      console.error("Error fetching activity content:", error);
+      res.status(500).json({ message: "Failed to fetch activity content" });
     }
   });
 
@@ -365,6 +484,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating user achievement:", error);
       res.status(500).json({ message: "Failed to create user achievement" });
+    }
+  });
+
+
+
+
+
+  // Course directory mapping endpoint
+  app.get("/api/courses/directory-map", async (req, res) => {
+    try {
+      const courses = await storage.getAllCourses();
+      const directoryMap: { [key: number]: string } = {};
+      
+      // Map course IDs to their directory names
+      courses.forEach(course => {
+        if (course.id === 1) directoryMap[course.id] = 'digital-wellness-safety';
+        else if (course.id === 2) directoryMap[course.id] = 'example-course';
+        // Add more mappings as needed
+      });
+      
+      res.json(directoryMap);
+    } catch (error) {
+      console.error("Error fetching course directory map:", error);
+      res.status(500).json({ message: "Failed to fetch course directory map" });
     }
   });
 

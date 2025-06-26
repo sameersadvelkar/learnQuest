@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "title": "First Steps",
+    "description": "Complete your first lesson",
+    "iconType": "trophy",
+    "badgeColor": "blue",
+    "criteria": {
+      "type": "lesson_completion",
+      "count": 1
+    }
+  },
+  {
+    "id": 2,
+    "title": "Quiz Master",
+    "description": "Score 100% on a quiz",
+    "iconType": "medal",
+    "badgeColor": "gold",
+    "criteria": {
+      "type": "quiz_perfect_score",
+      "count": 1
+    }
+  }
+]

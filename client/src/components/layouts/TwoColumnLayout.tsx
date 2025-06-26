@@ -1,8 +1,10 @@
 import React from 'react';
 import { VideoPlayer } from '@/components/VideoPlayer';
+import { SimpleAudioPlayer } from '@/components/SimpleAudioPlayer';
 import { Button } from '@/components/ui/button';
 import { Activity } from '@shared/schema';
 import { CheckCircle, BookOpen } from 'lucide-react';
+
 
 interface TwoColumnLayoutProps {
   activity: Activity;
@@ -27,6 +29,18 @@ export function TwoColumnLayout({
     <div className="flex-1 flex flex-col">
       {/* Video Section */}
       <div className="w-full bg-black relative" style={{ height: '60vh' }}>
+        {/* Audio Player - Only show on non-video pages */}
+        {!activity.videoUrl && (
+          <div className="absolute top-4 right-4 z-10">
+            <SimpleAudioPlayer 
+              courseId={1} 
+              pageType="activity"
+              activityId={activity.id}
+              className="bg-white/90 backdrop-blur-sm"
+            />
+          </div>
+        )}
+        
         {activity.videoUrl ? (
           <VideoPlayer 
             url={activity.videoUrl}
@@ -56,10 +70,10 @@ export function TwoColumnLayout({
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Video Completed!
+                Video completed
               </h3>
               <p className="text-gray-600 mb-3 text-sm">
-                Great job! Moving to next activity.
+                Proceed to the next page.
               </p>
               <div className="bg-blue-50 rounded-lg p-3 mb-3">
                 <p className="text-blue-800 text-sm">
